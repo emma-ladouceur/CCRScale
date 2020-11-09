@@ -1,0 +1,388 @@
+
+
+
+library(tidyverse)
+library(ggplot2)
+library(brms)
+library(bayesplot)
+library(patchwork)
+
+ccr_dat <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+alpha_dat <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/alpha_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+gamma_dat <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/gamma_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+
+# SPIE = mobr
+# ENSPIE = vegan - inverse Simpson's
+
+View(alpha_dat)
+View(gamma_dat)
+View(ccr_dat)
+
+
+#----------------------------------------------------------------------------------------------
+# alpha rich 
+
+d.alpha.rich <-  brm(alpha_rich ~  site_status + ( 1 | Field/Year), 
+                  data = alpha_dat, family = 'poisson', cores = 4, iter=2000, chains = 4)
+
+
+#save(d.alpha.rich, file = '~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.alpha.rich.Rdata')
+load("~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.alpha.rich.Rdata") 
+
+summary(d.alpha.rich)
+
+# alpha.rich_fixef <- fixef(alpha.rich)
+# 
+# alpha.rich.fixed.p<-posterior_samples(alpha.rich, "^b" , subset = floor(runif(n = 1000, 1, max = 2000)))
+# 
+# alpha.rich.fixed.p
+# 
+# alpha.rich.r <-  alpha.rich.fixed.p %>% select(`b_Intercept`,`b_site_statusoldfield`) %>%
+#   mutate(remnant.slope =`b_Intercept`,
+#          oldfield.slope=`b_site_statusoldfield`,
+#   ) %>%
+#   select(-c(`b_Intercept`,`b_site_statusoldfield`)) %>%
+#   mutate( `Site status`="never-plowed", eff = mean(remnant.slope),
+#           eff_lower = quantile(remnant.slope, probs=0.025),
+#           eff_upper = quantile(remnant.slope, probs=0.975)) %>% 
+#   select(-c(remnant.slope,oldfield.slope)) %>% distinct()   
+# 
+# 
+# alpha.rich.of <-  alpha.rich.fixed.p %>% select(`b_Intercept`,`b_site_statusoldfield`) %>%
+#   mutate(remnant.slope =`b_Intercept`,
+#          oldfield.slope=`b_site_statusoldfield`,
+#          oldfield.eff=(`b_Intercept`+`b_site_statusoldfield`)
+#   ) %>%
+#   select(-c(`b_Intercept`,`b_site_statusoldfield`)) %>%
+#   mutate( `Site status`="old field", eff = mean(oldfield.eff),
+#           eff_lower = quantile(oldfield.eff, probs=0.025),
+#           eff_upper = quantile(oldfield.eff, probs=0.975))  %>%
+#   select(-c(remnant.slope,oldfield.slope,oldfield.eff)) %>% distinct()   
+# 
+# alpha.rich.p <- bind_rows(alpha.rich.r,alpha.rich.of)
+# 
+# alpha.rich.p
+# 
+# 
+# alpha.rich.p$`Site status` <- factor(alpha.rich.p$`Site status` , levels=c("old field","never-plowed"))
+# 
+# alpha.rich.eff<-ggplot() + 
+#   geom_point(data = alpha.rich.p, aes(x = `Site status`, y = eff,color=`Site status`),size = 2) +
+#   geom_errorbar(data = alpha.rich.p, aes(x = `Site status`,ymin = eff_lower,
+#                                         ymax = eff_upper,color=`Site status`),
+#                 width = 0, size = 0.7) +
+#   #facet_wrap(~Model)+
+#   labs(x = '',
+#        # y= expression(paste('Effect of NPK on Species Loss'))
+#        y='') +
+#   geom_hline(yintercept = 0, lty = 2) +
+#   scale_y_continuous(trans = 'log2', breaks = c(2,5,7,11)) +
+#   scale_color_manual(values =  c("#15983DFF","#A1C720FF"))  + 
+#   theme_bw(base_size=14)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+#                                plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
+#                                axis.text.y = element_text(size=6),
+#                                axis.text.x = element_text(size=6),
+#                                title=element_text(size=8),
+#                                strip.background = element_blank(),legend.position="none") +
+#   labs(title = (expression(paste(italic(alpha), '-Diversity', sep = '')))
+#   ) + ylab("Species Richness") 
+# 
+# alpha.rich.eff
+
+
+
+alpha_c <- conditional_effects(d.alpha.rich, effects = 'site_status', re_formula = NA, method = 'fitted')  
+
+alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("old field","never-plowed"))
+
+
+d.alpha.rich.eff<-ggplot() + 
+  geom_point(data = alpha_dat,
+             aes(x = site_status, y = alpha_rich, colour = 	"#C0C0C0"), 
+             size = 0.25, alpha = 0.2, position = position_jitter(width = 0.02, height=0.05)) +
+  geom_point(data = alpha_c$site_status,
+             aes(x = site_status, y = estimate__, colour = site_status), size = 3) +
+  geom_errorbar(data = alpha_c$site_status,
+                aes(x = site_status, ymin = lower__, ymax = upper__, colour = site_status),
+                size = 1, width = 0) +
+  #facet_wrap(~Model)+
+  labs(x = '',
+       # y= expression(paste('Effect of NPK on Species Loss'))
+       y='') +
+  #geom_hline(yintercept = 0, lty = 2) +
+ # scale_y_continuous(trans = 'log2', breaks = c(4,8, 16, 24)) +
+  scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
+  theme_bw(base_size=14)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                               plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
+                               # axis.text.y = element_text(size=6),
+                               # axis.text.x = element_text(size=6),
+                               # title=element_text(size=8),
+                               strip.background = element_blank(),legend.position="none") +
+  labs(title = (expression(paste(italic(alpha), '-scale', sep = '')))
+  ) + ylab("log(Species Richness)") 
+
+
+d.alpha.rich.eff
+
+
+
+#----------------------------------------------------------------------------------------------
+
+# alpha enspie
+
+colnames(alpha_dat)
+
+d.alpha.spie <-  brm(alpha_ENSPIE ~  site_status + ( 1 | Field/Year), 
+                  data = alpha_dat,cores = 4, family = 'lognormal', iter=2000, chains = 4)
+
+#save(d.alpha.spie, file = '~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.alpha.spie.Rdata')
+load("~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.alpha.spie.Rdata") 
+
+summary(d.alpha.spie)
+
+
+color_scheme_set("darkgray")
+pp_check(d.alpha.spie)+ theme_classic() # predicted vs. observed values
+
+
+d.alpha.spie_c <- conditional_effects(d.alpha.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
+
+alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("old field","never-plowed"))
+
+d.alpha.spie.eff<-ggplot() + 
+  geom_point(data = alpha_dat,
+             aes(x = site_status, y = alpha_rich, colour = 	"#C0C0C0"), 
+             size = 0.25, alpha = 0.2, position = position_jitter(width = 0.02, height=0.05)) +
+  geom_point(data = d.alpha.spie_c$site_status,
+             aes(x = site_status, y = estimate__, colour = site_status), size = 3) +
+  geom_errorbar(data = d.alpha.spie_c$site_status,
+                aes(x = site_status, ymin = lower__, ymax = upper__, colour = site_status),
+                size = 1, width = 0) +
+  labs(x = '',
+       y='') +
+  #geom_hline(yintercept = 0, lty = 2) +
+  #scale_y_continuous(trans = 'log2', breaks = c(4,8, 16, 24)) +
+  scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
+  theme_bw(base_size=14)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                               plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
+                               # axis.text.y = element_text(size=6),
+                               # axis.text.x = element_text(size=6),
+                               # title=element_text(size=8),
+                               strip.background = element_blank(),legend.position="none") +
+  labs(title =  ''
+       #(expression(paste(italic(alpha), '-scale', sep = '')))
+  ) + #ylab(expression(ENS[PIE]))  
+  ylab( expression('log('~paste(ENS[PIE])~')') ) 
+
+
+
+d.alpha.spie.eff
+
+#----------------------------------------------------------------------------------------------
+# gamma rich 
+
+d.gamma.rich <-  brm(gamma_rich ~  site_status + (1 | Field/Year), 
+                  data = gamma_dat,family = 'poisson',cores = 4, iter=2000, chains = 4)
+
+#save(d.gamma.rich, file = '~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.gamma.rich.Rdata')
+load("~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.gamma.rich.Rdata") 
+
+
+summary(d.gamma.rich)
+
+
+gamma_c <- conditional_effects(d.gamma.rich, effects = 'site_status', re_formula = NA, method = 'fitted')  
+
+gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
+
+
+d.gamma.rich.eff<-ggplot() + 
+  geom_point(data = gamma_dat,
+             aes(x = site_status, y = gamma_rich, colour = 	"#C0C0C0"), 
+             size = 0.25, gamma = 0.2, position = position_jitter(width = 0.02, height=0.05)) +
+  geom_point(data = gamma_c$site_status,
+             aes(x = site_status, y = estimate__, colour = site_status), size = 3) +
+  geom_errorbar(data = gamma_c$site_status,
+                aes(x = site_status, ymin = lower__, ymax = upper__, colour = site_status),
+                size = 1, width = 0) +
+  #geom_hline(yintercept = 0, lty = 2) +
+  #scale_y_continuous(trans = 'log2', breaks = c(12, 16, 24,36,48,66)) +
+  scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
+  theme_bw(base_size=14)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                               plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
+                               # axis.text.y = element_text(size=6),
+                               # axis.text.x = element_text(size=6),
+                               # title=element_text(size=8),
+                               strip.background = element_blank(),legend.position="none") +
+  labs(title = (expression(paste(italic(gamma), '-scale', sep = '')))
+  ) + ylab("log(Species Richness)")  + xlab("")
+
+
+d.gamma.rich.eff
+
+#----------------------------------------------------------------------------------------------
+
+# gamma pie
+
+colnames(gamma_dat)
+
+d.gamma.spie <-  brm(gamma_ENSPIE ~  site_status + (1 | Field/Year), 
+                  data = gamma_dat,family = student(), cores = 4, iter=3000,warmup = 1000, chains = 4)
+
+save(d.gamma.spie, file = '~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.gamma.spie.Rdata')
+load("~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.gamma.spie.Rdata") 
+
+summary(d.gamma.spie)
+
+color_scheme_set("darkgray")
+pp_check(d.gamma.spie)+ theme_classic() # predicted vs. observed values
+
+
+
+d.gamma.spie_c <- conditional_effects(d.gamma.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
+
+gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
+
+d.gamma.spie.eff<-ggplot() + 
+  geom_point(data = gamma_dat,
+             aes(x = site_status, y = gamma_ENSPIE, colour = 	"#C0C0C0"), 
+             size = 0.25, gamma = 0.2, position = position_jitter(width = 0.02, height=0.05)) +
+  geom_point(data = d.gamma.spie_c$site_status,
+             aes(x = site_status, y = estimate__, colour = site_status), size = 3) +
+  geom_errorbar(data = d.gamma.spie_c$site_status,
+                aes(x = site_status, ymin = lower__, ymax = upper__, colour = site_status),
+                size = 1, width = 0) +
+  labs(x = '',
+      y='') +
+ # geom_hline(yintercept = 0, lty = 2) +
+  ylim(0,200)+
+  #scale_y_continuous( breaks = c(10, 20,50,100,150,200)) +
+  scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
+  theme_bw(base_size=14)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                               plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
+                               # axis.text.y = element_text(size=6),
+                               # axis.text.x = element_text(size=6),
+                               # title=element_text(size=8),
+                               strip.background = element_blank(),legend.position="none") +
+  labs(title =  ''
+       #(expression(paste(italic(gamma), '-scale', sep = '')))
+  ) + ylab(expression(ENS[PIE])) 
+
+
+
+d.gamma.spie.eff
+
+
+#----------------------------------------------------------------------------------------------
+# beta div
+
+colnames(gamma_dat)
+
+
+d.beta.div <-  brm(beta_rich ~  site_status + (1 | Field/Year), 
+                  data = gamma_dat,family=student(), cores = 4, iter=10000,warmup=1000, chains = 4)
+
+#save(d.beta.div, file = '~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.beta.div.Rdata')
+load("~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.beta.div.Rdata") 
+
+summary(d.beta.div)
+
+
+pp_check(d.beta.div)+ theme_classic() # predicted vs. observed values
+
+
+d.beta_c <- conditional_effects(d.beta.div, effects = 'site_status', re_formula = NA, method = 'fitted')  
+
+gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
+
+colnames(gamma_dat)
+
+d.beta.div.eff<-ggplot() + 
+  geom_point(data = gamma_dat,
+             aes(x = site_status, y = beta_rich, colour = 	"#C0C0C0"), 
+             size = 0.25, gamma = 0.2, position = position_jitter(width = 0.02, height=0.05)) +
+  geom_point(data = d.beta_c$site_status,
+             aes(x = site_status, y = estimate__, colour = site_status), size = 3) +
+  geom_errorbar(data = d.beta_c$site_status,
+                aes(x = site_status, ymin = lower__, ymax = upper__, colour = site_status),
+                size = 1, width = 0) +
+ # geom_hline(yintercept = 0, lty = 2) +
+ # scale_y_continuous(trans = 'log2', breaks = c(12, 16, 24,36,48,66)) +
+  scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
+  theme_bw(base_size=14)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                               plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.3, unit = "cm"),
+                               # axis.text.y = element_text(size=6),
+                               # axis.text.x = element_text(size=6),
+                               # title=element_text(size=8),
+                               strip.background = element_blank(),legend.position="none") +
+  labs(title = (expression(paste('', italic(beta), '-scale', sep = '')))) +
+  ylab((expression(paste(italic(beta), '-Diversity', sep = '')))) + xlab('')
+
+
+d.beta.div.eff
+
+
+#----------------------------------------------------------------------------------------------
+# beta spie
+
+colnames(gamma_dat)
+
+d.beta.spie <-  brm(beta_ENSPIE ~  site_status + (1 | Field/Year), 
+                 data = gamma_dat, family=student(),cores = 4, iter=4000,warmup=1000, chains = 4)
+
+save(d.beta.spie, file = '~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.beta.spie.Rdata')
+load("~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.beta.spie.Rdata") 
+
+summary(d.beta.spie)
+
+
+pp_check(d.beta.spie)+ theme_classic() # predicted vs. observed values
+
+
+d.beta.spie_c <- conditional_effects(d.beta.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
+
+gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
+
+colnames(gamma_dat)
+
+d.beta.spie.eff<-ggplot() + 
+  geom_point(data = gamma_dat,
+             aes(x = site_status, y = beta_ENSPIE, colour = 	"#C0C0C0"), 
+             size = 0.25, gamma = 0.2, position = position_jitter(width = 0.02, height=0.05)) +
+  geom_point(data = d.beta.spie_c$site_status,
+             aes(x = site_status, y = estimate__, colour = site_status), size = 3) +
+  geom_errorbar(data = d.beta.spie_c$site_status,
+                aes(x = site_status, ymin = lower__, ymax = upper__, colour = site_status),
+                size = 1, width = 0) +
+ # geom_hline(yintercept = 0, lty = 2) +
+  #scale_y_continuous(trans = 'log2', breaks = c(8,12, 16, 20)) +
+  scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
+  theme_bw(base_size=14)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                               plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
+                               # axis.text.y = element_text(size=6),
+                               # axis.text.x = element_text(size=6),
+                               # title=element_text(size=8),
+                               strip.background = element_blank(),legend.position="none") +
+  labs(title =  ''
+       #(expression(paste(italic(gamma), '-scale', sep = '')))+
+  )+
+  ylab((expression(paste(italic(beta), -ENS[PIE], sep = ' ')))) + xlab('')
+
+
+d.beta.spie.eff
+
+
+# Don't need a legend, really
+# 
+# g_legend<-function(a.gplot){
+#   tmp <- ggplot_gtable(ggplot_build(a.gplot))
+#   leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+#   legend <- tmp$grobs[[leg]]
+#   return(legend)}
+# 
+# ccr.legend<-g_legend(gamma.spie.eff)
+
+
+
+(d.alpha.rich.eff | d.alpha.spie.eff ) / (d.beta.div.eff | d.beta.spie.eff) / (d.gamma.rich.eff | d.gamma.spie.eff + theme(legend.position="none")) + plot_layout(heights = c(10,10,10)) 
+
