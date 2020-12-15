@@ -21,17 +21,26 @@ View(ccr_dat)
 
 #----------------------------------------------------------------------------------------------
 # alpha rich 
+alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-plowed","old field"))
 
-d.alpha.rich <-  brm(alpha_rich ~  site_status + ( 1 | Field/Year), 
-                  data = alpha_dat, family = 'poisson', cores = 4, iter=2000, chains = 4)
+d.alpha.rich <-  brm(alpha_rich ~  site_status +  ( 1 | Field) + (1 | Year), 
+                  data = alpha_dat, family = 'poisson', cores = 4, iter=3000,warmup=1000, chains = 4)
 
 
-#save(d.alpha.rich, file = '~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.alpha.rich.Rdata')
+save(d.alpha.rich, file = '~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.alpha.rich.Rdata')
 load("~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.alpha.rich.Rdata") 
 
 summary(d.alpha.rich)
 
-# alpha.rich_fixef <- fixef(alpha.rich)
+
+
+color_scheme_set("darkgray")
+pp_check(d.alpha.rich)+ theme_classic() # predicted vs. observed values
+
+
+
+ alpha.rich_fixef <- fixef(d.alpha.rich)
+ alpha.rich_fixef
 # 
 # alpha.rich.fixed.p<-posterior_samples(alpha.rich, "^b" , subset = floor(runif(n = 1000, 1, max = 2000)))
 # 
@@ -93,13 +102,13 @@ summary(d.alpha.rich)
 
 alpha_c <- conditional_effects(d.alpha.rich, effects = 'site_status', re_formula = NA, method = 'fitted')  
 
-alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("old field","never-plowed"))
+alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-plowed","old field"))
 
 
 d.alpha.rich.eff<-ggplot() + 
   geom_point(data = alpha_dat,
              aes(x = site_status, y = alpha_rich, colour = 	"#C0C0C0"), 
-             size = 0.25, alpha = 0.2, position = position_jitter(width = 0.02, height=0.05)) +
+             size = 0.25, alpha = 0.2, position = position_jitter(width = 0.05, height=0.45)) +
   geom_point(data = alpha_c$site_status,
              aes(x = site_status, y = estimate__, colour = site_status), size = 3) +
   geom_errorbar(data = alpha_c$site_status,
@@ -118,8 +127,9 @@ d.alpha.rich.eff<-ggplot() +
                                # axis.text.x = element_text(size=6),
                                # title=element_text(size=8),
                                strip.background = element_blank(),legend.position="none") +
-  labs(title = (expression(paste(italic(alpha), '-scale', sep = '')))
-  ) + ylab("log(Species Richness)") 
+  labs(title = (expression(paste(italic(alpha), '-scale', sep = ''))),
+       subtitle= 'a)'
+  ) + ylab("Species Richness") 
 
 
 d.alpha.rich.eff
@@ -132,10 +142,13 @@ d.alpha.rich.eff
 
 colnames(alpha_dat)
 
-d.alpha.spie <-  brm(alpha_ENSPIE ~  site_status + ( 1 | Field/Year), 
-                  data = alpha_dat,cores = 4, family = 'lognormal', iter=2000, chains = 4)
+alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-plowed","old field"))
 
-#save(d.alpha.spie, file = '~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.alpha.spie.Rdata')
+
+d.alpha.spie <-  brm(alpha_ENSPIE ~  site_status +  ( 1 | Field) + (1 | Year), 
+                  data = alpha_dat,cores = 4, family = 'lognormal', iter=3000, warmup=1000, chains = 4)
+
+save(d.alpha.spie, file = '~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.alpha.spie.Rdata')
 load("~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.alpha.spie.Rdata") 
 
 summary(d.alpha.spie)
@@ -152,7 +165,7 @@ alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("old field","n
 d.alpha.spie.eff<-ggplot() + 
   geom_point(data = alpha_dat,
              aes(x = site_status, y = alpha_rich, colour = 	"#C0C0C0"), 
-             size = 0.25, alpha = 0.2, position = position_jitter(width = 0.02, height=0.05)) +
+             size = 0.25, alpha = 0.2, position = position_jitter(width = 0.05, height=0.45)) +
   geom_point(data = d.alpha.spie_c$site_status,
              aes(x = site_status, y = estimate__, colour = site_status), size = 3) +
   geom_errorbar(data = d.alpha.spie_c$site_status,
@@ -169,10 +182,11 @@ d.alpha.spie.eff<-ggplot() +
                                # axis.text.x = element_text(size=6),
                                # title=element_text(size=8),
                                strip.background = element_blank(),legend.position="none") +
-  labs(title =  ''
+  labs(title =  '',
+       subtitle= 'b)'
        #(expression(paste(italic(alpha), '-scale', sep = '')))
   ) + #ylab(expression(ENS[PIE]))  
-  ylab( expression('log('~paste(ENS[PIE])~')') ) 
+  ylab( expression(paste(ENS[PIE])) ) 
 
 
 
@@ -180,15 +194,20 @@ d.alpha.spie.eff
 
 #----------------------------------------------------------------------------------------------
 # gamma rich 
+gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-plowed","old field"))
 
-d.gamma.rich <-  brm(gamma_rich ~  site_status + (1 | Field/Year), 
+d.gamma.rich <-  brm(gamma_rich ~  site_status +  (1 | Field) + (1 | Year), 
                   data = gamma_dat,family = 'poisson',cores = 4, iter=2000, chains = 4)
 
-#save(d.gamma.rich, file = '~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.gamma.rich.Rdata')
+save(d.gamma.rich, file = '~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.gamma.rich.Rdata')
 load("~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.gamma.rich.Rdata") 
 
 
 summary(d.gamma.rich)
+
+
+color_scheme_set("darkgray")
+pp_check(d.gamma.rich)+ theme_classic() # predicted vs. observed values
 
 
 gamma_c <- conditional_effects(d.gamma.rich, effects = 'site_status', re_formula = NA, method = 'fitted')  
@@ -214,8 +233,9 @@ d.gamma.rich.eff<-ggplot() +
                                # axis.text.x = element_text(size=6),
                                # title=element_text(size=8),
                                strip.background = element_blank(),legend.position="none") +
-  labs(title = (expression(paste(italic(gamma), '-scale', sep = '')))
-  ) + ylab("log(Species Richness)")  + xlab("")
+  labs(title = (expression(paste(italic(gamma), '-scale', sep = ''))),
+       subtitle= 'c)'
+  ) + ylab("Species Richness")  + xlab("")
 
 
 d.gamma.rich.eff
@@ -225,8 +245,12 @@ d.gamma.rich.eff
 # gamma pie
 
 colnames(gamma_dat)
+gamma_dat$Field<-as.factor(as.character(gamma_dat$Field))
+gamma_dat$Year<-as.factor(as.character(gamma_dat$Year))
+gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-plowed","old field"))
 
-d.gamma.spie <-  brm(gamma_ENSPIE ~  site_status + (1 | Field/Year), 
+
+d.gamma.spie <-  brm(gamma_ENSPIE ~  site_status + (1 | Field)  + (1 | Year), 
                   data = gamma_dat,family = student(), cores = 4, iter=3000,warmup = 1000, chains = 4)
 
 save(d.gamma.spie, file = '~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.gamma.spie.Rdata')
@@ -236,7 +260,6 @@ summary(d.gamma.spie)
 
 color_scheme_set("darkgray")
 pp_check(d.gamma.spie)+ theme_classic() # predicted vs. observed values
-
 
 
 d.gamma.spie_c <- conditional_effects(d.gamma.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
@@ -264,7 +287,8 @@ d.gamma.spie.eff<-ggplot() +
                                # axis.text.x = element_text(size=6),
                                # title=element_text(size=8),
                                strip.background = element_blank(),legend.position="none") +
-  labs(title =  ''
+  labs(title =  '',
+       subtitle= 'd)'
        #(expression(paste(italic(gamma), '-scale', sep = '')))
   ) + ylab(expression(ENS[PIE])) 
 
@@ -277,12 +301,13 @@ d.gamma.spie.eff
 # beta div
 
 colnames(gamma_dat)
+gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-plowed","old field"))
 
 
-d.beta.div <-  brm(beta_rich ~  site_status + (1 | Field/Year), 
+d.beta.div <-  brm(beta_rich ~  site_status +  (1 | Field) + (1 | Year), 
                   data = gamma_dat,family=student(), cores = 4, iter=10000,warmup=1000, chains = 4)
 
-#save(d.beta.div, file = '~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.beta.div.Rdata')
+save(d.beta.div, file = '~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.beta.div.Rdata')
 load("~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.beta.div.Rdata") 
 
 summary(d.beta.div)
@@ -315,7 +340,8 @@ d.beta.div.eff<-ggplot() +
                                # axis.text.x = element_text(size=6),
                                # title=element_text(size=8),
                                strip.background = element_blank(),legend.position="none") +
-  labs(title = (expression(paste('', italic(beta), '-scale', sep = '')))) +
+  labs(title = (expression(paste('', italic(beta), '-scale', sep = ''))),
+       subtitle= 'e)') +
   ylab((expression(paste(italic(beta), '-Diversity', sep = '')))) + xlab('')
 
 
@@ -326,8 +352,10 @@ d.beta.div.eff
 # beta spie
 
 colnames(gamma_dat)
+gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-plowed","old field"))
 
-d.beta.spie <-  brm(beta_ENSPIE ~  site_status + (1 | Field/Year), 
+
+d.beta.spie <-  brm(beta_ENSPIE ~  site_status + (1 | Field) + (1 | Year), 
                  data = gamma_dat, family=student(),cores = 4, iter=4000,warmup=1000, chains = 4)
 
 save(d.beta.spie, file = '~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.beta.spie.Rdata')
@@ -363,7 +391,8 @@ d.beta.spie.eff<-ggplot() +
                                # axis.text.x = element_text(size=6),
                                # title=element_text(size=8),
                                strip.background = element_blank(),legend.position="none") +
-  labs(title =  ''
+  labs(title =  '',
+       subtitle= 'f)'
        #(expression(paste(italic(gamma), '-scale', sep = '')))+
   )+
   ylab((expression(paste(italic(beta), -ENS[PIE], sep = ' ')))) + xlab('')
@@ -383,6 +412,7 @@ d.beta.spie.eff
 # ccr.legend<-g_legend(gamma.spie.eff)
 
 
+#10X10 portrait
 
-(d.alpha.rich.eff | d.alpha.spie.eff ) / (d.beta.div.eff | d.beta.spie.eff) / (d.gamma.rich.eff | d.gamma.spie.eff + theme(legend.position="none")) + plot_layout(heights = c(10,10,10)) 
+(d.alpha.rich.eff | d.alpha.spie.eff ) / (d.gamma.rich.eff | d.gamma.spie.eff) / (d.beta.div.eff | d.beta.spie.eff + theme(legend.position="none")) + plot_layout(heights = c(10,10,10)) 
 

@@ -21,7 +21,7 @@ alpha_dat_of$YSA <- as.numeric(alpha_dat_of$YSA)
 alpha_dat_of$log_alpha_rich_p <- log(alpha_dat_of$alpha_rich_p)
 alpha_dat_of$log_YSA <- log(alpha_dat_of$YSA)
 alpha_dat_of$c.YSA<-alpha_dat_of$YSA-mean(alpha_dat_of$YSA)
-alpha_dat_of$Year<-as.factor(as.chracter(alpha_dat_of$Year))
+alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
 
 
 p.alpha.rich <-  brm(log_alpha_rich_p ~  log_YSA + Year + ( log_YSA + Year | Field/Transect/Plot), 

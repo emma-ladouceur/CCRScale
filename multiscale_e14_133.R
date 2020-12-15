@@ -159,9 +159,9 @@ ccr.all.df$YSA<-factor(ccr.all.df$YSA,  levels=c("1" , "3" , "5" , "6" , "7" , "
 
 
 sa.all<-ggplot(ccr.all.df, aes(x=x, y=y,  group=site_id, color=YSA)) +
- # facet_wrap(~site_status)+
+  facet_wrap(~site_status)+
   #facet_wrap(~Field)+
-  facet_wrap(~YSA)+
+  #facet_wrap(~YSA)+
   #geom_point(aes(shape=Field), size=4, data=df.point.all) +
   geom_line(aes(), lwd=1, data=ccr.all.df) +
   # geom_ribbon(aes(ymin=y.lwr, ymax=y.upr,
@@ -169,13 +169,13 @@ sa.all<-ggplot(ccr.all.df, aes(x=x, y=y,  group=site_id, color=YSA)) +
   labs(x="Number of sampling units", y="Species richness",title="") +
    scale_color_viridis(discrete = T)  + 
   # scale_fill_manual(values =  c("#E7B800", "#972C8DFF" ,"#00AFBB", "#15983DFF","#E7B800", "#FC4E07"))  + 
-  theme(legend.position = "bottom",
+  theme_classic()+
+   theme(legend.position = "none",
         legend.title=element_blank(),
         text=element_text(size=18)) + 
-  labs(title='Species accumulation')+
+  labs(title='b) Accumulation for every site')
   #xlim(0,20)+ 
-  theme_classic()+
-  theme(legend.position="right")
+
 
 
 sa.all
@@ -203,7 +203,7 @@ sa.avg <- ggplot(ccr.all.df.avg, aes(x=x, y=y,   color=YSA)) +
   labs(x="Number of sampling units", y="Species richness",title="") +
   scale_color_viridis(discrete = T)  + 
   # scale_fill_manual(values =  c("#E7B800", "#972C8DFF" ,"#00AFBB", "#15983DFF","#E7B800", "#FC4E07"))  + 
-  labs(title='', color="Years Since Abandonment")+
+  labs(title='a) Average accumulation ', color="Years Since Abandonment")+
   #xlim(0,20)+ 
   theme_classic() +   theme(legend.direction = "horizontal",legend.position = "bottom") +
   guides(col = guide_legend(ncol = 15))
@@ -211,7 +211,7 @@ sa.avg <- ggplot(ccr.all.df.avg, aes(x=x, y=y,   color=YSA)) +
 
 sa.avg
 
-
+(sa.avg)/(sa.all)
 
 
 # MODEL THE SP ACCUM CURVES BY YSA ?
