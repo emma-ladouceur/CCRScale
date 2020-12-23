@@ -46,14 +46,15 @@ alpha_dat_of$Field<-as.factor(as.character(alpha_dat_of$Field))
 alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
 
 
+# This model takes some time to run so it is recommended to run on a  server or cluster 
+# possible to run on local machine but it takes some time
+# see alpha.rich.sh for cluster submit script and paired R script alpha.rich.R 
 
-p.alpha.rich.s <-  brm(log_alpha_rich_p ~  log_YSA + ( 1 + log_YSA  | Field/Transect/Plot) + (1 | Year), 
-                    data = alpha_dat_of, family=student(), cores = 4, iter=6000,warmup = 1000, control =
-                      list(adapt_delta = 0.99), chains = 4)
-
-
-
-save(p.alpha.rich, file = '~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.alpha.rich.Rdata')
+# p.alpha.rich.s <-  brm(log_alpha_rich_p ~  log_YSA + ( 1 + log_YSA  | Field/Transect/Plot) + (1 | Year), 
+#                        data = alpha_dat_of, family=student(), cores = 4, iter=10000,warmup = 1000, control =
+#                          list(adapt_delta = 0.99), chains = 4)
+# 
+# save(p.alpha.rich, file = '~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.alpha.rich.Rdata')
 load("~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.alpha.rich.Rdata") 
 
 summary(p.alpha.rich)

@@ -1,7 +1,7 @@
 
 # This is code to be submitted to the cluster equivelent to  percent_models.R
 # Since alpha model is the largest running on a server or cluster is recommended
-
+# this code is paired with the clister submit script 'alpha.rich.sh'
 
 library(tidyverse)
 library(brms)
@@ -32,7 +32,7 @@ p.alpha.rich.s <-  brm(log_alpha_rich_p ~  log_YSA + ( 1 + log_YSA  | Field/Tran
                      data = alpha_dat_of, family=student(), cores = 4, iter=10000,warmup = 1000, control =
                        list(adapt_delta = 0.99), chains = 4)
 
-save(p.alpha.rich,
+save(p.alpha.rich.s,
      file=Sys.getenv('OFILE'))
 
 
