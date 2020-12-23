@@ -1,10 +1,14 @@
 
+# This is code to be submitted to the cluster equivelent to  percent_models.R
+# Since alpha model is the largest running on a server or cluster is recommended
+
+
 library(tidyverse)
 library(brms)
 
 
 path <- '/gpfs1/data/idiv_chase/emmala/CCRScale'
-plot <- read.csv(paste0(path, '/alpha_div.csv'), header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na"))
+alpha_dat <- read.csv(paste0(path, '/alpha_div.csv'), header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na"))
 
 
 alpha_dat_np <- alpha_dat %>% filter(site_status == "never-plowed") %>% group_by(Field,YSA) %>%
