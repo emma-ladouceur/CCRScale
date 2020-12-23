@@ -45,7 +45,7 @@ alpha_dat_of$log_YSA <- log(alpha_dat_of$YSA)
 alpha_dat_of$c.YSA<-alpha_dat_of$YSA-mean(alpha_dat_of$YSA)
 alpha_dat_of$Field<-as.factor(as.character(alpha_dat_of$Field))
 alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
-
+alpha_dat_of$Field<-as.factor(as.character(alpha_dat_of$Field))
 
 # This model takes some time to run so it is recommended to run on a  server or cluster 
 # possible to run on local machine but it takes some time
@@ -57,18 +57,19 @@ alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
 # 
 # save(p.alpha.rich, file = '~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.alpha.rich.Rdata')
 load("~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.alpha.rich.Rdata") 
+load("~/Desktop/p.alpha.rich.Rdata") 
 
-summary(p.alpha.rich)
+summary(p.alpha.rich.s)
 
 
 color_scheme_set("darkgray")
-pp_check(p.alpha.rich)+ theme_classic() # predicted vs. observed values
+pp_check(p.alpha.rich.s)+ theme_classic() # predicted vs. observed values
 
 alpha_dat_of$Field<-as.factor(as.character(alpha_dat_of$Field))
 alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
 
 # models residuals
-ma<-residuals(p.alpha.rich)
+ma<-residuals(p.alpha.rich.s)
 ma<-as.data.frame(ma)
 ar.plot<-cbind(alpha_dat_of,ma$Estimate)
 
@@ -76,27 +77,27 @@ par(mfrow=c(1,2))
 with(ar.plot, plot(Field, ma$Estimate))
 with(ar.plot, plot(Year, ma$Estimate))
 
-
-
 alpha_dat_of$Field<-as.numeric(alpha_dat_of$Field)
 
-
 # for plotting fixed effects
-p.alpha.rich_fitted <- cbind(p.alpha.rich$data,
-                          fitted(p.alpha.rich, re_formula = NA)) %>% 
-  as_tibble() %>% 
-  # join with plot data for figures
-  inner_join(alpha_dat_of %>% distinct(Field, Year, log_YSA, YSA, log_alpha_rich_p, alpha_rich_p,alpha_rich),
-             by= c("Field", "Year", "log_YSA", "log_alpha_rich_p"))
+p.alpha.rich_fitted <- cbind(p.alpha.rich.s$data,
+                          fitted(p.alpha.rich.s, re_formula = NA)) %>% 
+  as_tibble()
+
+
+inner_join(alpha_dat_of %>% distinct(Field, Year, log_YSA, YSA, log_alpha_rich_p, alpha_rich_p, alpha_rich),
+             #by= c("Field", "Year", "log_YSA", "log_alpha_rich_p")
+             )
 
 
 View(p.alpha.rich_fitted)
 
+
 # fixed effect coefficients
-p.alpha.rich_fixef <- fixef(p.alpha.rich)
+p.alpha.rich_fixef <- fixef(p.alpha.rich.s)
 
 
-p.alpha.rich_coef <- coef(p.alpha.rich)
+p.alpha.rich_coef <- coef(p.alpha.rich.s)
 p.alpha.rich_coef 
 
 alpha_dat_of$Field<-as.character(alpha_dat_of$Field)
@@ -139,7 +140,7 @@ p.alpha.rich_fitted$YSA<- as.numeric(p.alpha.rich_fitted$YSA)
 p.alpha.rich_fitted$Field<-as.character(p.alpha.rich_fitted$Field)
 p.alpha.rich_coef2$Field<-as.character(p.alpha.rich_coef2$Field)
 
-View(alpha_dat_of)
+View(p.alpha.rich_fitted)
 View(p.alpha.rich_coef2)
 
 
@@ -174,7 +175,7 @@ p.alpha.rich.fig<-ggplot() +
   geom_line(data = p.alpha.rich_fitted,
             aes(x = YSA, y = exp(Estimate)),
             size = 1.5) +
-  scale_y_continuous( limits=c(10,210),breaks = c(25,50,100,150,200)) +
+ #  scale_y_continuous( limits=c(10,210),breaks = c(25,50,100,150,200)) +
   scale_color_manual(values = mycolors) +
     theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none") +
@@ -215,7 +216,7 @@ gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
 
 
 p.gamma.rich<-  brm(log_gamma_rich_p ~  log_YSA  +  ( 1 + log_YSA  | Field) + (1 | Year), 
-                     data = gamma_dat_of,cores = 4, iter=2000, chains = 4)
+                     data = gamma_dat_of,family=student(),cores = 4, iter=3000, warmup=1000, chains = 4)
 
 
 save(p.gamma.rich, file = '~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.gamma.rich.Rdata')
@@ -371,7 +372,7 @@ gamma_dat_of
 
 gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") 
 
-gamma_dat_of$beta_rich_p<-(gamma_dat_of$beta_rich/5.23 *100)
+gamma_dat_of$beta_rich_p<-(gamma_dat_of$beta_rich/4.79 *100)
 
 View(gamma_dat_of)
 
