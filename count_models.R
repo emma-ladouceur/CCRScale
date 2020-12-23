@@ -74,12 +74,12 @@ View(c.alpha.rich_fitted)
 c.alpha.rich_fixef <- fixef(c.alpha.rich)
 
 
-c.alpha.rich_coef <- coef(c.alpha.rich)
+c.alpha.rich_coef <- coef(c.alpha.rich) # coefficients
 c.alpha.rich_coef 
 
 alpha_dat_of$Field<-as.character(alpha_dat_of$Field)
 
-
+# pull out the coefficients we want
 c.alpha.rich_coef2 <-  bind_cols(c.alpha.rich_coef$Field[,,'Intercept'] %>% 
                                 as_tibble() %>% 
                                 mutate(Intercept = Estimate,
@@ -93,7 +93,7 @@ c.alpha.rich_coef2 <-  bind_cols(c.alpha.rich_coef$Field[,,'Intercept'] %>%
                                        Slope_lower = Q2.5,
                                        Slope_upper = Q97.5) %>% 
                                 select(-Estimate, -Est.Error, -Q2.5, -Q97.5)) %>% 
-  # join with min and max of the x-values
+  # join with min and max of the x-values for plotting slopes
   inner_join(alpha_dat_of %>% 
                group_by(Field) %>% 
                summarise(xmin = min(YSA),
@@ -118,8 +118,7 @@ c.alpha.rich_fitted$Field<-as.character(c.alpha.rich_fitted$Field)
 c.alpha.rich_coef2$Field<-as.character(c.alpha.rich_coef2$Field)
 
 
-View(c.alpha.rich_coef2)
-
+# plot 
 c.alpha.rich.fig<-ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
   geom_point(data = c.alpha.rich_fitted,

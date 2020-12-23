@@ -1,12 +1,13 @@
 
 
-
+# load packagaes
 library(tidyverse)
 library(ggplot2)
 library(brms)
 library(bayesplot)
 library(patchwork)
 
+# cleaned data and alpha, beta gamma div datasets
 ccr_dat <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 alpha_dat <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/alpha_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 gamma_dat <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/gamma_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
@@ -14,9 +15,8 @@ gamma_dat <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/gamma_div.csv",heade
 # SPIE = mobr
 # ENSPIE = vegan - inverse Simpson's
 
-View(alpha_dat)
-View(gamma_dat)
-View(ccr_dat)
+# Note: Models are computationallly intensive but in this case don't take too long to run
+# gamma and beta models are the fastest if you want to give it a try
 
 
 #----------------------------------------------------------------------------------------------
@@ -30,8 +30,8 @@ d.alpha.rich <-  brm(alpha_rich ~  site_status +  ( 1 | Field) + (1 | Year),
 save(d.alpha.rich, file = '~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.alpha.rich.Rdata')
 load("~/Dropbox/Projects/CCRScale/data/model_fits/discrete/d.alpha.rich.Rdata") 
 
-summary(d.alpha.rich)
 
+summary(d.alpha.rich) # model summary
 
 
 color_scheme_set("darkgray")
@@ -39,70 +39,13 @@ pp_check(d.alpha.rich)+ theme_classic() # predicted vs. observed values
 
 
 
- alpha.rich_fixef <- fixef(d.alpha.rich)
+ alpha.rich_fixef <- fixef(d.alpha.rich) # look @ fixed effects
  alpha.rich_fixef
-# 
-# alpha.rich.fixed.p<-posterior_samples(alpha.rich, "^b" , subset = floor(runif(n = 1000, 1, max = 2000)))
-# 
-# alpha.rich.fixed.p
-# 
-# alpha.rich.r <-  alpha.rich.fixed.p %>% select(`b_Intercept`,`b_site_statusoldfield`) %>%
-#   mutate(remnant.slope =`b_Intercept`,
-#          oldfield.slope=`b_site_statusoldfield`,
-#   ) %>%
-#   select(-c(`b_Intercept`,`b_site_statusoldfield`)) %>%
-#   mutate( `Site status`="never-plowed", eff = mean(remnant.slope),
-#           eff_lower = quantile(remnant.slope, probs=0.025),
-#           eff_upper = quantile(remnant.slope, probs=0.975)) %>% 
-#   select(-c(remnant.slope,oldfield.slope)) %>% distinct()   
-# 
-# 
-# alpha.rich.of <-  alpha.rich.fixed.p %>% select(`b_Intercept`,`b_site_statusoldfield`) %>%
-#   mutate(remnant.slope =`b_Intercept`,
-#          oldfield.slope=`b_site_statusoldfield`,
-#          oldfield.eff=(`b_Intercept`+`b_site_statusoldfield`)
-#   ) %>%
-#   select(-c(`b_Intercept`,`b_site_statusoldfield`)) %>%
-#   mutate( `Site status`="old field", eff = mean(oldfield.eff),
-#           eff_lower = quantile(oldfield.eff, probs=0.025),
-#           eff_upper = quantile(oldfield.eff, probs=0.975))  %>%
-#   select(-c(remnant.slope,oldfield.slope,oldfield.eff)) %>% distinct()   
-# 
-# alpha.rich.p <- bind_rows(alpha.rich.r,alpha.rich.of)
-# 
-# alpha.rich.p
-# 
-# 
-# alpha.rich.p$`Site status` <- factor(alpha.rich.p$`Site status` , levels=c("old field","never-plowed"))
-# 
-# alpha.rich.eff<-ggplot() + 
-#   geom_point(data = alpha.rich.p, aes(x = `Site status`, y = eff,color=`Site status`),size = 2) +
-#   geom_errorbar(data = alpha.rich.p, aes(x = `Site status`,ymin = eff_lower,
-#                                         ymax = eff_upper,color=`Site status`),
-#                 width = 0, size = 0.7) +
-#   #facet_wrap(~Model)+
-#   labs(x = '',
-#        # y= expression(paste('Effect of NPK on Species Loss'))
-#        y='') +
-#   geom_hline(yintercept = 0, lty = 2) +
-#   scale_y_continuous(trans = 'log2', breaks = c(2,5,7,11)) +
-#   scale_color_manual(values =  c("#15983DFF","#A1C720FF"))  + 
-#   theme_bw(base_size=14)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-#                                plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
-#                                axis.text.y = element_text(size=6),
-#                                axis.text.x = element_text(size=6),
-#                                title=element_text(size=8),
-#                                strip.background = element_blank(),legend.position="none") +
-#   labs(title = (expression(paste(italic(alpha), '-Diversity', sep = '')))
-#   ) + ylab("Species Richness") 
-# 
-# alpha.rich.eff
 
 
+alpha_c <- conditional_effects(d.alpha.rich, effects = 'site_status', re_formula = NA, method = 'fitted')  # conditional effects
 
-alpha_c <- conditional_effects(d.alpha.rich, effects = 'site_status', re_formula = NA, method = 'fitted')  
-
-alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-plowed","old field"))
+alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("old field","never-plowed"))
 
 
 d.alpha.rich.eff<-ggplot() + 
@@ -412,7 +355,7 @@ d.beta.spie.eff
 # ccr.legend<-g_legend(gamma.spie.eff)
 
 
-#10X10 portrait
+# save as 10X10 portrait
 
 (d.alpha.rich.eff | d.alpha.spie.eff ) / (d.gamma.rich.eff | d.gamma.spie.eff) / (d.beta.div.eff | d.beta.spie.eff + theme(legend.position="none")) + plot_layout(heights = c(10,10,10)) 
 

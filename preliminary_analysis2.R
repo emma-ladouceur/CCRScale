@@ -353,11 +353,6 @@ beta.PIE<-ggplot() +
 
 beta.PIE
 
-
-library(patchwork)
-
-
-
 g_legend<-function(a.gplot){
   tmp <- ggplot_gtable(ggplot_build(a.gplot))
   leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
@@ -367,6 +362,6 @@ g_legend<-function(a.gplot){
 ccr.legend<-g_legend(gamma_PIE)
 
 
-
+# Figure S1
 (alpha_plot | alpha_PIE ) / (beta.plot | beta.PIE) / (gamma_plot | gamma_PIE + theme(legend.position="none"))/(ccr.legend) + plot_layout(heights = c(10,10,10,1)) 
 

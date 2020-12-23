@@ -3,13 +3,9 @@
 
 
 # old field wrangle
-
 library(tidyverse)
 library(vegan)
 library(mobr)
-
-
-
 
 cover <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
@@ -19,10 +15,19 @@ head(cover)
 
 distinct(cover,LCD_species) %>% arrange(LCD_species)
 
-savanna_cover <- cover %>% filter(!Count_Species %in% c( "0") ) %>%  # remove not a species
-  filter(HasBeenPlowed %in% c("0"))  # remnant savannas only
+`905_cover` <- cover %>% filter(Field %in% c( "905") ) # keep site '905' (says zero burn_freq but not)
 
-savanna_cover$site_status<- "never-plowed"
+head(`905_cover`)
+
+savanna_cover <- cover %>% filter(!Count_Species %in% c( "0") ) %>%  # remove not a species
+  filter(HasBeenPlowed %in% c("0")) %>% # remnant savannas only
+  filter(!burn_freq %in% c( "0") ) %>% # remove sites that have never been burned
+  filter(!is.na(burn_freq)) %>% # remove sites that have 'NA" for burn frequency 
+  bind_rows(`905_cover`) # add 905_cover back
+
+savanna_cover$site_status<- "never-plowed" # informative categorical label
+
+distinct(savanna_cover,Field) %>% arrange(Field) # Matches Isbell et al. NEE 2019? Yep!
 
 View(savanna_cover)
 
@@ -31,7 +36,7 @@ savanna_cover$pCover_class<-as.factor(as.character(savanna_cover$pCover_class))
 levels(savanna_cover$pCover_class)
 
 
-savanna_clean <- savanna_cover %>% # convert cover classes into midpoint between classes
+savanna_clean <- savanna_cover %>% # convert cover classes into the midpoint between classes
         mutate( pCover = case_when(pCover_class == "[0,0.2)" ~ "0.1",
                                    pCover_class == "[0.2,0.26)" ~ "0.23",
                                    pCover_class == "[0.26,0.51)" ~ "0.38",
@@ -42,9 +47,9 @@ savanna_clean <- savanna_cover %>% # convert cover classes into midpoint between
 savanna_clean$pCover<- as.numeric(savanna_clean$pCover)
 
 
-
+# clean the old field data
 oldfield_cover <- cover %>% filter(!Count_Species %in% c( "0") ) %>%  # remove not a species
-  filter(!HasBeenPlowed %in% c("0")) %>% # only old field
+  filter(!HasBeenPlowed %in% c("0")) %>% # only old fields
   filter(!forest_status %in% c( "HF") ) %>%  # remove heavily forested
   filter(!Year > first_year_burned) %>%  # if Year is greater than first year burned, filter out
   droplevels()
@@ -52,10 +57,10 @@ oldfield_cover <- cover %>% filter(!Count_Species %in% c( "0") ) %>%  # remove n
 oldfield_cover$site_status<- "old field"
 
 clean_cover <- savanna_clean %>% bind_rows(oldfield_cover)  %>% # bind cleaned old field and remnants data
-  mutate(YSA = (Year-YearAb)) %>% # calculate year since abandoned
+  mutate(YSA = (Year-YearAb)) %>% # calculate year since agricultural abandonment
   mutate( YSA = ifelse(YearAb =="0" & site_status=="never-plowed","never-plowed",YSA))  %>% # if year ab = 0, then its never plowed
   filter(!LCD_species %in% c("Miscellaneous woody plants","Canopy Cover", "Miscellaneous species",
-                             "Mosses & lichens")) %>% droplevels()
+                             "Mosses & lichens")) %>% droplevels() #remove some other riff raff
 
 
 plot_count <- clean_cover %>% distinct(Exp,Year,YSA,Field,Transect,Plot) %>%
@@ -81,7 +86,7 @@ View(cover_wide)
 
 
 cover_select<- cover_wide %>% group_by(Exp,Year,YSA,Field) %>%
-  sample_n(20) %>% ungroup() # select only 20 random plots
+  sample_n(20) %>% ungroup() # select only 20 random plots to keep it even
 
 colnames(cover_select)
 
@@ -114,13 +119,9 @@ write.csv(cover_rel, "~/Dropbox/Projects/CCRScale/E14 _133/e014_e133_cleaned_198
 cover_long <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
 
-
-
 colnames(cover_long)
 
-
-
-
+# calculate alpha scale metrics
 alpha_ccr <- cover_long %>%
   group_by(Exp,site_status,YSA,Field,Year,Transect,Plot) %>%
   summarise(
@@ -132,12 +133,14 @@ alpha_ccr <- cover_long %>%
 
 View(alpha_ccr)
 
+# have a look at the means to see if they look alright
 alpha_mean <- alpha_ccr %>% group_by(Exp,site_status,YSA,Field,Year) %>%
-  summarise(mean_alpha_rich = mean(alpha_rich),
+  summarise(mean_alpha_rich = mean(alpha_rich), # summarise the mean
             mean_alpha_ENSPIE = mean(alpha_ENSPIE)) 
 
 View(alpha_mean)
 
+# calculate the gamma metrics
 gamma_ccr <- cover_long %>%
   group_by(Exp,site_status,YSA,Field,Year) %>%
   summarise(

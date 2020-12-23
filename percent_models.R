@@ -47,8 +47,9 @@ alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
 
 
 
-p.alpha.rich <-  brm(log_alpha_rich_p ~  log_YSA + ( 1 + log_YSA  | Field/Transect/Plot) + (1 | Year), 
-                    data = alpha_dat_of, family=student(), cores = 4, iter=5000,warmup = 1000, chains = 4)
+p.alpha.rich.s <-  brm(log_alpha_rich_p ~  log_YSA + ( 1 + log_YSA  | Field/Transect/Plot) + (1 | Year), 
+                    data = alpha_dat_of, family=student(), cores = 4, iter=6000,warmup = 1000, control =
+                      list(adapt_delta = 0.99), chains = 4)
 
 
 
@@ -66,7 +67,7 @@ alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
 
 # models residuals
 ma<-residuals(p.alpha.rich)
-ma<-as.data.frame(m1)
+ma<-as.data.frame(ma)
 ar.plot<-cbind(alpha_dat_of,ma$Estimate)
 
 par(mfrow=c(1,2))
@@ -354,6 +355,8 @@ p.gamma.rich.fig
 
 
 #----------------------------------------------------------------------------------------------
+
+
 gamma_dat_np <- gamma_dat %>% filter(site_status == "never-plowed") %>% 
   summarise(beta_rich_p_np = mean(beta_rich))
 
@@ -379,9 +382,10 @@ gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
 
 
 p.beta.div <-  brm(log_beta_rich_p ~  log_YSA + (1 + log_YSA | Field) + (1 | Year), 
-                  data = gamma_dat_of, family=student(),cores = 4, iter=2000, chains = 4)
+                  data = gamma_dat_of, family=student(), cores = 4, iter=6000, warmup=1000, control =
+                    list(adapt_delta = 0.99), chains = 4)
 
-#save(p.beta.div, file = '~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.beta.div.Rdata')
+save(p.beta.div, file = '~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.beta.div.Rdata')
 load("~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.beta.div.Rdata") 
 
 summary(p.beta.div)

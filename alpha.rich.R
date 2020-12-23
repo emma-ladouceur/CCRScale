@@ -24,9 +24,9 @@ alpha_dat_of$c.YSA<-alpha_dat_of$YSA-mean(alpha_dat_of$YSA)
 alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
 
 
-p.alpha.rich <-  brm(log_alpha_rich_p ~  log_YSA + Year + ( log_YSA + Year | Field/Transect/Plot), 
-                     data = alpha_dat_of, cores = 4, iter=2000, chains = 4)
-
+p.alpha.rich.s <-  brm(log_alpha_rich_p ~  log_YSA + ( 1 + log_YSA  | Field/Transect/Plot) + (1 | Year), 
+                     data = alpha_dat_of, family=student(), cores = 4, iter=10000,warmup = 1000, control =
+                       list(adapt_delta = 0.99), chains = 4)
 
 save(p.alpha.rich,
      file=Sys.getenv('OFILE'))
