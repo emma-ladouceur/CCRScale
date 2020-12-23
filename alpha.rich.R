@@ -1,7 +1,7 @@
 
-# This is code to be submitted to the cluster equivelent to  percent_models.R
+# This is code to be submitted to the cluster equivalent to  lines 53-55 in percent_models.R
 # Since alpha model is the largest running on a server or cluster is recommended
-# this code is paired with the clister submit script 'alpha.rich.sh'
+# this code is paired with the cluster submit script 'alpha.rich.sh'
 
 library(tidyverse)
 library(brms)
@@ -19,7 +19,7 @@ alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") %>%  group_by(F
 
 alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") 
 
-alpha_dat_of$alpha_rich_p<-(alpha_dat_of$alpha_rich/8.13 *100)
+alpha_dat_of$alpha_rich_p<-(alpha_dat_of$alpha_rich/9.21 * 100)
 
 alpha_dat_of$YSA <- as.numeric(alpha_dat_of$YSA)
 alpha_dat_of$log_alpha_rich_p <- log(alpha_dat_of$alpha_rich_p)

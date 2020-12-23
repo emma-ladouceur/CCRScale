@@ -65,7 +65,7 @@ clean_cover <- savanna_clean %>% bind_rows(oldfield_cover)  %>% # bind cleaned o
 
 plot_count <- clean_cover %>% distinct(Exp,Year,YSA,Field,Transect,Plot) %>%
   group_by(Exp,Year,YSA,Field) %>%
-  count() %>%
+  count() %>% # count number of samps
   arrange(n) %>% ungroup() %>% left_join(clean_cover) %>% 
   filter(n >= 20)  %>% # select sites with 20 samps or greater 
   select(Exp,Year,YSA,Field,Transect,Plot,n,site_status,LCD_species,pCover) %>%
@@ -108,11 +108,12 @@ cover_rel <- cover_long %>% group_by(Field, Year, Transect, Plot) %>%
   summarise(pCover_plot_sum=sum(pCover)) %>%
   left_join(cover_long) %>%
   mutate( Relative_pCover = (pCover/pCover_plot_sum) *100 ) %>%
-  arrange(Field,Year,Transect,Plot,Species)
+  arrange(Field,Year,Transect,Plot,Species) %>% ungroup()
 
 
 
-View(cover_rel)
+site_check <- distinct(cover_rel, Field)
+View(site_check)
 
 write.csv(cover_rel, "~/Dropbox/Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv")
 

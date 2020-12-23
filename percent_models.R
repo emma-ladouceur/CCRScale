@@ -21,20 +21,21 @@ View(alpha_dat)
 View(gamma_dat)
 View(ccr_dat)
 
-
-alpha_dat_np <- alpha_dat %>% filter(site_status == "never-plowed") %>% group_by(Field,YSA) %>%
+# check what the mean richness is for each field type
+# turn the grouping on or off to see details
+alpha_dat_np <- alpha_dat %>% filter(site_status == "never-plowed") %>% #group_by(Field,YSA) %>%
   summarise(alpha_rich_p_np = mean(alpha_rich))
 
-View(alpha_dat_np)
+alpha_dat_np
 
-alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") %>%  group_by(Field,YSA) %>%
+alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") %>%  #group_by(Field,YSA) %>%
   summarise(alpha_rich_p = mean(alpha_rich))
 
 alpha_dat_of
 
 alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") 
 
-alpha_dat_of$alpha_rich_p<-(alpha_dat_of$alpha_rich/8.13 *100)
+alpha_dat_of$alpha_rich_p <- (alpha_dat_of$alpha_rich/9.21 *100)
   
 View(alpha_dat_of)
 
@@ -197,7 +198,7 @@ gamma_dat_of
 
 gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") 
 
-gamma_dat_of$gamma_rich_p<-(gamma_dat_of$gamma_rich/40.82 *100)
+gamma_dat_of$gamma_rich_p<-(gamma_dat_of$gamma_rich/43.33 *100)
 
 
 View(gamma_dat_of)

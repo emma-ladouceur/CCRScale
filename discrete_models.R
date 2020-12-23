@@ -15,7 +15,7 @@ gamma_dat <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/gamma_div.csv",heade
 # SPIE = mobr
 # ENSPIE = vegan - inverse Simpson's
 
-# Note: Models are computationallly intensive but in this case don't take too long to run
+# Note: Models are computationally intensive but in this case don't take too long to run
 # gamma and beta models are the fastest if you want to give it a try
 
 
