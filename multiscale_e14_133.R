@@ -7,7 +7,7 @@ library(ggplot2)
 library(viridis)
 
 
-cover <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+cover <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
 colnames(cover)
 head(cover)
@@ -46,7 +46,7 @@ plot_count <- clean_cover %>% distinct(Exp,Year,YSA,Field,Transect,Plot) %>%
 
 View(plot_count)
 
-cover_wide<- plot_count %>% select(-Species,-pCover_class,-pCover,-Count_Species,-X) %>%
+cover_wide<- plot_count %>% select(-Species,-pCover_class,-pCover,-Count_Species) %>%
   distinct() %>%
   group_by(Exp,Year,YSA,Field,Transect,Plot,site_status) %>%
   spread(LCD_species,pres) %>% # spread to wide format
@@ -104,7 +104,7 @@ levels(ccr_prep$YSA)
 
 View(ccr_comm_prep)
 
-write.csv(ccr_comm_prep, "~/Dropbox/Projects/CCRScale/E14 _133/star_prep.csv")
+write.csv(ccr_comm_prep, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/star_prep.csv")
 
 
 summary(ccr_comm_prep)

@@ -16,9 +16,10 @@ alpha_dat_of <- alpha_dat %>% filter(site_status == "old field")
 alpha_dat_of$alpha_rich_p <- (alpha_dat_of$alpha_rich/9.21 *100)
 
 
+
 alpha_dat_of$YSA <- as.numeric(alpha_dat_of$YSA)
 alpha_dat_of$log_alpha_rich_p <- log(alpha_dat_of$alpha_rich_p)
-alpha_dat_of$log_YSA <- log(alpha_dat_of$YSA)
+alpha_dat_of$log_YSA <- log10(alpha_dat_of$YSA)
 alpha_dat_of$c.YSA<-alpha_dat_of$YSA-mean(alpha_dat_of$YSA)
 alpha_dat_of$Field<-as.factor(as.character(alpha_dat_of$Field))
 alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))

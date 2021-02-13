@@ -9,10 +9,11 @@ library(RColorBrewer)
 library(tidybayes)
 library(ggdist)
 library(modelr)
+library(viridis)
 
-ccr_dat <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
-alpha_dat <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/alpha_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
-gamma_dat <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/gamma_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+ccr_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+alpha_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/alpha_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
 # SPIE = mobr
 # ENSPIE = vegan - inverse Simpson's
@@ -23,7 +24,7 @@ View(ccr_dat)
 
 # check what the mean richness is for each field type
 # turn the grouping on or off to see details
-alpha_dat_np <- alpha_dat %>% filter(site_status == "never-plowed") %>% #group_by(Field,YSA) %>%
+alpha_dat_np <- alpha_dat %>% filter(site_status == "never-plowed") %>% group_by(Year) %>%
   summarise(alpha_rich_p_np = mean(alpha_rich))
 
 alpha_dat_np
@@ -39,6 +40,8 @@ alpha_dat_of$alpha_rich_p <- (alpha_dat_of$alpha_rich/9.21 *100)
   
 View(alpha_dat_of)
 
+is.numeric(alpha_dat_of$YSA)
+
 alpha_dat_of$YSA <- as.numeric(alpha_dat_of$YSA)
 alpha_dat_of$log_alpha_rich_p <- log(alpha_dat_of$alpha_rich_p)
 alpha_dat_of$log_YSA <- log(alpha_dat_of$YSA)
@@ -51,13 +54,12 @@ alpha_dat_of$Field<-as.factor(as.character(alpha_dat_of$Field))
 # possible to run on local machine but it takes some time
 # see alpha.rich.sh for cluster submit script and paired R script alpha.rich.R 
 
-# p.alpha.rich.s <-  brm(log_alpha_rich_p ~  log_YSA + ( 1 + log_YSA  | Field/Transect/Plot) + (1 | Year), 
+# p.alpha.rich.s <-  brm(log_alpha_rich_p ~  log_YSA + ( 1 + log_YSA  | Field/Transect/Plot) + (1 | Year),
 #                        data = alpha_dat_of, family=student(), cores = 4, iter=10000,warmup = 1000, control =
 #                          list(adapt_delta = 0.99), chains = 4)
-# 
-# save(p.alpha.rich, file = '~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.alpha.rich.Rdata')
-load("~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.alpha.rich.Rdata") 
-load("~/Desktop/p.alpha.rich.Rdata") 
+
+#save(p.alpha.rich.s, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.alpha.rich.Rdata')
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.alpha.rich.Rdata") 
 
 summary(p.alpha.rich.s)
 
@@ -77,15 +79,12 @@ par(mfrow=c(1,2))
 with(ar.plot, plot(Field, ma$Estimate))
 with(ar.plot, plot(Year, ma$Estimate))
 
-alpha_dat_of$Field<-as.numeric(alpha_dat_of$Field)
+alpha_dat_of$Field<-as.character(as.factor(alpha_dat_of$Field))
 
 # for plotting fixed effects
 p.alpha.rich_fitted <- cbind(p.alpha.rich.s$data,
                           fitted(p.alpha.rich.s, re_formula = NA)) %>% 
-  as_tibble()
-
-
-inner_join(alpha_dat_of %>% distinct(Field, Year, log_YSA, YSA, log_alpha_rich_p, alpha_rich_p, alpha_rich),
+  as_tibble() %>% inner_join(alpha_dat_of %>% distinct(Field, Year, log_YSA, YSA, log_alpha_rich_p, alpha_rich_p, alpha_rich),
              #by= c("Field", "Year", "log_YSA", "log_alpha_rich_p")
              )
 
@@ -143,6 +142,12 @@ p.alpha.rich_coef2$Field<-as.character(p.alpha.rich_coef2$Field)
 View(p.alpha.rich_fitted)
 View(p.alpha.rich_coef2)
 
+setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
+# save data objects to avoid time of compiling every time
+#save(p.alpha.rich_fitted,p.alpha.rich_fixef,p.alpha.rich_coef,p.alpha.rich_coef2, file = 'a.rich.mod_dat.Rdata')
+load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/a.rich.mod_dat.Rdata')
+
+
 
 # Define the number of colors you want
 nb.cols <- 17
@@ -154,19 +159,19 @@ p.alpha.rich.fig<-ggplot() +
   geom_point(data = p.alpha.rich_fitted,
              aes(x = YSA, y = alpha_rich_p,
                  colour = Field),
-             size = 1.2, shape=1, position = position_jitter(width = 0.95, height=0.95)) +
-  # geom_line(data = alpha_dat_sum,aes(x = YSA, y= alpha_rich_p,
-  #                    group = Field,
-  #                    colour = Field),
-  #                    size = 0.55)+
-  geom_segment(data = p.alpha.rich_coef2,
-               aes(x = xmin,
-                   xend = xmax,
-                   y = exp(Intercept + Slope * lxmin),
-                   yend = exp(Intercept + Slope * lxmax ),
-                   group = Field,
-                   colour = Field),
-            size = 1.2) +
+             size = 1.2, shape=1, position = position_jitter(width = 1, height=1)) +
+  geom_line(data = alpha_dat_sum,aes(x = YSA, y= alpha_rich_p,
+                     group = Field,
+                     colour = Field),
+                     size = 0.55)+
+  # geom_segment(data = p.alpha.rich_coef2,
+  #              aes(x = xmin,
+  #                  xend = xmax,
+  #                  y = exp(Intercept + Slope * lxmin),
+  #                  yend = exp(Intercept + Slope * lxmax ),
+  #                  group = Field,
+  #                  colour = Field),
+  #           size = 1.2) +
   # uncertainy in fixed effect
   geom_ribbon(data = p.alpha.rich_fitted,
               aes(x = YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
@@ -175,12 +180,13 @@ p.alpha.rich.fig<-ggplot() +
   geom_line(data = p.alpha.rich_fitted,
             aes(x = YSA, y = exp(Estimate)),
             size = 1.5) +
- #  scale_y_continuous( limits=c(10,210),breaks = c(25,50,100,150,200)) +
-  scale_color_manual(values = mycolors) +
+   scale_y_continuous( limits=c(10,210),breaks = c(25,50,100,150,200)) +
+  #scale_color_manual(values = mycolors) +
+  scale_color_viridis(discrete = T, option="D")  + 
     theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none") +
   labs(title = (expression(paste(italic(alpha), '-scale', sep = ''))) ) +
- ylab("Species Richness (%)")  + xlab("")
+ ylab("Species Richness (%) Recovery")  + xlab("")
 
 p.alpha.rich.fig
 
@@ -202,7 +208,7 @@ gamma_dat_of <- gamma_dat %>% filter(site_status == "old field")
 gamma_dat_of$gamma_rich_p<-(gamma_dat_of$gamma_rich/43.33 *100)
 
 
-View(gamma_dat_of)
+head(gamma_dat_of)
 
 gamma_dat_of$YSA <- as.numeric(gamma_dat_of$YSA)
 gamma_dat_of$log_gamma_rich_p <- log(gamma_dat_of$gamma_rich_p)
@@ -215,12 +221,12 @@ gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
 # ar(time = Year, gr = Field, p = 1),
 
 
-p.gamma.rich<-  brm(log_gamma_rich_p ~  log_YSA  +  ( 1 + log_YSA  | Field) + (1 | Year), 
-                     data = gamma_dat_of,family=student(),cores = 4, iter=3000, warmup=1000, chains = 4)
-
-
-save(p.gamma.rich, file = '~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.gamma.rich.Rdata')
-load("~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.gamma.rich.Rdata") 
+# p.gamma.rich<-  brm(log_gamma_rich_p ~  log_YSA  +  ( 1 + log_YSA  | Field) + (1 | Year), 
+#                      data = gamma_dat_of,family=student(), cores = 4, iter=3000, warmup=1000, chains = 4)
+# 
+# 
+# save(p.gamma.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.gamma.rich.Rdata')
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.gamma.rich.Rdata") 
 
 summary(p.gamma.rich)
 
@@ -304,6 +310,11 @@ gamma_dat_sum   <- gamma_dat_of %>%
 
 View(gamma_dat_sum)
 
+
+#setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
+#save(p.gamma.rich_fitted,p.gamma.rich_fixef,p.gamma.rich_coef,p.gamma.rich_coef2, file = 'g.rich.mod_dat.Rdata')
+load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/g.rich.mod_dat.Rdata')
+
 p.gamma.rich_fitted$YSA<- as.numeric(p.gamma.rich_fitted$YSA)
 p.gamma.rich_fitted$Field<-as.character(p.gamma.rich_fitted$Field)
 p.gamma.rich_coef2$Field<-as.character(p.gamma.rich_coef2$Field)
@@ -345,11 +356,13 @@ p.gamma.rich.fig<-ggplot() +
   #           size = 1.5) +
   scale_y_continuous( limits=c(10,105),breaks = c(25,50,100)) +
   #scale_x_continuous(trans = 'log2') +
-  scale_color_manual(values = mycolors) +
+  #scale_color_manual(values = mycolors) +
+  scale_color_viridis(discrete = T, option="D")  + 
     theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none")  +
   labs(title = (expression(paste(italic(gamma), '-scale', sep = '')))
-                     ) + ylab("Species Richness (%)")  + xlab("")
+                     ) + ylab("Species Richness (%) Recovery")  + xlab("")
+  #xlab("Years since restoration") 
 
 
 p.gamma.rich.fig
@@ -357,7 +370,7 @@ p.gamma.rich.fig
 
 
 
-#----------------------------------------------------------------------------------------------
+ #----------------------------------------------------------------------------------------------
 
 
 gamma_dat_np <- gamma_dat %>% filter(site_status == "never-plowed") %>% 
@@ -384,12 +397,12 @@ gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
 gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
 
 
-p.beta.div <-  brm(log_beta_rich_p ~  log_YSA + (1 + log_YSA | Field) + (1 | Year), 
-                  data = gamma_dat_of, family=student(), cores = 4, iter=6000, warmup=1000, control =
-                    list(adapt_delta = 0.99), chains = 4)
+# p.beta.div <-  brm(log_beta_rich_p ~  log_YSA + (1 + log_YSA | Field) + (1 | Year), 
+#                   data = gamma_dat_of, family=student(), cores = 4, iter=6000, warmup=1000, control =
+#                     list(adapt_delta = 0.99), chains = 4)
 
-save(p.beta.div, file = '~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.beta.div.Rdata')
-load("~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.beta.div.Rdata") 
+#save(p.beta.div, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.beta.div.Rdata')
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.beta.div.Rdata") 
 
 summary(p.beta.div)
 
@@ -475,28 +488,79 @@ p.beta.div_fitted$YSA<- as.numeric(p.beta.div_fitted$YSA)
 p.beta.div_fitted$Field<-as.character(p.beta.div_fitted$Field)
 p.beta.div_coef2$Field<-as.character(p.beta.div_coef2$Field)
 
+setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
+# avoid running above code everytime
+#save(p.beta.div_fitted,p.beta.div_fixef,p.beta.div_coef,p.beta.div_coef2, file = 'b.div.mod_dat.Rdata')
+load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/b.div.mod_dat.Rdata')
+
+
 
 View(p.beta.div_coef2)
 
 View(p.beta.div_fitted)
 
+p.beta.div_fitted$Field<-as.factor(p.beta.div_fitted$Field)
+levels(p.beta.div_fitted$Field)
+
+p.beta.div_fitted2<-p.beta.div_fitted %>% mutate( Site = fct_recode( Field,  "A" = "10",
+                                                      "B" = "21",
+                                                      "C" = "27",
+                                                      "D" = "28",
+                                                      "E" = "32",
+                                                      "F" = "35",
+                                                      "G" = "39",
+                                                      "H" = "4",
+                                                      "I" = "40",
+                                                      "J" = "41",
+                                                      "K" = "44",
+                                                      "L" = "45",
+                                                      "M" = "47",
+                                                      "N" = "47",
+                                                      "O" = "5",
+                                                      "P" = "53",
+                                                      "Q" = "70",
+                                                      "R" = "72"))
+
+p.beta.div_coef3
+p.beta.div_coef2$Field<-as.factor(p.beta.div_coef2$Field)
+levels(p.beta.div_coef2$Field)
+
+p.beta.div_coef3<-p.beta.div_coef2 %>% mutate( `Old field` = fct_recode( Field,  "A" = "10",
+                                                                          "B" = "21",
+                                                                          "C" = "27",
+                                                                          "D" = "28",
+                                                                          "E" = "32",
+                                                                          "F" = "35",
+                                                                          "G" = "39",
+                                                                          "H" = "4",
+                                                                          "I" = "40",
+                                                                          "J" = "41",
+                                                                          "K" = "44",
+                                                                          "L" = "45",
+                                                                          "M" = "47",
+                                                                          "N" = "47",
+                                                                          "O" = "5",
+                                                                          "P" = "53",
+                                                                          "Q" = "70",
+                                                                          "R" = "72"))
+
 p.beta.div.fig<-ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
-  geom_point(data = p.beta.div_fitted,
+  geom_point(data = p.beta.div_fitted2,
              aes(x = YSA, y = beta_rich_p,
-                 colour = Field),
+                 colour = Site),
              size = 1.2, shape=1) +
   # geom_line(data = p.beta.div_fitted,aes(x = YSA, y= beta_rich_p,
   #                                       group = Field,
   #                                       colour = Field),
   #            size = 0.55)+
-  geom_segment(data = p.beta.div_coef2,
+  geom_segment(data = p.beta.div_coef3,
                aes(x = xmin,
                    xend = xmax,
                    y = exp(Intercept + Slope * lxmin),
                    yend = exp(Intercept + Slope * lxmax),
-                   group = Field,
-                   colour = Field),
+                   group = `Old field`,
+                   colour = `Old field`),
                size = 1.2) +
   # uncertainy in fixed effect
   geom_ribbon(data = p.beta.div_fitted,
@@ -507,11 +571,13 @@ p.beta.div.fig<-ggplot() +
             aes(x = YSA, y = exp(Estimate)),
             size = 1.5) +
   scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
-  scale_color_manual(values = mycolors) +
+  #scale_color_manual(values = mycolors) +
+  scale_color_viridis(discrete = T, option="D")  + 
     theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                     legend.direction = "horizontal", legend.position="bottom")  +
-  labs(title = (expression(paste('', italic(beta), '-scale', sep = '')))) +
-  ylab((expression(''~paste(italic(beta), '-Diversity (%)', sep = '')))) +  xlab("Years since agricultural abandonment") + guides(col = guide_legend(ncol = 13))
+  labs(title = (expression(paste('', italic(beta), '-scale', sep = ''))), color = "Old field") +
+  ylab((expression(''~paste(italic(beta), '-Diversity (%) Recovery', sep = '')))) +  xlab("Years since agricultural abandonment") +
+  guides(col = guide_legend(ncol = 9))
 
 
 
@@ -529,7 +595,7 @@ ysa.legend<-g_legend(p.beta.div.fig)
 (p.alpha.rich.fig | p.gamma.rich.fig   | p.beta.div.fig + theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,1)) 
 
 
-#7.5 X 12
+# 7.5 X 12
 
 
 
@@ -550,7 +616,7 @@ alpha_dat_of
 
 alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") 
 
-alpha_dat_of$alpha_ENSPIE_p<-(alpha_dat_of$alpha_ENSPIE/6.33 *100)
+alpha_dat_of$alpha_ENSPIE_p<-(alpha_dat_of$alpha_ENSPIE/7.10 *100)
 
 View(alpha_dat_of)
 
@@ -563,13 +629,13 @@ alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
 
 
 
-p.alpha.spie <-  brm(log_alpha_ENSPIE_p ~  log_YSA + ( 1 + log_YSA  | Field/Transect/Plot) + (1 | Year), 
-                     data = alpha_dat_of, family=student(), cores = 4, iter=7000,warmup = 1000, chains = 4)
-
-
-
-save(p.alpha.spie, file = '~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.alpha.spie.Rdata')
-load("~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.alpha.spie.Rdata") 
+# p.alpha.spie <-  brm(log_alpha_ENSPIE_p ~  log_YSA + ( 1 + log_YSA  | Field/Transect/Plot) + (1 | Year), 
+#                      data = alpha_dat_of, family=student(), cores = 4, iter=7000,warmup = 1000, chains = 4)
+# 
+# 
+# 
+#save(p.alpha.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.alpha.spie.Rdata')
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.alpha.spie.Rdata") 
 
 summary(p.alpha.spie)
 
@@ -637,12 +703,6 @@ p.alpha.spie_coef2 <-  bind_cols(p.alpha.spie_coef$Field[,,'Intercept'] %>%
              by = 'Field')
 
 
-alpha_dat_sum   <- alpha_dat_of %>% 
-  group_by(Field,YSA) %>% 
-  summarise(alpha_rich_p = mean(alpha_rich_p),
-            alpha_rich = mean(alpha_rich),
-            xmin = min(YSA),
-            xmax = max(YSA))
 
 View(alpha_dat_sum)
 
@@ -652,6 +712,12 @@ p.alpha.spie_coef2$Field<-as.character(p.alpha.spie_coef2$Field)
 
 View(alpha_dat_of)
 View(p.alpha.spie_coef2)
+
+setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
+# avoid running above code everytime
+save(p.alpha.spie_fitted,p.alpha.spie_fixef,p.alpha.spie_coef,p.alpha.spie_coef2, file = 'alpha.spie.mod_dat.Rdata')
+load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/alpha.spie.mod_dat.Rdata')
+
 
 
 # Define the number of colors you want
@@ -686,11 +752,12 @@ p.alpha.spie.fig<-ggplot() +
             aes(x = YSA, y = exp(Estimate)),
             size = 1.5) +
   scale_y_continuous( limits=c(10,210),breaks = c(25,50,100,150,200)) +
-  scale_color_manual(values = mycolors) +
+ # scale_color_manual(values = mycolors) +
+  scale_color_viridis(discrete = T, option="D")  + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none") +
-  #labs(title = (expression(paste(italic(alpha), '-scale', sep = ''))) ) +
-  ylab( expression(paste(ENS[PIE])) )  + xlab("")
+  labs(title = (expression(paste(italic(alpha), '-scale', sep = ''))) ) +
+  xlab("") +  ylab((expression(paste(italic(alpha), -ENS[PIE], " (%) Recovery", sep = ' '))))
 
 p.alpha.spie.fig
 
@@ -714,7 +781,7 @@ gamma_dat_of
 
 gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") 
 
-gamma_dat_of$gamma_ENSPIE_p<-(gamma_dat_of$gamma_ENSPIE/121.8052 *100)
+gamma_dat_of$gamma_ENSPIE_p<-(gamma_dat_of$gamma_ENSPIE/125.5786 *100)
 
 
 View(gamma_dat_of)
@@ -730,15 +797,16 @@ gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
 # ar(time = Year, gr = Field, p = 1),
 
 
-p.gamma.spie<-  brm(log_gamma_ENSPIE_p ~  log_YSA  +  ( 1 + log_YSA  | Field) + (1 | Year), 
-                    data = gamma_dat_of,family=student(), cores = 4, iter=10000, warmup=1000, chains = 4)
+# p.gamma.spie<-  brm(log_gamma_ENSPIE_p ~  log_YSA  +  ( 1 + log_YSA  | Field) + (1 | Year), 
+#                     data = gamma_dat_of, control = list(adapt_delta = 0.99), cores = 4, iter=12000, warmup=1000, chains = 4)
 
+# student() does not converge
+# went with gaussian
 
-save(p.gamma.spie, file = '~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.gamma.spie.Rdata')
-load("~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.gamma.spie.Rdata") 
+#save(p.gamma.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.gamma.spie.Rdata')
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.gamma.spie.Rdata") 
 
 summary(p.gamma.spie)
-
 
 
 color_scheme_set("darkgray")
@@ -809,19 +877,16 @@ p.gamma.spie_coef2 <-  bind_cols(p.gamma.spie_coef$Field[,,'Intercept'] %>%
 
 
 
-
-gamma_dat_sum   <- gamma_dat_of %>% 
-  group_by(Field,YSA) %>% 
-  summarise(gamma_ENSPIE_p = mean(gamma_ENSPIE_p),
-            gamma_ENSPIE = mean(gamma_ENSPIE),
-            xmin = min(YSA),
-            xmax = max(YSA))
-
 View(gamma_dat_sum)
 
 p.gamma.spie_fitted$YSA<- as.numeric(p.gamma.spie_fitted$YSA)
 p.gamma.spie_fitted$Field<-as.character(p.gamma.spie_fitted$Field)
 p.gamma.spie_coef2$Field<-as.character(p.gamma.spie_coef2$Field)
+
+setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
+# avoid running above code everytime
+save(p.gamma.spie_fitted,p.gamma.spie_fixef,p.gamma.spie_coef,p.gamma.spie_coef2, file = 'gamma.spie.mod_dat.Rdata')
+load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/gamma.spie.mod_dat.Rdata')
 
 
 
@@ -860,11 +925,14 @@ p.gamma.spie.fig<-ggplot() +
   #           size = 1.5) +
   scale_y_continuous( limits=c(10,105),breaks = c(25,50,100)) +
   #scale_x_continuous(trans = 'log2') +
-  scale_color_manual(values = mycolors) +
+ # scale_color_manual(values = mycolors) +
+  scale_color_viridis(discrete = T, option="D")  + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none")  +
-  #labs(title = (expression(paste(italic(gamma), '-scale', sep = '')))) +
-  ylab(expression(ENS[PIE]))  + xlab("")
+  labs(title = (expression(paste(italic(gamma), '-scale', sep = '')))
+  ) +
+  xlab("") +
+  ylab((expression(paste(italic(gamma), -ENS[PIE], " (%) Recovery", sep = ' '))))  
 
 
 p.gamma.spie.fig
@@ -885,7 +953,7 @@ gamma_dat_of
 
 gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") 
 
-gamma_dat_of$beta_ENSPIE_p<-(gamma_dat_of$beta_ENSPIE/19.24 *100)
+gamma_dat_of$beta_ENSPIE_p<-(gamma_dat_of$beta_ENSPIE/17.63 *100)
 
 View(gamma_dat_of)
 
@@ -897,11 +965,11 @@ gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
 gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
 
 
-p.beta.spie <-  brm(log_beta_ENSPIE_p ~  log_YSA + (1 + log_YSA | Field) + (1 | Year), 
-                   data = gamma_dat_of, family=student(),cores = 4, iter=6000,warmup=1000, chains = 4)
-
-save(p.beta.spie, file = '~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.beta.spie.Rdata')
-load("~/Dropbox/Projects/CCRScale/data/model_fits/percent/p.beta.spie.Rdata") 
+# p.beta.spie <-  brm(log_beta_ENSPIE_p ~  log_YSA + (1 + log_YSA | Field) + (1 | Year), 
+#                    data = gamma_dat_of, family=student(),cores = 4, iter=10000,warmup=1000, chains = 4)
+# 
+# save(p.beta.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.beta.spie.Rdata')
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.beta.spie.Rdata") 
 
 summary(p.beta.spie)
 
@@ -987,6 +1055,12 @@ p.beta.spie_fitted$YSA<- as.numeric(p.beta.spie_fitted$YSA)
 p.beta.spie_fitted$Field<-as.character(p.beta.spie_fitted$Field)
 p.beta.spie_coef2$Field<-as.character(p.beta.spie_coef2$Field)
 
+setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
+# avoid running above code everytime
+save(p.beta.spie_fitted,p.beta.spie_fixef,p.beta.spie_coef,p.beta.spie_coef2, file = 'beta.spie.mod_dat.Rdata')
+load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/beta.spie.mod_dat.Rdata')
+
+
 
 View(p.beta.spie_coef2)
 
@@ -1019,11 +1093,12 @@ p.beta.spie.fig<-ggplot() +
             aes(x = YSA, y = exp(Estimate)),
             size = 1.5) +
   scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
-  scale_color_manual(values = mycolors) +
+  #scale_color_manual(values = mycolors) +
+  scale_color_viridis(discrete = T, option="D")  + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.direction = "horizontal", legend.position="bottom")  +
-  #labs(title = (expression(paste('', italic(beta), '-scale', sep = '')))) +
-  ylab((expression(paste(italic(beta), -ENS[PIE], sep = ' '))))  +  xlab("Years since agricultural abandonment") + guides(col = guide_legend(ncol = 13))
+  labs(title = (expression(paste('', italic(beta), '-scale', sep = '')))) +
+  ylab((expression(paste(italic(beta), -ENS[PIE], " (%) Recovery", sep = ' '))))  +  xlab("Years since agricultural abandonment") + guides(col = guide_legend(ncol = 13))
 
 
 
@@ -1036,13 +1111,15 @@ g_legend<-function(a.gplot){
   legend <- tmp$grobs[[leg]]
   return(legend)}
 
-ysa.legend<-g_legend(p.beta.spie.fig)
+ysa.legend<-g_legend(p.beta.div.fig)
 
 (p.alpha.spie.fig | p.gamma.spie.fig   | p.beta.spie.fig + theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,1)) 
 
 (p.alpha.rich.fig| p.alpha.spie.fig)/ (p.gamma.rich.fig | p.gamma.spie.fig)/( p.beta.div.fig + theme(legend.position="none") | p.beta.spie.fig + theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,10,10,2)) 
 
 
+
+(p.alpha.rich.fig|p.gamma.rich.fig  )/ ( p.alpha.spie.fig| p.gamma.spie.fig)/( p.beta.div.fig + theme(legend.position="none") | p.beta.spie.fig + theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,10,10,2)) 
 
 
 

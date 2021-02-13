@@ -9,7 +9,7 @@ library(ggplot2)
 library(viridis)
 
 
-clean_cover <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+clean_cover <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
 
 head(clean_cover)
@@ -73,6 +73,8 @@ View(ccr_comm_prep)
 
 write.csv(ccr_comm_prep, "~/Dropbox/Projects/CCRScale/E14 _133/star_prep.csv")
 
+# ~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/
+
 
 summary(ccr_comm_prep)
 
@@ -124,32 +126,57 @@ ccr.all.df <- ccr_dat %>% filter(method == "interpolated" | method == "observed"
 View(ccr.all.df)
 
 
+ccr.all.df.np <- ccr.all.df %>% filter(YSA == "never-plowed") %>%
+  mutate( State = YSA)
+
+ccr.all.df.of <- ccr.all.df %>% filter(!YSA == "never-plowed")
 
 levels(ccr.all.df$YSA)
-ccr.all.df$YSA<-factor(ccr.all.df$YSA,  levels=c("1" , "3" , "5" , "6" , "7" , "8" , "9" , "11" , "12" , "14" , "15" , "17" , "18" , "19" , "20" , "21" , "22" , "23" , "24" , "25" , "26" , "27" , "28" , "29" , "30" , "31" , "32" , "33" , "34" , "35" , "36" , "37" ,"38" , "39" , "40" , "41" , "42" , "43" , "45" , "46" , "47", "48" , "49" , "50" , "51" , "53" , "54" , "55" , "56" ,"59" ,  "61" , "62" , "63" , "65" , "67" , "70",  "75" , "79" , "never-plowed"))
+ccr.all.df.of$YSA<-factor(ccr.all.df.of$YSA,  levels=c("1" , "3" , "5" , "6" , "7" , "8" , "9" , "11" , "12" , "14" , "15" , "17" , "18" , "19" , "20" , "21" , "22" , "23" , "24" , "25" , "26" , "27" , "28" , "29" , "30" , "31" , "32" , "33" , "34" , "35" , "36" , "37" ,"38" , "39" , "40" , "41" , "42" , "43" , "45" , "46" , "47", "48" , "49" , "50" , "51" , "53" , "54" , "55" , "56" ,"59" ,  "61" , "62" , "63" , "65" , "67" , "70",  "75" , "79" , "never-plowed"))
 
 
-sa.all<-ggplot(ccr.all.df, aes(x=x, y=y,  group=site_id, color=YSA)) +
-  facet_wrap(~site_status)+
+sa.all.of<-ggplot(ccr.all.df.of, aes(x=x, y=y,  group=site_id, color=YSA)) +
+ #facet_wrap(~site_status)+
   #facet_wrap(~Field)+
   #facet_wrap(~YSA)+
   #geom_point(aes(shape=Field), size=4, data=df.point.all) +
-  geom_line(aes(), lwd=1, data=ccr.all.df) +
+  geom_line(aes(), lwd=1, data=ccr.all.df.of) +
   # geom_ribbon(aes(ymin=y.lwr, ymax=y.upr,
   #                 fill=YSA, colour=NULL), alpha=0.2) +
   labs(x="Number of sampling units", y="Species richness",title="") +
-  scale_color_viridis(discrete = T)  + 
+  scale_color_viridis(discrete = T, option="C")  + 
   # scale_fill_manual(values =  c("#E7B800", "#972C8DFF" ,"#00AFBB", "#15983DFF","#E7B800", "#FC4E07"))  + 
   theme_classic()+
   theme(legend.position = "none",
         legend.title=element_blank(),
-        text=element_text(size=18)) + 
-  labs(title='b) Accumulation for every site')
+        text=element_text(size=10)) + 
+  labs(subtitle='c) Old field')
 #xlim(0,20)+ 
 
+sa.all.of
 
 
-sa.all
+sa.all.np<-ggplot(ccr.all.df.np, aes(x=x, y=y,  group=site_id )) +
+  #facet_wrap(~site_status)+
+  #facet_wrap(~Field)+
+  #facet_wrap(~YSA)+
+  #geom_point(aes(shape=Field), size=4, data=df.point.all) +
+  geom_line(aes(), lwd=1, data=ccr.all.df.np,color= "#5DC863FF") +
+  # geom_ribbon(aes(ymin=y.lwr, ymax=y.upr,
+  #                 fill=YSA, colour=NULL), alpha=0.2) +
+  labs(x="Number of sampling units", y="Species richness",title="") +
+  #scale_color_viridis(discrete = T, option="C")  + 
+  # scale_fill_manual(values =  c("#E7B800", "#972C8DFF" ,"#00AFBB", "#15983DFF","#E7B800", "#FC4E07"))  + 
+  theme_classic()+
+  theme(legend.position = "none",
+        legend.title=element_blank(),
+        text=element_text(size=10)) + 
+  labs(title='Accumulation for every field at every time point', subtitle="b) Never-plowed")
+#xlim(0,20)+ 
+
+sa.all.np
+
+all.sites  <- (sa.all.np) + (sa.all.of) 
 
 
 # CALCULATED AS  AVERAGE ACROSS YSA'S
@@ -174,7 +201,7 @@ sa.avg <- ggplot(ccr.all.df.avg, aes(x=x, y=y,   color=YSA)) +
   labs(x="Number of sampling units", y="Species richness",title="") +
   scale_color_viridis(discrete = T)  + 
   # scale_fill_manual(values =  c("#E7B800", "#972C8DFF" ,"#00AFBB", "#15983DFF","#E7B800", "#FC4E07"))  + 
-  labs(title='a) Average accumulation ', color="Years Since Abandonment")+
+  labs(title='a) Accumulation for every site at every time point', color="Years Since Abandonment")+
   #xlim(0,20)+ 
   theme_classic() +   theme(legend.direction = "horizontal",legend.position = "bottom") +
   guides(col = guide_legend(ncol = 15))
@@ -183,6 +210,85 @@ sa.avg <- ggplot(ccr.all.df.avg, aes(x=x, y=y,   color=YSA)) +
 sa.avg
 
 (sa.avg)/(sa.all)
+
+
+# fix the color problem
+colnames(ccr.all.df.avg)
+ 
+ 
+ccr.all.df.avg.np <- ccr.all.df.avg %>% filter(YSA == "never-plowed") %>%
+  mutate( State = YSA)
+
+ccr.all.df.avg.of <- ccr.all.df.avg %>% filter(!YSA == "never-plowed")
+
+View(ccr.all.df.avg.of)
+
+ccr.all.df.avg.of$YSA<-factor(ccr.all.df.avg.of$YSA,  levels=c("1" , "3" , "5" , "6" , "7" , "8" , "9" , "11" , "12" , "14" , "15" , "17" , "18" , "19" , "20" , "21" , "22" , "23" , "24" , "25" , "26" , "27" , "28" , "29" , "30" , "31" , "32" , "33" , "34" , "35" , "36" , "37" ,"38" , "39" , "40" , "41" , "42" , "43" , "45" , "46" , "47", "48" , "49" , "50" , "51" , "53" , "54" , "55" , "56" ,"59" ,  "61" , "62" , "63" , "65" , "67" , "70",  "75" , "79" ))
+
+
+
+
+sa.avg.leg <- ggplot() +
+  # facet_wrap(~YSA)+
+  #geom_point(aes(shape=Field), size=4, data=df.point.all) +
+  #geom_line(data=ccr.all.df.avg.of, aes(x=x, y=y,   color=YSA), lwd=1) +
+  geom_line(data=ccr.all.df.avg.np, aes(x=x, y=y, color = State),   lwd=1 ) +
+  # geom_ribbon(aes(ymin=y.lwr, ymax=y.upr,
+  #                 fill=YSA, colour=NULL), alpha=0.2) +
+  labs(x="Number of sampling units", y="Species richness",title="") +
+  #scale_color_viridis(discrete = T, option="A")  + 
+  scale_color_manual(values =  c("#5DC863FF"))  + 
+  labs(title='Species accumulation across scales', color="Reference Habitat")+
+  #xlim(0,20)+ 
+  theme_classic() +   theme(legend.direction = "horizontal",legend.position = "bottom") 
+
+
+sa.avg.leg
+
+
+g_legend<-function(a.gplot){
+  tmp <- ggplot_gtable(ggplot_build(a.gplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)}
+
+np.legend<-g_legend(sa.avg.leg)
+
+sa.avg <- ggplot() +
+  # facet_wrap(~YSA)+
+  #geom_point(aes(shape=Field), size=4, data=df.point.all) +
+  geom_line(data=ccr.all.df.avg.of, aes(x=x, y=y,   color=YSA), lwd=1) +
+  geom_line(data=ccr.all.df.avg.np, aes(x=x, y=y), color= "#5DC863FF" ,  lwd=1 ) +
+  # geom_ribbon(aes(ymin=y.lwr, ymax=y.upr,
+  #                 fill=YSA, colour=NULL), alpha=0.2) +
+  labs(x="Number of sampling units", y="Species richness",title="") +
+  scale_color_viridis(discrete = T, option="C")  + 
+ #scale_color_manual(values =  c("#E7B800"))  + 
+  labs(title='Multi-scale',subtitle="Average Accumulation for Year Since Abandonment", color="Old fields\nYears Since Abandonment")+
+  #xlim(0,20)+ 
+  theme_classic() +   theme(legend.direction = "horizontal",legend.position = "bottom") +
+  guides(col = guide_legend(ncol = 15))
+
+
+sa.avg
+
+of.legend<-g_legend(sa.avg)
+
+multi.scale<-(sa.avg + theme(legend.position="none")) / (np.legend) / (of.legend)/ (all.sites)  + plot_layout(heights = c(6,0.75,1.5,6)) 
+
+multi.scale
+
+
+multi.scale<-(sa.avg + theme(legend.position="none")) / (np.legend) / (of.legend)  + plot_layout(heights = c(10,0.75,1)) 
+
+multi.scale
+
+
+scales.fig <- (p.alpha.rich.fig | p.gamma.rich.fig   | p.beta.div.fig + theme(legend.position="none"))/(ysa.legend)/
+  (sa.avg + theme(legend.position="none")) / (np.legend) / (of.legend) + plot_layout(heights = c(6,1,8,0.75,1)) 
+
+# PORTRAIT 11 X 15
+scales.fig
 
 
 # MODEL THE SP ACCUM CURVES BY YSA ?
@@ -198,8 +304,12 @@ ccr.all.df$log_y <- log(ccr.all.df$y)
 
 
 
-multi_scale_mod <-  brm(log_y ~  YSA * log_x + ( YSA * log_x| Field/Year), 
-                        data = ccr.all.df, cores = 4, iter=2000, chains = 4)
+multi_scale_mod <-  brm(log_y ~  YSA * log_x + ( 1 + YSA * log_x | Field ) + (1 | Year),
+                        data = ccr.all.df, family=student(), cores = 4, iter=2000, chains = 4)
+
+
+#cores = 4, iter=10000,warmup = 1000, control =list(adapt_delta = 0.99), chains = 4)
+
 
 
 

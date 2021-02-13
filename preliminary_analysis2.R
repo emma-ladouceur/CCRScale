@@ -9,8 +9,8 @@ library(Hmisc)
 
 
 
-alpha_dat <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/alpha_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
-gamma_dat <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/gamma_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+alpha_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/alpha_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
 
 colnames(alpha_dat)
@@ -42,6 +42,7 @@ alpha_plot<-ggplot() +
                geom="pointrange", color="black", shape=16,size=0.25)+
   scale_color_manual(values =  c("#228B22", 	"#6B8E23"))  + 
   scale_x_discrete(breaks=c(1,9,20,20,30,40,50,61,70,79)) +
+  #ylim(0,60) +
   theme_classic()+theme(axis.text.x = element_text(size=7), plot.margin=margin(t=2,1,1,1, "lines"),
                         legend.direction = "horizontal", legend.position = "none" )+
   labs(title = (expression(paste(italic(alpha), '-scale', sep = '')))
@@ -66,10 +67,12 @@ alpha_PIE<-ggplot() +
                geom="pointrange", color="black", shape=16,size=0.25)+
   scale_color_manual(values =  c("#228B22", 	"#6B8E23"))  + 
   scale_x_discrete(breaks=c(1,9,20,20,30,40,50,61,70,79)) +
+  #ylim(0,200) +
   theme_classic()+theme(axis.text.x = element_text(size=7), plot.margin=margin(t=2,1,1,1, "lines"),
                         legend.direction = "horizontal", legend.position = "none" )+
   labs(title =  ''
        #(expression(paste(italic(alpha), '-scale', sep = '')))
+  ) +  labs(title = (expression(paste(italic(alpha), '-scale', sep = '')))
   ) + ylab(expression(ENS[PIE])) + xlab("Years since agricultural abandonment") 
 
 alpha_PIE
@@ -93,6 +96,7 @@ gamma_plot<-ggplot() +
                geom="pointrange", color="black", shape=16,size=0.25)+
   scale_color_manual(values =  c("#228B22", 	"#6B8E23"))  + 
   scale_x_discrete(breaks=c(1,9,20,20,30,40,50,61,70,79)) +
+  #ylim(0,60) +
   theme_classic()+theme(axis.text.x = element_text(size=7), plot.margin=margin(t=2,1,1,1, "lines"),
                         legend.direction = "horizontal", legend.position = "none" )+
   labs(title = (expression(paste(italic(gamma), '-scale', sep = '')))
@@ -117,11 +121,13 @@ gamma_PIE<-ggplot() +
                geom="pointrange", color="black", shape=16,size=0.25)+
   scale_color_manual(values =  c("#228B22", 	"#6B8E23"))  + 
   scale_x_discrete(breaks=c(1,9,20,20,30,40,50,61,70,79)) +
+  #ylim(0,200) +
   theme_classic()+theme(axis.text.x = element_text(size=7), plot.margin=margin(t=2,1,1,1, "lines"),
                          legend.direction = "horizontal", legend.position = "bottom" )+
   labs(title = '', color= "Site Status", shape= "Site Status"
        #(expression(paste(italic(gamma), '-scale', sep = '')))
-  )  + ylab(expression(ENS[PIE])) + xlab("Years since agricultural abandonment") 
+  )  +   labs(title = (expression(paste(italic(gamma), '-scale', sep = '')))
+  ) + ylab(expression(ENS[PIE])) + xlab("Years since agricultural abandonment") 
 
 gamma_PIE
 
@@ -141,6 +147,7 @@ beta.plot<-ggplot() +
                aes(x = YSA, y = beta_rich),fun.data=mean_sdl, fun.args = list(mult=1), 
                geom="pointrange", shape=16,color="black",size=0.25)+
   scale_color_manual(values =  c("#228B22", 	"#6B8E23"))  + 
+  #ylim(2,20) +
   scale_x_discrete(breaks=c(1,9,20,20,30,40,50,61,70,79)) +
   theme_classic()+theme(axis.text.x = element_text(size=7), plot.margin=margin(t=1,1,2,1, "lines"),
                         legend.direction = "horizontal", legend.position = "none")+
@@ -167,9 +174,11 @@ beta.PIE<-ggplot() +
                geom="pointrange", shape=16,color="black",size=0.25)+
   scale_color_manual(values =  c("#228B22", 	"#6B8E23"))  + 
   scale_x_discrete(breaks=c(1,9,20,20,30,40,50,61,70,79)) +
+  #ylim(2,20) +
   theme_classic()+theme(axis.text.x = element_text(size=7), plot.margin=margin(t=1,1,2,1, "lines"),
                         legend.direction = "horizontal", legend.position = "none")+
   #labs(title =  (expression(paste(' ', italic(beta), -ENS[PIE], sep = ' ')))) + 
+  labs(title = (expression(paste('', italic(beta), '-scale', sep = '')))) +
   ylab((expression(paste(italic(beta), -ENS[PIE], sep = ' ')))) + xlab("Years since agricultural abandonment") 
 
 
@@ -186,5 +195,10 @@ ccr.legend<-g_legend(gamma_PIE)
 
 
 # Figure S1
-(alpha_plot | alpha_PIE ) / (beta.plot | beta.PIE) / (gamma_plot | gamma_PIE + theme(legend.position="none"))/(ccr.legend) + plot_layout(heights = c(10,10,10,1)) 
+(alpha_plot | alpha_PIE ) /  (gamma_plot | gamma_PIE + theme(legend.position="none"))/ (beta.plot | beta.PIE) /(ccr.legend) + plot_layout(heights = c(10,10,10,1)) 
+
+# Figure S1 alternative
+(alpha_plot | gamma_plot  ) / (alpha_PIE | gamma_PIE + theme(legend.position="none"))/ (beta.plot | beta.PIE) / (ccr.legend) + plot_layout(heights = c(10,10,10,1)) 
+
+
 
