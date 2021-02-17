@@ -67,13 +67,14 @@ d.alpha.rich.eff<-ggplot() +
  # scale_y_continuous(trans = 'log2', breaks = c(4,8, 16, 24)) +
   #ylim(0,60)+ 
   scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
-  theme_bw(base_size=14)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+  ggtitle((expression(paste(italic(alpha), '-scale', sep = ''))))+
+  theme_bw()+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                                plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
                                # axis.text.y = element_text(size=6),
                                # axis.text.x = element_text(size=6),
-                               # title=element_text(size=8),
+                                plot.title=element_text(size=18, hjust=0.5),
                                strip.background = element_blank(),legend.position="none") +
-  labs(title = (expression(paste(italic(alpha), '-scale', sep = ''))),
+  labs(#title = (expression(paste(italic(alpha), '-scale', sep = ''))),
        subtitle= 'a)'
   ) + ylab("Species Richness") 
 
@@ -125,14 +126,15 @@ d.alpha.spie.eff<-ggplot() +
   #scale_y_continuous(trans = 'log2', breaks = c(4,8, 16, 24)) +
   scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
   #ylim(0,200) +
-  theme_bw(base_size=14)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+  ggtitle((expression(paste(italic(alpha), '-scale', sep = ''))))+
+  theme_bw()+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                                plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
                                # axis.text.y = element_text(size=6),
                                # axis.text.x = element_text(size=6),
-                               # title=element_text(size=8),
+                               plot.title=element_text(size=18, hjust=0.5),
                                strip.background = element_blank(),legend.position="none") +
-  labs(title = (expression(paste(italic(alpha), '-scale', sep = ''))),
-       subtitle= 'c)'
+  labs(#title = (expression(paste(italic(alpha), '-scale', sep = ''))),
+       subtitle= 'a)'
   ) +  
   ylab( expression(paste(ENS[PIE])) ) 
 
@@ -178,13 +180,14 @@ d.gamma.rich.eff<-ggplot() +
   #scale_y_continuous(trans = 'log2', breaks = c(12, 16, 24,36,48,66)) +
   scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
   #ylim(0,60) +
-  theme_bw(base_size=14)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+  ggtitle((expression(paste(italic(gamma), '-scale', sep = ''))))+
+  theme_bw()+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                                plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
                                # axis.text.y = element_text(size=6),
                                # axis.text.x = element_text(size=6),
-                               # title=element_text(size=8),
+                               plot.title=element_text(size=18, hjust=0.5),
                                strip.background = element_blank(),legend.position="none") +
-  labs(title = (expression(paste(italic(gamma), '-scale', sep = ''))),
+  labs(#title = (expression(paste(italic(gamma), '-scale', sep = ''))),
        subtitle= 'b)'
   ) + ylab("Species Richness")  + xlab("")
 
@@ -234,17 +237,19 @@ d.gamma.spie.eff<-ggplot() +
   #ylim(0,200)+
   #scale_y_continuous( breaks = c(10, 20,50,100,150,200)) +
   scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
-  theme_bw(base_size=14)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+  ggtitle((expression(paste(italic(gamma), '-scale', sep = ''))))+
+  theme_bw()+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                                plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
                                # axis.text.y = element_text(size=6),
                                # axis.text.x = element_text(size=6),
-                               # title=element_text(size=8),
+                               plot.title=element_text(size=18, hjust=0.5),
                                strip.background = element_blank(),legend.position="none") +
-  labs(title = (expression(paste(italic(gamma), '-scale', sep = ''))),
-       subtitle= 'd)'
+  labs(#title = (expression(paste(italic(gamma), '-scale', sep = ''))),
+       subtitle= 'b)'
   ) +  ylab(expression(ENS[PIE])) 
 
 
+# theme_bw(base_size=14)
 
 d.gamma.spie.eff
 
@@ -288,14 +293,15 @@ d.beta.div.eff<-ggplot() +
  # geom_hline(yintercept = 0, lty = 2) +
  # scale_y_continuous(trans = 'log2', breaks = c(12, 16, 24,36,48,66)) +
   scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
-  theme_bw(base_size=14)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+ # ggtitle((expression(paste('', italic(beta), '-scale', sep = ''))))+
+  theme_bw()+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                                plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.3, unit = "cm"),
                                # axis.text.y = element_text(size=6),
                                # axis.text.x = element_text(size=6),
-                               # title=element_text(size=8),
+                               #plot.title=element_text(size=18, hjust=0.5),
                                strip.background = element_blank(),legend.position="none") +
-  labs(title = (expression(paste('', italic(beta), '-scale', sep = ''))),
-       subtitle= 'e)') +
+  labs(#title = (expression(paste('', italic(beta), '-scale', sep = ''))),
+       subtitle= 'a)') +
   ylab((expression(paste(italic(beta), '-Diversity', sep = '')))) + xlab('')
 
 
@@ -341,14 +347,14 @@ d.beta.spie.eff<-ggplot() +
  # geom_hline(yintercept = 0, lty = 2) +
   #scale_y_continuous(trans = 'log2', breaks = c(8,12, 16, 20)) +
   scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
-  theme_bw(base_size=14)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+  theme_bw()+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                                plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
                                # axis.text.y = element_text(size=6),
                                # axis.text.x = element_text(size=6),
                                # title=element_text(size=8),
                                strip.background = element_blank(),legend.position="none") +
   labs(title =  '',
-       subtitle= 'f)'
+       subtitle= 'c)'
        #(expression(paste(italic(gamma), '-scale', sep = '')))+
   )+
   ylab((expression(paste(italic(beta), -ENS[PIE], sep = ' ')))) + xlab('')

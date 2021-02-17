@@ -160,18 +160,18 @@ p.alpha.rich.fig<-ggplot() +
              aes(x = YSA, y = alpha_rich_p,
                  colour = Field),
              size = 1.2, shape=1, position = position_jitter(width = 1, height=1)) +
-  geom_line(data = alpha_dat_sum,aes(x = YSA, y= alpha_rich_p,
-                     group = Field,
-                     colour = Field),
-                     size = 0.55)+
-  # geom_segment(data = p.alpha.rich_coef2,
-  #              aes(x = xmin,
-  #                  xend = xmax,
-  #                  y = exp(Intercept + Slope * lxmin),
-  #                  yend = exp(Intercept + Slope * lxmax ),
-  #                  group = Field,
-  #                  colour = Field),
-  #           size = 1.2) +
+  # geom_line(data = alpha_dat_sum,aes(x = YSA, y= alpha_rich_p,
+  #                    group = Field,
+  #                    colour = Field),
+  #                    size = 0.55)+
+  geom_segment(data = p.alpha.rich_coef2,
+               aes(x = xmin,
+                   xend = xmax,
+                   y = exp(Intercept + Slope * lxmin),
+                   yend = exp(Intercept + Slope * lxmax ),
+                   group = Field,
+                   colour = Field),
+            size = 1.2) +
   # uncertainy in fixed effect
   geom_ribbon(data = p.alpha.rich_fitted,
               aes(x = YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
@@ -185,7 +185,9 @@ p.alpha.rich.fig<-ggplot() +
   scale_color_viridis(discrete = T, option="D")  + 
     theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none") +
-  labs(title = (expression(paste(italic(alpha), '-scale', sep = ''))) ) +
+  labs(#title = (expression(paste(italic(alpha), '-scale', sep = ''))),
+       subtitle= 'c)'
+  ) +
  ylab("Species Richness (%) Recovery")  + xlab("")
 
 p.alpha.rich.fig
@@ -360,8 +362,8 @@ p.gamma.rich.fig<-ggplot() +
   scale_color_viridis(discrete = T, option="D")  + 
     theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none")  +
-  labs(title = (expression(paste(italic(gamma), '-scale', sep = '')))
-                     ) + ylab("Species Richness (%) Recovery")  + xlab("")
+  labs(#title = (expression(paste(italic(gamma), '-scale', sep = '')))
+       subtitle= 'd)' ) + ylab("Species Richness (%) Recovery")  + xlab("")
   #xlab("Years since restoration") 
 
 
@@ -575,7 +577,8 @@ p.beta.div.fig<-ggplot() +
   scale_color_viridis(discrete = T, option="D")  + 
     theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                     legend.direction = "horizontal", legend.position="bottom")  +
-  labs(title = (expression(paste('', italic(beta), '-scale', sep = ''))), color = "Old field") +
+  labs(#title = (expression(paste('', italic(beta), '-scale', sep = ''))), 
+    color = "Old field", subtitle= 'b)') +
   ylab((expression(''~paste(italic(beta), '-Diversity (%) Recovery', sep = '')))) +  xlab("Years since agricultural abandonment") +
   guides(col = guide_legend(ncol = 9))
 
@@ -756,7 +759,8 @@ p.alpha.spie.fig<-ggplot() +
   scale_color_viridis(discrete = T, option="D")  + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none") +
-  labs(title = (expression(paste(italic(alpha), '-scale', sep = ''))) ) +
+  labs(#title = (expression(paste(italic(alpha), '-scale', sep = ''))) 
+    subtitle = 'g)') +
   xlab("") +  ylab((expression(paste(italic(alpha), -ENS[PIE], " (%) Recovery", sep = ' '))))
 
 p.alpha.spie.fig
@@ -929,8 +933,8 @@ p.gamma.spie.fig<-ggplot() +
   scale_color_viridis(discrete = T, option="D")  + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none")  +
-  labs(title = (expression(paste(italic(gamma), '-scale', sep = '')))
-  ) +
+  labs(#title = (expression(paste(italic(gamma), '-scale', sep = '')))
+    subtitle = 'h)') +
   xlab("") +
   ylab((expression(paste(italic(gamma), -ENS[PIE], " (%) Recovery", sep = ' '))))  
 
@@ -1097,7 +1101,8 @@ p.beta.spie.fig<-ggplot() +
   scale_color_viridis(discrete = T, option="D")  + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.direction = "horizontal", legend.position="bottom")  +
-  labs(title = (expression(paste('', italic(beta), '-scale', sep = '')))) +
+  labs(#title = (expression(paste('', italic(beta), '-scale', sep = '')))
+       subtitle= 'd)' ) +
   ylab((expression(paste(italic(beta), -ENS[PIE], " (%) Recovery", sep = ' '))))  +  xlab("Years since agricultural abandonment") + guides(col = guide_legend(ncol = 13))
 
 
@@ -1122,4 +1127,23 @@ ysa.legend<-g_legend(p.beta.div.fig)
 (p.alpha.rich.fig|p.gamma.rich.fig  )/ ( p.alpha.spie.fig| p.gamma.spie.fig)/( p.beta.div.fig + theme(legend.position="none") | p.beta.spie.fig + theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,10,10,2)) 
 
 
+(d.alpha.rich.eff | d.gamma.rich.eff  ) / (d.alpha.spie.eff | d.gamma.spie.eff) / (d.beta.div.eff | d.beta.spie.eff + theme(legend.position="none")) + plot_layout(heights = c(10,10,10)) 
 
+
+# MIX UP
+# FIG 1 ALPHA GAMMA
+(d.alpha.rich.eff | d.gamma.rich.eff  )/ (p.alpha.rich.fig | p.gamma.rich.fig  )/ (ysa.legend) + plot_layout(heights = c(10,10,2)) 
+
+
+# FIG 2 EVENNESS
+  (d.alpha.spie.eff | d.gamma.spie.eff)/( p.alpha.spie.fig| p.gamma.spie.fig)/(ysa.legend) + plot_layout(heights = c(10,10,2)) 
+
+
+
+# FIG 3 BETA
+b.fig <- (d.beta.div.eff | p.beta.div.fig + theme(legend.position="none")) /(  d.beta.spie.eff + theme(legend.position="none") | p.beta.spie.fig + theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,10,2)) 
+b.fig
+
+(b.fig) + plot_annotation(title = (expression(paste('', italic(beta), '-scale', sep = ''))),
+                                          theme = theme(plot.title = element_text(hjust = 0.5, size= 18))) + plot_layout(ncol=1)
+ 

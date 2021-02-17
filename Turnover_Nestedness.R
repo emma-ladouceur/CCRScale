@@ -346,7 +346,7 @@ turn.fig <- ggplot() +
   scale_color_viridis(discrete = T, option="D")  + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.direction = "horizontal", legend.position="bottom")  +
-  labs(color = "Old field") +
+  labs(subtitle= 'a)', color = "Old field") +
   ylab("Turnover")+  xlab("Years since agricultural abandonment") +
   guides(col = guide_legend(ncol = 9))
 
@@ -422,7 +422,7 @@ nest.fig <- ggplot() +
   scale_color_viridis(discrete = T, option="D")  + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.direction = "horizontal", legend.position="bottom") +
-labs( color = "Old field") +
+labs( subtitle= 'b)', color = "Old field") +
 ylab("Nestedness") +  xlab("Years since agricultural abandonment") +
 guides(col = guide_legend(ncol = 9))
 
