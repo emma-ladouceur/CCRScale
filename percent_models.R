@@ -83,7 +83,8 @@ alpha_dat_of$Field<-as.character(as.factor(alpha_dat_of$Field))
 
 # for plotting fixed effects
 p.alpha.rich_fitted <- cbind(p.alpha.rich.s$data,
-                          fitted(p.alpha.rich.s, re_formula = NA)) %>% 
+                          fitted(p.alpha.rich.s, re_formula = NA
+                                 )) %>% 
   as_tibble() %>% inner_join(alpha_dat_of %>% distinct(Field, Year, log_YSA, YSA, log_alpha_rich_p, alpha_rich_p, alpha_rich),
              #by= c("Field", "Year", "log_YSA", "log_alpha_rich_p")
              )
@@ -96,10 +97,53 @@ View(p.alpha.rich_fitted)
 p.alpha.rich_fixef <- fixef(p.alpha.rich.s)
 
 
+View(p.alpha.rich_fixef)
+
 p.alpha.rich_coef <- coef(p.alpha.rich.s)
 p.alpha.rich_coef 
 
 alpha_dat_of$Field<-as.character(alpha_dat_of$Field)
+
+## attempt predicted field effects for improved field level line fits in figures
+
+colnames(alpha_dat_of)
+# which we fit a model, specifically, one row per metric for each study.
+obs_nest <- alpha_dat_of %>% 
+                        select(Field,alpha_rich_p,log_alpha_rich_p,YSA,log_YSA ) %>%
+  group_by(Field, Transect, Plot) %>% 
+  nest(data = c(alpha_rich_p,log_alpha_rich_p,YSA,log_YSA))
+
+
+mod$mod_dat <- p.alpha.rich.s
+
+
+
+predicts <- alpha_dat_of %>%
+  mutate( mod = as.vector(p.alpha.rich.s ))
+  # select( Field,  log_YSA ) %>%
+  # distinct( ) %>%
+  # group_by(Field) %>%
+  #  nest( yr.data = c(`log_YSA`)) #%>%
+   #mutate(predicted = map2(.x= p.alpha.rich.s$data, .y= yr.data, ~predict(.x, newdata = .y) ))
+
+View(predicts)
+
+predicts <- alpha_dat_of %>%
+  select(Field, YSA, log_YSA) %>%
+  distinct() 
+
+
+View(predicts)
+
+pdat <-  cbind(p.alpha.rich.s$data,
+         predict(p.alpha.rich.s, alpha_dat_of, re_formula= NA) ) %>%
+  as_tibble() %>% group_by(Field, log_YSA) %>%
+  summarise( Estimate = mean(Estimate),
+             Slope_lower = mean(Q2.5),
+             Slope_upper = mean(Q97.5)) %>% left_join(predicts)
+
+View(pdat)
+
 
 
 p.alpha.rich_coef2 <-  bind_cols(p.alpha.rich_coef$Field[,,'Intercept'] %>% 
@@ -160,18 +204,21 @@ p.alpha.rich.fig<-ggplot() +
              aes(x = YSA, y = alpha_rich_p,
                  colour = Field),
              size = 1.2, shape=1, position = position_jitter(width = 1, height=1)) +
-  # geom_line(data = alpha_dat_sum,aes(x = YSA, y= alpha_rich_p,
-  #                    group = Field,
-  #                    colour = Field),
-  #                    size = 0.55)+
-  geom_segment(data = p.alpha.rich_coef2,
-               aes(x = xmin,
-                   xend = xmax,
-                   y = exp(Intercept + Slope * lxmin),
-                   yend = exp(Intercept + Slope * lxmax ),
-                   group = Field,
-                   colour = Field),
-            size = 1.2) +
+  geom_line(data = pdat, aes(x = YSA, y= exp(Estimate) ,
+                     group = Field,
+                     colour = Field),
+                     size = 1.2) +
+  # geom_segment(data = p.alpha.rich_coef2,
+  #              aes(x = xmin,
+  #                  xend = xmax,
+  #                  y = exp(Intercept + Slope * lxmin),
+  #                  yend = exp(Intercept + Slope * lxmax ),
+  #                  group = Field,
+  #                  colour = Field),
+  #           size = 1.2) +
+geom_line(data = pdat,
+          aes(x = YSA, y = Estimate, colour = Field),
+          size = 1.5) +
   # uncertainy in fixed effect
   geom_ribbon(data = p.alpha.rich_fitted,
               aes(x = YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
