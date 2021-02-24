@@ -106,44 +106,25 @@ alpha_dat_of$Field<-as.character(alpha_dat_of$Field)
 
 ## attempt predicted field effects for improved field level line fits in figures
 
-colnames(alpha_dat_of)
-# which we fit a model, specifically, one row per metric for each study.
-obs_nest <- alpha_dat_of %>% 
-                        select(Field,alpha_rich_p,log_alpha_rich_p,YSA,log_YSA ) %>%
-  group_by(Field, Transect, Plot) %>% 
-  nest(data = c(alpha_rich_p,log_alpha_rich_p,YSA,log_YSA))
+
+# predict estimates for each field across a sequence of log_YSA's and YSA's
+obs_nest.alpha <- alpha_dat_of %>% 
+  mutate(Field_group = Field) %>%
+  group_by(Field_group, Field) %>% 
+  summarise(log_YSA = seq(min(log_YSA), max(log_YSA), length.out = 6 ),
+         YSA = seq(min(YSA), max(YSA), length.out = 6)) %>%
+  nest(data = c(Field,YSA,log_YSA)) %>%
+  mutate(predicted = map(data, ~predict(p.alpha.rich.s, newdata= .x, re_formula = ~(1 + log_YSA | Field) ))) 
 
 
-mod$mod_dat <- p.alpha.rich.s
 
-
-
-predicts <- alpha_dat_of %>%
-  mutate( mod = as.vector(p.alpha.rich.s ))
-  # select( Field,  log_YSA ) %>%
-  # distinct( ) %>%
-  # group_by(Field) %>%
-  #  nest( yr.data = c(`log_YSA`)) #%>%
-   #mutate(predicted = map2(.x= p.alpha.rich.s$data, .y= yr.data, ~predict(.x, newdata = .y) ))
-
-View(predicts)
-
-predicts <- alpha_dat_of %>%
-  select(Field, YSA, log_YSA) %>%
-  distinct() 
-
-
-View(predicts)
-
-pdat <-  cbind(p.alpha.rich.s$data,
-         predict(p.alpha.rich.s, alpha_dat_of, re_formula= NA) ) %>%
-  as_tibble() %>% group_by(Field, log_YSA) %>%
-  summarise( Estimate = mean(Estimate),
-             Slope_lower = mean(Q2.5),
-             Slope_upper = mean(Q97.5)) %>% left_join(predicts)
-
-View(pdat)
-
+# janky version
+# pdat <-  cbind(p.alpha.rich.s$data,
+#          predict(p.alpha.rich.s, alpha_dat_of, re_formula= NA) ) %>%
+#   as_tibble() %>% group_by(Field, log_YSA) %>%
+#   summarise( Estimate = mean(Estimate),
+#              Slope_lower = mean(Q2.5),
+#              Slope_upper = mean(Q97.5)) %>% left_join(predicts)
 
 
 p.alpha.rich_coef2 <-  bind_cols(p.alpha.rich_coef$Field[,,'Intercept'] %>% 
@@ -188,7 +169,7 @@ View(p.alpha.rich_coef2)
 
 setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
 # save data objects to avoid time of compiling every time
-#save(p.alpha.rich_fitted,p.alpha.rich_fixef,p.alpha.rich_coef,p.alpha.rich_coef2, file = 'a.rich.mod_dat.Rdata')
+save(p.alpha.rich_fitted,p.alpha.rich_fixef,p.alpha.rich_coef,p.alpha.rich_coef2, obs_nest.alpha, file = 'a.rich.mod_dat.Rdata')
 load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/a.rich.mod_dat.Rdata')
 
 
@@ -199,12 +180,13 @@ mycolors <- colorRampPalette(brewer.pal(8, "Set1"))(nb.cols)
 
 
 p.alpha.rich.fig<-ggplot() +
+ # facet_grid(~Field, scales="free") +
   geom_hline(yintercept = 100, lty = 2) +
   geom_point(data = p.alpha.rich_fitted,
              aes(x = YSA, y = alpha_rich_p,
                  colour = Field),
              size = 1.2, shape=1, position = position_jitter(width = 1, height=1)) +
-  geom_line(data = pdat, aes(x = YSA, y= exp(Estimate) ,
+  geom_line(data = obs_nest.alpha %>% unnest(cols = c(data, predicted)), aes(x = YSA, y= exp(predicted[,1]) ,
                      group = Field,
                      colour = Field),
                      size = 1.2) +
@@ -216,9 +198,6 @@ p.alpha.rich.fig<-ggplot() +
   #                  group = Field,
   #                  colour = Field),
   #           size = 1.2) +
-geom_line(data = pdat,
-          aes(x = YSA, y = Estimate, colour = Field),
-          size = 1.5) +
   # uncertainy in fixed effect
   geom_ribbon(data = p.alpha.rich_fitted,
               aes(x = YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
@@ -324,6 +303,17 @@ p.gamma.rich_coef <- coef(p.gamma.rich)
 p.gamma.rich_coef 
 
 
+# predict estimates for each field across a sequence of log_YSA's and YSA's
+obs_nest.gamma <- gamma_dat_of %>% 
+  mutate(Field_group = Field) %>%
+  group_by(Field_group, Field) %>% 
+  summarise(log_YSA = seq(min(log_YSA), max(log_YSA), length.out = 6 ),
+            YSA = seq(min(YSA), max(YSA), length.out = 6)) %>%
+  nest(data = c(Field,YSA,log_YSA)) %>%
+  mutate(predicted = map(data, ~predict(p.gamma.rich, newdata= .x, re_formula = ~(1 + log_YSA | Field) ))) 
+
+
+
 p.gamma.rich_coef2 <-  bind_cols(p.gamma.rich_coef$Field[,,'Intercept'] %>% 
                                       as_tibble() %>% 
                                       mutate(Intercept = Estimate,
@@ -361,7 +351,7 @@ View(gamma_dat_sum)
 
 
 #setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
-#save(p.gamma.rich_fitted,p.gamma.rich_fixef,p.gamma.rich_coef,p.gamma.rich_coef2, file = 'g.rich.mod_dat.Rdata')
+save(p.gamma.rich_fitted,p.gamma.rich_fixef,p.gamma.rich_coef,p.gamma.rich_coef2,obs_nest.gamma, file = 'g.rich.mod_dat.Rdata')
 load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/g.rich.mod_dat.Rdata')
 
 p.gamma.rich_fitted$YSA<- as.numeric(p.gamma.rich_fitted$YSA)
@@ -376,18 +366,18 @@ p.gamma.rich.fig<-ggplot() +
              aes(x = YSA, y = gamma_rich_p,
                  colour = Field),
              size = 1.2, shape=1) +
-  # geom_line(data = p.gamma.rich_fitted,aes(x = YSA, y= gamma_rich_p,
-  #                                    group = Field,
-  #                                    colour = Field),
-  #           size = 0.55)+
-  geom_segment(data = p.gamma.rich_coef2,
-               aes(x = xmin,
-                   xend = xmax,
-                   y = exp(Intercept + Slope * lxmin),
-                   yend = exp(Intercept + Slope * lxmax),
-                   group = Field,
-                   colour = Field),
-               size = 1.2) +
+  geom_line(data = obs_nest.gamma %>% unnest(cols = c(data, predicted)), aes(x = YSA, y= exp(predicted[,1]) ,
+                 group = Field,
+                 colour = Field),
+            size = 1.2) +
+  # geom_segment(data = p.gamma.rich_coef2,
+  #              aes(x = xmin,
+  #                  xend = xmax,
+  #                  y = exp(Intercept + Slope * lxmin),
+  #                  yend = exp(Intercept + Slope * lxmax),
+  #                  group = Field,
+  #                  colour = Field),
+  #              size = 1.2) +
   #uncertainy in fixed effect
   geom_ribbon(data = p.gamma.rich_fitted,
               aes(x=YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
@@ -497,6 +487,15 @@ p.beta.div_coef
 
 gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
 
+# predict estimates for each field across a sequence of log_YSA's and YSA's
+obs_nest.beta.div <- gamma_dat_of %>% 
+  mutate(Field_group = Field) %>%
+  group_by(Field_group, Field) %>% 
+  summarise(log_YSA = seq(min(log_YSA), max(log_YSA), length.out = 6 ),
+            YSA = seq(min(YSA), max(YSA), length.out = 6)) %>%
+  nest(data = c(Field,YSA,log_YSA)) %>%
+  mutate(predicted = map(data, ~predict(p.beta.div, newdata= .x, re_formula = ~(1 + log_YSA | Field) ))) 
+
 
 p.beta.div_coef2 <-  bind_cols(p.beta.div_coef$Field[,,'Intercept'] %>% 
                                 as_tibble() %>% 
@@ -539,7 +538,7 @@ p.beta.div_coef2$Field<-as.character(p.beta.div_coef2$Field)
 
 setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
 # avoid running above code everytime
-#save(p.beta.div_fitted,p.beta.div_fixef,p.beta.div_coef,p.beta.div_coef2, file = 'b.div.mod_dat.Rdata')
+save(p.beta.div_fitted,p.beta.div_fixef,p.beta.div_coef,p.beta.div_coef2,obs_nest.beta.div, file = 'b.div.mod_dat.Rdata')
 load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/b.div.mod_dat.Rdata')
 
 
@@ -551,7 +550,7 @@ View(p.beta.div_fitted)
 p.beta.div_fitted$Field<-as.factor(p.beta.div_fitted$Field)
 levels(p.beta.div_fitted$Field)
 
-p.beta.div_fitted2<-p.beta.div_fitted %>% mutate( Site = fct_recode( Field,  "A" = "10",
+p.beta.div_fitted2<-p.beta.div_fitted %>% mutate( `Old field` = fct_recode( Field,  "A" = "10",
                                                       "B" = "21",
                                                       "C" = "27",
                                                       "D" = "28",
@@ -597,20 +596,38 @@ p.beta.div.fig<-ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
   geom_point(data = p.beta.div_fitted2,
              aes(x = YSA, y = beta_rich_p,
-                 colour = Site),
+                 colour = `Old field`),
              size = 1.2, shape=1) +
-  # geom_line(data = p.beta.div_fitted,aes(x = YSA, y= beta_rich_p,
-  #                                       group = Field,
-  #                                       colour = Field),
-  #            size = 0.55)+
-  geom_segment(data = p.beta.div_coef3,
-               aes(x = xmin,
-                   xend = xmax,
-                   y = exp(Intercept + Slope * lxmin),
-                   yend = exp(Intercept + Slope * lxmax),
+  geom_line(data = obs_nest.beta.div %>% unnest(cols = c(data, predicted))%>% mutate( `Old field` = fct_recode( Field,  "A" = "10",
+                                                                                                             "B" = "21",
+                                                                                                             "C" = "27",
+                                                                                                             "D" = "28",
+                                                                                                             "E" = "32",
+                                                                                                             "F" = "35",
+                                                                                                             "G" = "39",
+                                                                                                             "H" = "4",
+                                                                                                             "I" = "40",
+                                                                                                             "J" = "41",
+                                                                                                             "K" = "44",
+                                                                                                             "L" = "45",
+                                                                                                             "M" = "47",
+                                                                                                             "N" = "47",
+                                                                                                             "O" = "5",
+                                                                                                             "P" = "53",
+                                                                                                             "Q" = "70",
+                                                                                                             "R" = "72")),
+            aes(x = YSA, y= exp(predicted[,1]) ,
                    group = `Old field`,
-                   colour = `Old field`),
-               size = 1.2) +
+                    colour = `Old field`),
+            size = 1.2) +
+  # geom_segment(data = p.beta.div_coef3,
+  #              aes(x = xmin,
+  #                  xend = xmax,
+  #                  y = exp(Intercept + Slope * lxmin),
+  #                  yend = exp(Intercept + Slope * lxmax),
+  #                  group = `Old field`,
+  #                  colour = `Old field`),
+  #              size = 1.2) +
   # uncertainy in fixed effect
   geom_ribbon(data = p.beta.div_fitted,
               aes(x = YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
@@ -728,6 +745,15 @@ p.alpha.spie_coef
 
 alpha_dat_of$Field<-as.character(alpha_dat_of$Field)
 
+# predict estimates for each field across a sequence of log_YSA's and YSA's
+obs_nest.alpha.pie <- alpha_dat_of %>% 
+  mutate(Field_group = Field) %>%
+  group_by(Field_group, Field) %>% 
+  summarise(log_YSA = seq(min(log_YSA), max(log_YSA), length.out = 6 ),
+            YSA = seq(min(YSA), max(YSA), length.out = 6)) %>%
+  nest(data = c(Field,YSA,log_YSA)) %>%
+  mutate(predicted = map(data, ~predict(p.alpha.spie, newdata= .x, re_formula = ~(1 + log_YSA | Field) ))) 
+
 
 p.alpha.spie_coef2 <-  bind_cols(p.alpha.spie_coef$Field[,,'Intercept'] %>% 
                                    as_tibble() %>% 
@@ -765,7 +791,7 @@ View(p.alpha.spie_coef2)
 
 setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
 # avoid running above code everytime
-save(p.alpha.spie_fitted,p.alpha.spie_fixef,p.alpha.spie_coef,p.alpha.spie_coef2, file = 'alpha.spie.mod_dat.Rdata')
+save(p.alpha.spie_fitted,p.alpha.spie_fixef,p.alpha.spie_coef,p.alpha.spie_coef2,obs_nest.alpha.pie, file = 'alpha.spie.mod_dat.Rdata')
 load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/alpha.spie.mod_dat.Rdata')
 
 
@@ -781,10 +807,11 @@ p.alpha.spie.fig<-ggplot() +
              aes(x = YSA, y = alpha_ENSPIE_p,
                  colour = Field),
              size = 1.2, shape=1, position = position_jitter(width = 0.95, height=0.95)) +
-  # geom_line(data = alpha_dat_sum,aes(x = YSA, y= alpha_ENSPIE_p,
-  #                                    group = Field,
-  #                                    colour = Field),
-  #           size = 0.55)+
+  geom_line(data = obs_nest.alpha.pie %>% unnest(cols = c(data, predicted)),
+            aes(x = YSA, y= exp(predicted[,1]) ,
+                group = Field,
+                colour = Field),
+            size = 1.2) +
   geom_segment(data = p.alpha.spie_coef2,
                aes(x = xmin,
                    xend = xmax,
@@ -902,6 +929,15 @@ p.gamma.spie_coef <- coef(p.gamma.spie)
 
 p.gamma.spie_coef 
 
+# predict estimates for each field across a sequence of log_YSA's and YSA's
+obs_nest.gamma.pie <- gamma_dat_of %>% 
+  mutate(Field_group = Field) %>%
+  group_by(Field_group, Field) %>% 
+  summarise(log_YSA = seq(min(log_YSA), max(log_YSA), length.out = 6 ),
+            YSA = seq(min(YSA), max(YSA), length.out = 6)) %>%
+  nest(data = c(Field,YSA,log_YSA)) %>%
+  mutate(predicted = map(data, ~predict(p.gamma.spie, newdata= .x, re_formula = ~(1 + log_YSA | Field) ))) 
+
 
 p.gamma.spie_coef2 <-  bind_cols(p.gamma.spie_coef$Field[,,'Intercept'] %>% 
                                    as_tibble() %>% 
@@ -936,7 +972,7 @@ p.gamma.spie_coef2$Field<-as.character(p.gamma.spie_coef2$Field)
 
 setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
 # avoid running above code everytime
-save(p.gamma.spie_fitted,p.gamma.spie_fixef,p.gamma.spie_coef,p.gamma.spie_coef2, file = 'gamma.spie.mod_dat.Rdata')
+save(p.gamma.spie_fitted,p.gamma.spie_fixef,p.gamma.spie_coef,p.gamma.spie_coef2,obs_nest.gamma.pie, file = 'gamma.spie.mod_dat.Rdata')
 load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/gamma.spie.mod_dat.Rdata')
 
 
@@ -947,18 +983,19 @@ p.gamma.spie.fig<-ggplot() +
              aes(x = YSA, y = gamma_ENSPIE_p,
                  colour = Field),
              size = 1.2, shape=1) +
-  # geom_line(data = p.gamma.spie_fitted,aes(x = YSA, y= gamma_ENSPIE_p,
-  #                                    group = Field,
-  #                                    colour = Field),
-  #           size = 0.55)+
-  geom_segment(data = p.gamma.spie_coef2,
-               aes(x = xmin,
-                   xend = xmax,
-                   y = exp(Intercept + Slope * lxmin),
-                   yend = exp(Intercept + Slope * lxmax),
-                   group = Field,
-                   colour = Field),
-               size = 1.2) +
+  geom_line(data = obs_nest.gamma.pie %>% unnest(cols = c(data, predicted)),
+            aes(x = YSA, y= exp(predicted[,1]) ,
+                group = Field,
+                colour = Field),
+            size = 1.2) +
+  # geom_segment(data = p.gamma.spie_coef2,
+  #              aes(x = xmin,
+  #                  xend = xmax,
+  #                  y = exp(Intercept + Slope * lxmin),
+  #                  yend = exp(Intercept + Slope * lxmax),
+  #                  group = Field,
+  #                  colour = Field),
+  #              size = 1.2) +
   #uncertainy in fixed effect
   geom_ribbon(data = p.gamma.spie_fitted,
               aes(x=YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
@@ -1067,6 +1104,17 @@ p.beta.spie_coef
 gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
 
 
+# predict estimates for each field across a sequence of log_YSA's and YSA's
+obs_nest.beta.pie <- gamma_dat_of %>% 
+  mutate(Field_group = Field) %>%
+  group_by(Field_group, Field) %>% 
+  summarise(log_YSA = seq(min(log_YSA), max(log_YSA), length.out = 6 ),
+            YSA = seq(min(YSA), max(YSA), length.out = 6)) %>%
+  nest(data = c(Field,YSA,log_YSA)) %>%
+  mutate(predicted = map(data, ~predict(p.beta.spie, newdata= .x, re_formula = ~(1 + log_YSA | Field) ))) 
+
+
+
 p.beta.spie_coef2 <-  bind_cols(p.beta.spie_coef$Field[,,'Intercept'] %>% 
                                  as_tibble() %>% 
                                  mutate(Intercept = Estimate,
@@ -1108,7 +1156,7 @@ p.beta.spie_coef2$Field<-as.character(p.beta.spie_coef2$Field)
 
 setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
 # avoid running above code everytime
-save(p.beta.spie_fitted,p.beta.spie_fixef,p.beta.spie_coef,p.beta.spie_coef2, file = 'beta.spie.mod_dat.Rdata')
+save(p.beta.spie_fitted,p.beta.spie_fixef,p.beta.spie_coef,p.beta.spie_coef2,obs_nest.beta.pie, file = 'beta.spie.mod_dat.Rdata')
 load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/beta.spie.mod_dat.Rdata')
 
 
@@ -1123,18 +1171,19 @@ p.beta.spie.fig<-ggplot() +
              aes(x = YSA, y = beta_ENSPIE_p,
                  colour = Field),
              size = 1.2, shape=1) +
-  # geom_line(data = p.beta.spie_fitted,aes(x = YSA, y= beta_ENSPIE_p,
-  #                                        group = Field,
-  #                                        colour = Field),
-  #           size = 0.55)+
-  geom_segment(data = p.beta.spie_coef2,
-               aes(x = xmin,
-                   xend = xmax,
-                   y = exp(Intercept + Slope * lxmin),
-                   yend = exp(Intercept + Slope * lxmax),
-                   group = Field,
-                   colour = Field),
-               size = 1.2) +
+  geom_line(data = obs_nest.beta.pie %>% unnest(cols = c(data, predicted)),
+            aes(x = YSA, y= exp(predicted[,1]) ,
+                group = Field,
+                colour = Field),
+            size = 1.2) +
+  # geom_segment(data = p.beta.spie_coef2,
+  #              aes(x = xmin,
+  #                  xend = xmax,
+  #                  y = exp(Intercept + Slope * lxmin),
+  #                  yend = exp(Intercept + Slope * lxmax),
+  #                  group = Field,
+  #                  colour = Field),
+  #              size = 1.2) +
   # uncertainy in fixed effect
   geom_ribbon(data = p.beta.spie_fitted,
               aes(x = YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
