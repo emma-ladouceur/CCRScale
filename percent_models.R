@@ -18,9 +18,9 @@ gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 
 # SPIE = mobr
 # ENSPIE = vegan - inverse Simpson's
 
-View(alpha_dat)
-View(gamma_dat)
-View(ccr_dat)
+head(alpha_dat)
+head(gamma_dat)
+head(ccr_dat)
 
 # check what the mean richness is for each field type
 # turn the grouping on or off to see details
@@ -38,7 +38,7 @@ alpha_dat_of <- alpha_dat %>% filter(site_status == "old field")
 
 alpha_dat_of$alpha_rich_p <- (alpha_dat_of$alpha_rich/9.21 *100)
   
-View(alpha_dat_of)
+head(alpha_dat_of)
 
 is.numeric(alpha_dat_of$YSA)
 
@@ -90,14 +90,14 @@ p.alpha.rich_fitted <- cbind(p.alpha.rich.s$data,
              )
 
 
-View(p.alpha.rich_fitted)
+head(p.alpha.rich_fitted)
 
 
 # fixed effect coefficients
 p.alpha.rich_fixef <- fixef(p.alpha.rich.s)
 
 
-View(p.alpha.rich_fixef)
+head(p.alpha.rich_fixef)
 
 p.alpha.rich_coef <- coef(p.alpha.rich.s)
 p.alpha.rich_coef 
@@ -117,16 +117,7 @@ obs_nest.alpha <- alpha_dat_of %>%
   mutate(predicted = map(data, ~predict(p.alpha.rich.s, newdata= .x, re_formula = ~(1 + log_YSA | Field) ))) 
 
 
-
-# janky version
-# pdat <-  cbind(p.alpha.rich.s$data,
-#          predict(p.alpha.rich.s, alpha_dat_of, re_formula= NA) ) %>%
-#   as_tibble() %>% group_by(Field, log_YSA) %>%
-#   summarise( Estimate = mean(Estimate),
-#              Slope_lower = mean(Q2.5),
-#              Slope_upper = mean(Q97.5)) %>% left_join(predicts)
-
-
+# linear/lazy version version of site-level coefs
 p.alpha.rich_coef2 <-  bind_cols(p.alpha.rich_coef$Field[,,'Intercept'] %>% 
                                 as_tibble() %>% 
                                 mutate(Intercept = Estimate,
@@ -158,25 +149,19 @@ p.alpha.rich_coef2 <-  bind_cols(p.alpha.rich_coef$Field[,,'Intercept'] %>%
                             xmin = min(YSA),
                                 xmax = max(YSA))
 
-View(alpha_dat_sum)
+head(alpha_dat_sum)
 
 p.alpha.rich_fitted$YSA<- as.numeric(p.alpha.rich_fitted$YSA)
 p.alpha.rich_fitted$Field<-as.character(p.alpha.rich_fitted$Field)
 p.alpha.rich_coef2$Field<-as.character(p.alpha.rich_coef2$Field)
 
-View(p.alpha.rich_fitted)
-View(p.alpha.rich_coef2)
+head(p.alpha.rich_fitted)
+head(p.alpha.rich_coef2)
 
 setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
 # save data objects to avoid time of compiling every time
 save(p.alpha.rich_fitted,p.alpha.rich_fixef,p.alpha.rich_coef,p.alpha.rich_coef2, obs_nest.alpha, file = 'a.rich.mod_dat.Rdata')
 load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/a.rich.mod_dat.Rdata')
-
-
-
-# Define the number of colors you want
-nb.cols <- 17
-mycolors <- colorRampPalette(brewer.pal(8, "Set1"))(nb.cols)
 
 
 p.alpha.rich.fig<-ggplot() +
@@ -214,7 +199,7 @@ p.alpha.rich.fig<-ggplot() +
   labs(#title = (expression(paste(italic(alpha), '-scale', sep = ''))),
        subtitle= 'c)'
   ) +
- ylab("Species Richness (%) Recovery")  + xlab("")
+ ylab("Species Richness (%) Recovery")  + xlab("Years since agricultural abandonment")
 
 p.alpha.rich.fig
 
@@ -289,14 +274,14 @@ p.gamma.rich_fitted <- cbind(p.gamma.rich$data,
 
 
 
-View(p.gamma.rich_fitted)
+head(p.gamma.rich_fitted)
 
 # fixed effect coefficients
 p.gamma.rich_fixef <- fixef(p.gamma.rich)
 
 
 
-View(p.gamma.rich_fixef)
+head(p.gamma.rich_fixef)
 
 p.gamma.rich_coef <- coef(p.gamma.rich)
 
@@ -313,7 +298,7 @@ obs_nest.gamma <- gamma_dat_of %>%
   mutate(predicted = map(data, ~predict(p.gamma.rich, newdata= .x, re_formula = ~(1 + log_YSA | Field) ))) 
 
 
-
+# coefs
 p.gamma.rich_coef2 <-  bind_cols(p.gamma.rich_coef$Field[,,'Intercept'] %>% 
                                       as_tibble() %>% 
                                       mutate(Intercept = Estimate,
@@ -347,7 +332,7 @@ gamma_dat_sum   <- gamma_dat_of %>%
             xmin = min(YSA),
             xmax = max(YSA))
 
-View(gamma_dat_sum)
+head(gamma_dat_sum)
 
 
 #setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
@@ -400,7 +385,7 @@ p.gamma.rich.fig<-ggplot() +
     theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none")  +
   labs(#title = (expression(paste(italic(gamma), '-scale', sep = '')))
-       subtitle= 'd)' ) + ylab("Species Richness (%) Recovery")  + xlab("")
+       subtitle= 'd)' ) + ylab("Species Richness (%) Recovery")  + xlab("Years since agricultural abandonment")
   #xlab("Years since restoration") 
 
 
@@ -426,7 +411,7 @@ gamma_dat_of <- gamma_dat %>% filter(site_status == "old field")
 
 gamma_dat_of$beta_rich_p<-(gamma_dat_of$beta_rich/4.79 *100)
 
-View(gamma_dat_of)
+head(gamma_dat_of)
 
 gamma_dat_of$YSA <- as.numeric(gamma_dat_of$YSA)
 gamma_dat_of$log_beta_rich_p <- log(gamma_dat_of$beta_rich_p)
@@ -476,7 +461,7 @@ p.beta.div_fitted <- cbind(p.beta.div$data,
              by= c("Field", "Year", "log_YSA", "log_beta_rich_p"))
 
 
-View(p.beta.div_fitted)
+head(p.beta.div_fitted)
 
 # fixed effect coefficients
 p.beta.div_fixef <- fixef(p.beta.div)
@@ -530,7 +515,7 @@ beta_dat_sum   <- gamma_dat_of %>%
             lxmin = min(log_YSA),
             lxmax = max(log_YSA))
 
-View(beta_dat_sum)
+head(beta_dat_sum)
 
 p.beta.div_fitted$YSA<- as.numeric(p.beta.div_fitted$YSA)
 p.beta.div_fitted$Field<-as.character(p.beta.div_fitted$Field)
@@ -543,13 +528,14 @@ load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/b.div.mod_dat.Rd
 
 
 
-View(p.beta.div_coef2)
+head(p.beta.div_coef2)
 
-View(p.beta.div_fitted)
+head(p.beta.div_fitted)
 
 p.beta.div_fitted$Field<-as.factor(p.beta.div_fitted$Field)
 levels(p.beta.div_fitted$Field)
 
+# rename fields to be letters instead of numbers- because numbers get confusing when you're looking at YSA & Field #'s
 p.beta.div_fitted2<-p.beta.div_fitted %>% mutate( `Old field` = fct_recode( Field,  "A" = "10",
                                                       "B" = "21",
                                                       "C" = "27",
@@ -685,7 +671,7 @@ alpha_dat_of <- alpha_dat %>% filter(site_status == "old field")
 
 alpha_dat_of$alpha_ENSPIE_p<-(alpha_dat_of$alpha_ENSPIE/7.10 *100)
 
-View(alpha_dat_of)
+head(alpha_dat_of)
 
 alpha_dat_of$YSA <- as.numeric(alpha_dat_of$YSA)
 alpha_dat_of$log_alpha_ENSPIE_p <- log(alpha_dat_of$alpha_ENSPIE_p)
@@ -734,7 +720,7 @@ p.alpha.spie_fitted <- cbind(p.alpha.spie$data,
              by= c("Field", "Year", "log_YSA", "log_alpha_ENSPIE_p"))
 
 
-View(p.alpha.spie_fitted)
+head(p.alpha.spie_fitted)
 
 # fixed effect coefficients
 p.alpha.spie_fixef <- fixef(p.alpha.spie)
@@ -780,14 +766,14 @@ p.alpha.spie_coef2 <-  bind_cols(p.alpha.spie_coef$Field[,,'Intercept'] %>%
 
 
 
-View(alpha_dat_sum)
+head(alpha_dat_sum)
 
 p.alpha.spie_fitted$YSA<- as.numeric(p.alpha.spie_fitted$YSA)
 p.alpha.spie_fitted$Field<-as.character(p.alpha.spie_fitted$Field)
 p.alpha.spie_coef2$Field<-as.character(p.alpha.spie_coef2$Field)
 
-View(alpha_dat_of)
-View(p.alpha.spie_coef2)
+head(alpha_dat_of)
+head(p.alpha.spie_coef2)
 
 setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
 # avoid running above code everytime
@@ -796,30 +782,25 @@ load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/alpha.spie.mod_d
 
 
 
-# Define the number of colors you want
-nb.cols <- 17
-mycolors <- colorRampPalette(brewer.pal(8, "Set1"))(nb.cols)
-
-
 p.alpha.spie.fig<-ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
   geom_point(data = p.alpha.spie_fitted,
              aes(x = YSA, y = alpha_ENSPIE_p,
                  colour = Field),
              size = 1.2, shape=1, position = position_jitter(width = 0.95, height=0.95)) +
-  geom_line(data = obs_nest.alpha.pie %>% unnest(cols = c(data, predicted)),
+  geom_line(data = obs_nest.alpha.pie %>% unnest(cols = c(data, predicted)), # predict version
             aes(x = YSA, y= exp(predicted[,1]) ,
                 group = Field,
                 colour = Field),
             size = 1.2) +
-  geom_segment(data = p.alpha.spie_coef2,
-               aes(x = xmin,
-                   xend = xmax,
-                   y = exp(Intercept + Slope * lxmin),
-                   yend = exp(Intercept + Slope * lxmax ),
-                   group = Field,
-                   colour = Field),
-            size = 1.2) +
+  # geom_segment(data = p.alpha.spie_coef2, # coef version
+  #              aes(x = xmin,
+  #                  xend = xmax,
+  #                  y = exp(Intercept + Slope * lxmin),
+  #                  yend = exp(Intercept + Slope * lxmax ),
+  #                  group = Field,
+  #                  colour = Field),
+  #           size = 1.2) +
   # uncertainy in fixed effect
   geom_ribbon(data = p.alpha.spie_fitted,
               aes(x = YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
@@ -834,8 +815,8 @@ p.alpha.spie.fig<-ggplot() +
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none") +
   labs(#title = (expression(paste(italic(alpha), '-scale', sep = ''))) 
-    subtitle = 'g)') +
-  xlab("") +  ylab((expression(paste(italic(alpha), -ENS[PIE], " (%) Recovery", sep = ' '))))
+    subtitle = 'c)') +
+  xlab("Years since agricultural abandonment") +  ylab((expression(paste(italic(alpha), -ENS[PIE], " (%) Recovery", sep = ' '))))
 
 p.alpha.spie.fig
 
@@ -862,7 +843,7 @@ gamma_dat_of <- gamma_dat %>% filter(site_status == "old field")
 gamma_dat_of$gamma_ENSPIE_p<-(gamma_dat_of$gamma_ENSPIE/125.5786 *100)
 
 
-View(gamma_dat_of)
+head(gamma_dat_of)
 
 gamma_dat_of$YSA <- as.numeric(gamma_dat_of$YSA)
 gamma_dat_of$log_gamma_ENSPIE_p <- log(gamma_dat_of$gamma_ENSPIE_p)
@@ -916,14 +897,14 @@ p.gamma.spie_fitted <- cbind(p.gamma.spie$data,
 
 
 
-View(p.gamma.spie_fitted)
+head(p.gamma.spie_fitted)
 
 # fixed effect coefficients
 p.gamma.spie_fixef <- fixef(p.gamma.spie)
 
 
 
-View(p.gamma.spie_fixef)
+head(p.gamma.spie_fixef)
 
 p.gamma.spie_coef <- coef(p.gamma.spie)
 
@@ -964,7 +945,7 @@ p.gamma.spie_coef2 <-  bind_cols(p.gamma.spie_coef$Field[,,'Intercept'] %>%
 
 
 
-View(gamma_dat_sum)
+head(gamma_dat_sum)
 
 p.gamma.spie_fitted$YSA<- as.numeric(p.gamma.spie_fitted$YSA)
 p.gamma.spie_fitted$Field<-as.character(p.gamma.spie_fitted$Field)
@@ -1018,8 +999,8 @@ p.gamma.spie.fig<-ggplot() +
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none")  +
   labs(#title = (expression(paste(italic(gamma), '-scale', sep = '')))
-    subtitle = 'h)') +
-  xlab("") +
+    subtitle = 'd)') +
+  xlab("Years since agricultural abandonment") +
   ylab((expression(paste(italic(gamma), -ENS[PIE], " (%) Recovery", sep = ' '))))  
 
 
@@ -1043,7 +1024,7 @@ gamma_dat_of <- gamma_dat %>% filter(site_status == "old field")
 
 gamma_dat_of$beta_ENSPIE_p<-(gamma_dat_of$beta_ENSPIE/17.63 *100)
 
-View(gamma_dat_of)
+head(gamma_dat_of)
 
 gamma_dat_of$YSA <- as.numeric(gamma_dat_of$YSA)
 gamma_dat_of$log_beta_ENSPIE_p <- log(gamma_dat_of$beta_ENSPIE_p)
@@ -1092,7 +1073,7 @@ p.beta.spie_fitted <- cbind(p.beta.spie$data,
              by= c("Field", "Year", "log_YSA", "log_beta_ENSPIE_p"))
 
 
-View(p.beta.spie_fitted)
+head(p.beta.spie_fitted)
 
 # fixed effect coefficients
 p.beta.spie_fixef <- fixef(p.beta.spie)
@@ -1148,7 +1129,7 @@ beta_dat_sum   <- gamma_dat_of %>%
             lxmin = min(log_YSA),
             lxmax = max(log_YSA))
 
-View(beta_dat_sum)
+head(beta_dat_sum)
 
 p.beta.spie_fitted$YSA<- as.numeric(p.beta.spie_fitted$YSA)
 p.beta.spie_fitted$Field<-as.character(p.beta.spie_fitted$Field)
@@ -1161,9 +1142,9 @@ load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/beta.spie.mod_da
 
 
 
-View(p.beta.spie_coef2)
+head(p.beta.spie_coef2)
 
-View(p.beta.spie_fitted)
+head(p.beta.spie_fitted)
 
 p.beta.spie.fig<-ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
@@ -1227,12 +1208,14 @@ ysa.legend<-g_legend(p.beta.div.fig)
 
 
 # MIX UP
+# LANDSCAPE 10X11
+
 # FIG 1 ALPHA GAMMA
 (d.alpha.rich.eff | d.gamma.rich.eff  )/ (p.alpha.rich.fig | p.gamma.rich.fig  )/ (ysa.legend) + plot_layout(heights = c(10,10,2)) 
 
 
 # FIG 2 EVENNESS
-  (d.alpha.spie.eff | d.gamma.spie.eff)/( p.alpha.spie.fig| p.gamma.spie.fig)/(ysa.legend) + plot_layout(heights = c(10,10,2)) 
+(d.alpha.spie.eff | d.gamma.spie.eff)/( p.alpha.spie.fig| p.gamma.spie.fig)/(ysa.legend) + plot_layout(heights = c(10,10,2)) 
 
 
 

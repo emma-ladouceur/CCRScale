@@ -441,6 +441,100 @@ ysa.legend<-g_legend(nest.fig)
 
 (turn.fig + theme(legend.position="none") | nest.fig+ theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,1)) 
 
-View(beta)
+# REARRANGE STACK PLOTS
+
+
+turn.fig <- ggplot() +
+  #facet_grid(~Site) +
+  #geom_hline(yintercept = 0, lty = 2) +
+  geom_point(data = betat_fitted2,
+             aes(x = YSA, y = jtu,
+                 colour = `Old field`),
+             size = 1.2, shape=1) +
+  # geom_line(data = p.beta.div_fitted,aes(x = YSA, y= beta_rich_p,
+  #                                       group = Field,
+  #                                       colour = Field),
+  #            size = 0.55)+
+  geom_segment(data = betat_coef3,
+               aes(x = xmin,
+                   xend = xmax,
+                   y = plogis(Intercept + Slope * xmin),
+                   yend = plogis(Intercept + Slope * xmax),
+                   group = `Old field`,
+                   colour = `Old field`),
+               size = 1.2) +
+  # uncertainy in fixed effect
+  geom_ribbon(data = betat_fitted,
+              aes(x = YSA, ymin = (Q2.5), ymax = (Q97.5)),
+              alpha = 0.3) +
+  # fixed effect
+  geom_line(data = betat_fitted,
+            aes(x = YSA, y = (Estimate)),
+            size = 1.5) +
+  # scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
+  #scale_color_manual(values = mycolors) +
+  scale_color_viridis(discrete = T, option="D")  + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+                     axis.title.x=element_blank(),
+                     axis.text.x=element_blank(),
+                     axis.ticks.x=element_blank(),
+                     legend.direction = "horizontal", legend.position="bottom")  +
+  labs( color = "Old field") +
+  ylab("Turnover")+  xlab("") +
+  guides(col = guide_legend(ncol = 9))
+
+turn.fig
+
+head(betan_fitted2)
+head(betan_coef3)
+head(betan_fitted)
+
+betan_fitted2$jne <- (betan_fitted2$jne)*-1
+betan_coef3$Intercept <- (betan_coef3$Intercept)*-1
+betan_coef3$Slope <- (betan_coef3$Slope)*-1
+betan_fitted$Estimate <- (betan_fitted$Estimate)*-1
+betan_fitted$Q2.5 <- (betan_fitted$Q2.5)*-1
+betan_fitted$Q97.5 <- (betan_fitted$Q97.5)*-1
+
+nest.fig <- ggplot() +
+  #facet_grid(~Site) +
+  #geom_hline(yintercept = 0, lty = 2) +
+  geom_hline(yintercept = 1, lty = 2) +
+  geom_point(data = betan_fitted2,
+             aes(x = YSA, y = jne,
+                 colour = `Old field`),
+             size = 1.2, shape=1) +
+  # geom_line(data = p.beta.div_fitted,aes(x = YSA, y= beta_rich_p,
+  #                                       group = Field,
+  #                                       colour = Field),
+  #            size = 0.55)+
+  geom_segment(data = betan_coef3,
+               aes(x = xmin,
+                   xend = xmax,
+                   y = plogis(Intercept + Slope * xmin),
+                   yend = plogis(Intercept + Slope * xmax),
+                   group = `Old field`,
+                   colour = `Old field`),
+               size = 1.2) +
+  # uncertainy in fixed effect
+  geom_ribbon(data = betan_fitted,
+              aes(x = YSA, ymin = (Q2.5), ymax = (Q97.5)),
+              alpha = 0.3) +
+  # fixed effect
+  geom_line(data = betan_fitted,
+            aes(x = YSA, y = (Estimate)),
+            size = 1.5) +
+  # scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
+  #scale_color_manual(values = mycolors) +
+  scale_color_viridis(discrete = T, option="D")  + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+                     legend.direction = "horizontal", legend.position="bottom") +
+  labs(  color = "Old field") +
+  ylab("Nestedness") +  xlab("Years since agricultural abandonment") +
+  guides(col = guide_legend(ncol = 9))
+
+nest.fig
+
+(turn.fig + theme(legend.position="none") )/( nest.fig+ theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,10,1)) 
 
 

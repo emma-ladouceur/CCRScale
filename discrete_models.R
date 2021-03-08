@@ -48,7 +48,7 @@ alpha_c <- conditional_effects(d.alpha.rich, effects = 'site_status', re_formula
 alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("old field","never-plowed"))
 
 
-View(alpha_c)
+#View(alpha_c)
 
 d.alpha.rich.eff<-ggplot() + 
   geom_point(data = alpha_dat,
@@ -109,7 +109,7 @@ d.alpha.spie_c <- conditional_effects(d.alpha.spie, effects = 'site_status', re_
 
 alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("old field","never-plowed"))
 
-View(d.alpha.spie_c)
+#View(d.alpha.spie_c)
 
 d.alpha.spie.eff<-ggplot() + 
   geom_point(data = alpha_dat,
@@ -165,7 +165,7 @@ gamma_c <- conditional_effects(d.gamma.rich, effects = 'site_status', re_formula
 gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
 
 
-View(gamma_c)
+#View(gamma_c)
 
 d.gamma.rich.eff<-ggplot() + 
   geom_point(data = gamma_dat,
@@ -220,7 +220,7 @@ d.gamma.spie_c <- conditional_effects(d.gamma.spie, effects = 'site_status', re_
 
 gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
 
-View(d.gamma.spie_c)
+#View(d.gamma.spie_c)
 
 d.gamma.spie.eff<-ggplot() + 
   geom_point(data = gamma_dat,
@@ -278,7 +278,7 @@ d.beta_c <- conditional_effects(d.beta.div, effects = 'site_status', re_formula 
 gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
 
 
-View(d.beta_c)
+#View(d.beta_c)
 colnames(gamma_dat)
 
 d.beta.div.eff<-ggplot() + 
@@ -332,7 +332,7 @@ d.beta.spie_c <- conditional_effects(d.beta.spie, effects = 'site_status', re_fo
 gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
 
 
-View(d.beta.spie_c)
+#View(d.beta.spie_c)
 colnames(gamma_dat)
 
 d.beta.spie.eff<-ggplot() + 
