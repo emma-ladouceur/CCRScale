@@ -194,7 +194,7 @@ p.alpha.rich.fig<-ggplot() +
    scale_y_continuous( limits=c(10,210),breaks = c(25,50,75,100,150,200)) +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
-    theme_bw(base_size=14 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+    theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none") +
   labs(#title = (expression(paste(italic(alpha), '-scale', sep = ''))),
        subtitle= 'c)'
@@ -382,7 +382,7 @@ p.gamma.rich.fig<-ggplot() +
   #scale_x_continuous(trans = 'log2') +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
-    theme_bw(base_size=14 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+    theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none")  +
   labs(#title = (expression(paste(italic(gamma), '-scale', sep = '')))
        subtitle= 'd)' ) + ylab("Species Richness (%) Recovery")  + xlab("Years since agricultural abandonment")
@@ -625,7 +625,7 @@ p.beta.div.fig<-ggplot() +
   scale_y_continuous( limits=c(25,125),breaks = c(25,50,85,90,100,125)) +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
-    theme_bw(base_size=14 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+    theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                     legend.direction = "horizontal", legend.position="bottom")  +
   labs(#title = (expression(paste('', italic(beta), '-scale', sep = ''))), 
     color = "Old field", subtitle= 'b)') +
@@ -812,7 +812,7 @@ p.alpha.spie.fig<-ggplot() +
   scale_y_continuous( limits=c(10,210),breaks = c(25,50,100,150,200)) +
  # scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
-  theme_bw(base_size=14 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+  theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none") +
   labs(#title = (expression(paste(italic(alpha), '-scale', sep = ''))) 
     subtitle = 'c)') +
@@ -996,7 +996,7 @@ p.gamma.spie.fig<-ggplot() +
   #scale_x_continuous(trans = 'log2') +
  # scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
-  theme_bw(base_size=14 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+  theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none")  +
   labs(#title = (expression(paste(italic(gamma), '-scale', sep = '')))
     subtitle = 'd)') +
@@ -1176,7 +1176,7 @@ p.beta.spie.fig<-ggplot() +
   scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
-  theme_bw(base_size=14 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+  theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.direction = "horizontal", legend.position="bottom")  +
   labs(#title = (expression(paste('', italic(beta), '-scale', sep = '')))
        subtitle= 'd)' ) +
@@ -1229,4 +1229,28 @@ b.fig
 
 
 
- 
+
+# PRESSIE
+
+
+(d.alpha.rich.eff | p.alpha.rich.fig  )/ (ysa.legend) + plot_layout(heights = c(10,2)) 
+
+
+(d.alpha.spie.eff | p.alpha.spie.fig  )/ (ysa.legend) + plot_layout(heights = c(10,2)) 
+
+
+(d.gamma.rich.eff  | p.gamma.rich.fig  )/ (ysa.legend) + plot_layout(heights = c(10,2)) 
+
+(d.gamma.spie.eff  | p.gamma.spie.fig  )/ (ysa.legend) + plot_layout(heights = c(10,2)) 
+
+
+
+
+b.fig <- (d.beta.div.eff | p.beta.div.fig + theme(legend.position="none")) /(  d.beta.spie.eff + theme(legend.position="none") | p.beta.spie.fig + theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,10,2)) 
+b.fig
+
+(b.fig) + plot_annotation(title = (expression(paste('', italic(beta), '-scale', sep = ''))),
+                          theme = theme(plot.title = element_text(hjust = 0.5, size= 18))) + plot_layout(ncol=1)
+
+
+
