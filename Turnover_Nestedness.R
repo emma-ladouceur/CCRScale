@@ -149,7 +149,7 @@ View(beta.df)
 
 write.csv(beta.df,"~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/beta.df.csv")
 
-beta<-read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/beta.df.csv", header=TRUE) %>%
+beta <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/beta.df.csv", header=TRUE) %>%
   as_tibble()
 
 
@@ -215,6 +215,17 @@ betat_fixef <- fixef(ccr.turnover)
 
 betat_coef <- coef(ccr.turnover)
 
+summary(ccr.turnover)
+
+# predict estimates for each field across a sequence of log_YSA's and YSA's
+obs_nest.betat <- beta %>% 
+  mutate(Field_group = Field) %>%
+  group_by(Field_group, Field) %>% 
+  summarise(YSA = seq(min(YSA), max(YSA), length.out = 6 ),
+            YSA = seq(min(YSA), max(YSA), length.out = 6)) %>%
+  nest(data = c(Field,YSA)) %>%
+  mutate(predicted = map(data, ~predict(ccr.turnover, newdata= .x, re_formula = ~(1 + YSA | Field) ))) 
+
 
 betat_coef2 <-  bind_cols(betat_coef$Field[,,'Intercept'] %>% 
                                 as_tibble() %>% 
@@ -237,8 +248,8 @@ betat_coef2 <-  bind_cols(betat_coef$Field[,,'Intercept'] %>%
 
 View(betat_coef2)
 
-# setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/')
-# save(betat_fitted,betat_fixef,betat_coef,betat_coef2, file = 'betat.mod_dat.Rdata')
+ setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/')
+ save(betat_fitted,betat_fixef,betat_coef,betat_coef2,obs_nest.betat, file = 'betat.mod_dat.Rdata')
 load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/betat.mod_dat.Rdata')
 
 
@@ -249,6 +260,16 @@ betan_fitted <- cbind(ccr.nest$data,
 betan_fixef <- fixef(ccr.nest)
 
 betan_coef <- coef(ccr.nest)
+
+# predict estimates for each field across a sequence of log_YSA's and YSA's
+obs_nest.betan <- beta %>% 
+  mutate(Field_group = Field) %>%
+  group_by(Field_group, Field) %>% 
+  summarise(YSA = seq(min(YSA), max(YSA), length.out = 6 ),
+            YSA = seq(min(YSA), max(YSA), length.out = 6)) %>%
+  nest(data = c(Field,YSA)) %>%
+  mutate(predicted = map(data, ~predict(ccr.nest, newdata= .x, re_formula = ~(1 + YSA | Field) ))) 
+
 
 betan_coef2 <-  bind_cols(betan_coef$Field[,,'Intercept'] %>% 
                                 as_tibble() %>% 
@@ -270,8 +291,8 @@ betan_coef2 <-  bind_cols(betan_coef$Field[,,'Intercept'] %>%
              by = 'Field')
 
 
-# setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/')
-# save(betan_fitted,betan_fixef,betan_coef,betan_coef2, file = 'betan.mod_dat.Rdata')
+setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/')
+ save(betan_fitted,betan_fixef,betan_coef,betan_coef2,obs_nest.betan, file = 'betan.mod_dat.Rdata')
 load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/betan.mod_dat.Rdata')
 
 colnames(betat_fitted)
@@ -344,7 +365,7 @@ turn.fig <- ggplot() +
  # scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
-  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+  theme_bw(base_size=18) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.direction = "horizontal", legend.position="bottom")  +
   labs(subtitle= 'a)', color = "Old field") +
   ylab("Turnover")+  xlab("Years since agricultural abandonment") +
@@ -420,7 +441,7 @@ nest.fig <- ggplot() +
   # scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
-  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+  theme_bw(base_size=18) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.direction = "horizontal", legend.position="bottom") +
 labs( subtitle= 'b)', color = "Old field") +
 ylab("Nestedness") +  xlab("Years since agricultural abandonment") +
@@ -451,18 +472,36 @@ turn.fig <- ggplot() +
              aes(x = YSA, y = jtu,
                  colour = `Old field`),
              size = 1.2, shape=1) +
-  # geom_line(data = p.beta.div_fitted,aes(x = YSA, y= beta_rich_p,
-  #                                       group = Field,
-  #                                       colour = Field),
-  #            size = 0.55)+
-  geom_segment(data = betat_coef3,
-               aes(x = xmin,
-                   xend = xmax,
-                   y = plogis(Intercept + Slope * xmin),
-                   yend = plogis(Intercept + Slope * xmax),
-                   group = `Old field`,
-                   colour = `Old field`),
-               size = 1.2) +
+  geom_line(data = obs_nest.betat %>% unnest(cols = c(data, predicted))%>% mutate( `Old field` = fct_recode( Field,  "A" = "10",
+                                                                                                             "B" = "21",
+                                                                                                             "C" = "27",
+                                                                                                             "D" = "28",
+                                                                                                             "E" = "32",
+                                                                                                             "F" = "35",
+                                                                                                             "G" = "39",
+                                                                                                             "H" = "4",
+                                                                                                             "I" = "40",
+                                                                                                             "J" = "41",
+                                                                                                             "K" = "44",
+                                                                                                             "L" = "45",
+                                                                                                             "M" = "47",
+                                                                                                             "N" = "47",
+                                                                                                             "O" = "5",
+                                                                                                             "P" = "53",
+                                                                                                             "Q" = "70",
+                                                                                                             "R" = "72")),
+            aes(x = YSA, y= (predicted[,1]) ,
+                group = `Old field`,
+                colour = `Old field`),
+            size = 1.2) +
+  # geom_segment(data = betat_coef3,
+  #              aes(x = xmin,
+  #                  xend = xmax,
+  #                  y = plogis(Intercept + Slope * xmin),
+  #                  yend = plogis(Intercept + Slope * xmax),
+  #                  group = `Old field`,
+  #                  colour = `Old field`),
+  #              size = 1.2) +
   # uncertainy in fixed effect
   geom_ribbon(data = betat_fitted,
               aes(x = YSA, ymin = (Q2.5), ymax = (Q97.5)),
@@ -471,14 +510,35 @@ turn.fig <- ggplot() +
   geom_line(data = betat_fitted,
             aes(x = YSA, y = (Estimate)),
             size = 1.5) +
+  ylim(0.15,0.7)+
   # scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
-  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+  theme_bw(base_size=18) + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+             panel.border = element_blank(),
+        axis.line = element_line(),
+                                 plot.margin = unit(c(1,1,-0.5,7), "lines"),
+                                 strip.background = element_rect(colour="black", fill="white"),
                      axis.title.x=element_blank(),
                      axis.text.x=element_blank(),
                      axis.ticks.x=element_blank(),
-                     legend.direction = "horizontal", legend.position="bottom")  +
+                     legend.direction = "horizontal", legend.position="bottom",
+                     axis.line.x.bottom=element_line(colour = NA) )  +
+  annotate(
+    geom = 'segment',
+    y = Inf,
+    yend = Inf,
+    x = -Inf,
+    xend = Inf, size=1.5
+  )+
+  annotate(
+    geom = 'segment',
+    y = -Inf,
+    yend = Inf,
+    x = Inf,
+    xend = Inf, size=1.5
+  )+
   labs( color = "Old field") +
   ylab("Turnover")+  xlab("") +
   guides(col = guide_legend(ncol = 9))
@@ -489,33 +549,44 @@ head(betan_fitted2)
 head(betan_coef3)
 head(betan_fitted)
 
-betan_fitted2$jne <- (betan_fitted2$jne)*-1
-betan_coef3$Intercept <- (betan_coef3$Intercept)*-1
-betan_coef3$Slope <- (betan_coef3$Slope)*-1
-betan_fitted$Estimate <- (betan_fitted$Estimate)*-1
-betan_fitted$Q2.5 <- (betan_fitted$Q2.5)*-1
-betan_fitted$Q97.5 <- (betan_fitted$Q97.5)*-1
-
 nest.fig <- ggplot() +
   #facet_grid(~Site) +
   #geom_hline(yintercept = 0, lty = 2) +
-  geom_hline(yintercept = 1, lty = 2) +
+  #geom_hline(yintercept = 1, lty = 2) +
   geom_point(data = betan_fitted2,
              aes(x = YSA, y = jne,
                  colour = `Old field`),
              size = 1.2, shape=1) +
-  # geom_line(data = p.beta.div_fitted,aes(x = YSA, y= beta_rich_p,
-  #                                       group = Field,
-  #                                       colour = Field),
-  #            size = 0.55)+
-  geom_segment(data = betan_coef3,
-               aes(x = xmin,
-                   xend = xmax,
-                   y = plogis(Intercept + Slope * xmin),
-                   yend = plogis(Intercept + Slope * xmax),
-                   group = `Old field`,
-                   colour = `Old field`),
-               size = 1.2) +
+  geom_line(data = obs_nest.betan %>% unnest(cols = c(data, predicted))%>% mutate( `Old field` = fct_recode( Field,  "A" = "10",
+                                                                                                             "B" = "21",
+                                                                                                             "C" = "27",
+                                                                                                             "D" = "28",
+                                                                                                             "E" = "32",
+                                                                                                             "F" = "35",
+                                                                                                             "G" = "39",
+                                                                                                             "H" = "4",
+                                                                                                             "I" = "40",
+                                                                                                             "J" = "41",
+                                                                                                             "K" = "44",
+                                                                                                             "L" = "45",
+                                                                                                             "M" = "47",
+                                                                                                             "N" = "47",
+                                                                                                             "O" = "5",
+                                                                                                             "P" = "53",
+                                                                                                             "Q" = "70",
+                                                                                                             "R" = "72")),
+            aes(x = YSA, y= (predicted[,1]) ,
+                group = `Old field`,
+                colour = `Old field`),
+            size = 1.2) +
+  # geom_segment(data = betan_coef3,
+  #              aes(x = xmin,
+  #                  xend = xmax,
+  #                  y = plogis(Intercept + Slope * xmin),
+  #                  yend = plogis(Intercept + Slope * xmax),
+  #                  group = `Old field`,
+  #                  colour = `Old field`),
+  #              size = 1.2) +
   # uncertainy in fixed effect
   geom_ribbon(data = betan_fitted,
               aes(x = YSA, ymin = (Q2.5), ymax = (Q97.5)),
@@ -524,17 +595,67 @@ nest.fig <- ggplot() +
   geom_line(data = betan_fitted,
             aes(x = YSA, y = (Estimate)),
             size = 1.5) +
+  ylim(0.2,0.7)+
   # scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
-  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
-                     legend.direction = "horizontal", legend.position="bottom") +
+  theme_bw(base_size=18) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
+                                 panel.border = element_blank(),
+                                 axis.line = element_line(),
+                                 plot.margin = unit(c(-0.5,1,1,7), "lines"),
+                     strip.background = element_rect(colour="black", fill="white"),
+                     legend.direction = "vertical", legend.position="right",
+                     axis.line.x.top = element_line(colour = NA)) +
+  annotate(
+    geom = 'segment',
+    y = -Inf,
+    yend = Inf,
+    x = Inf,
+    xend = Inf, size=1.5
+  )+
   labs(  color = "Old field") +
   ylab("Nestedness") +  xlab("Years since agricultural abandonment") +
-  guides(col = guide_legend(ncol = 9))
+  guides(col = guide_legend(ncol = 2))
 
 nest.fig
 
-(turn.fig + theme(legend.position="none") )/( nest.fig+ theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,10,1)) 
+ysa.legend<-g_legend(nest.fig)
+
+
+
+
+# DRAW THE CENTRE BIT
+Model <-c((expression(paste(italic(gamma), -ENS[PIE], " (%) Recovery", sep = ' '))))
+Model <- c('Never-Plowed Regional Species Pool')
+conceptdat<- data.frame(Model)
+conceptdat  
+
+
+conceptual <- ggplot(data = conceptdat) +
+  #facet_grid(~Model) +
+  #labs(title = (expression(paste( 'Never-Plowed Regional ', italic(gamma), '-scale', sep = ''))) ) +
+ # annotate("text", x = -1, y = 0, label = "  paste( 'Never-Plowed Regional ',italic(gamma), '-scale')", size= 6, parse=TRUE ) +
+  annotate("text", x = -1.7:-1.7, y = 0.5:-0.5, label =  c( "Never-Plowed" , "paste( 'Regional ',italic(gamma), '-scale')" ), size= 6, parse=TRUE ) +
+  coord_cartesian(xlim = c(0, 8), ylim = c(-1,1), clip = "off")+
+   geom_hline( yintercept = 0, linetype="longdash") + theme_classic() + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        plot.margin = unit(c(0,1,0,7), "lines"),
+        strip.background = element_rect(colour=NA, fill=NA),
+        legend.position="bottom",  axis.title.y = element_blank(),
+        axis.text.y = element_blank(), axis.ticks.y = element_blank(),
+        axis.text.x = element_blank(), axis.ticks.x = element_blank(),  axis.title.x = element_blank(),
+        panel.background = element_rect(color = NA),
+        axis.line = element_line(colour = NA),
+        # text = element_text(size=rel(14)),
+        # plot.title=element_text(size=18, hjust=0.5)
+         )
+  
+conceptual
+
+#  PORTRAIT 11X14
+p.lot <- (turn.fig + theme(legend.position="none") ) / (conceptual) / ( nest.fig + theme(legend.position="none"))  + plot_layout(heights = c(10,1.5,10)) 
+
+(p.lot | ysa.legend) + plot_layout(widths = c(30,5) )
+
 
 

@@ -71,9 +71,10 @@ ccr_comm_prep <- ccr_prep %>%  select(group,x,y,Year,YSA,Field,Transect,Plot,n,S
 
 View(ccr_comm_prep)
 
-write.csv(ccr_comm_prep, "~/Dropbox/Projects/CCRScale/E14 _133/star_prep.csv")
+write.csv(ccr_comm_prep, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/star_prep.csv")
 
 # ~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/
+ccr_comm_prep <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/star_prep.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
 
 summary(ccr_comm_prep)
@@ -240,7 +241,7 @@ sa.avg.leg <- ggplot() +
   scale_color_manual(values =  c("#5DC863FF"))  + 
   labs(title='Species accumulation across scales', color="Reference Habitat")+
   #xlim(0,20)+ 
-  theme_classic() +   theme(legend.direction = "horizontal",legend.position = "bottom") 
+  theme_classic(base_size=18) +   theme(legend.direction = "horizontal",legend.position = "bottom") 
 
 
 sa.avg.leg
@@ -266,17 +267,17 @@ sa.avg <- ggplot() +
  #scale_color_manual(values =  c("#E7B800"))  + 
   labs(title='Multi-scale',subtitle="Average Accumulation for Year Since Abandonment", color="Old fields\nYears Since Abandonment")+
   #xlim(0,20)+ 
-  theme_classic() +   theme(legend.direction = "horizontal",legend.position = "bottom") +
+  theme_classic(base_size=18) +   theme(legend.direction = "horizontal",legend.position = "bottom") +
   guides(col = guide_legend(ncol = 15))
 
 
 sa.avg
 
-of.legend<-g_legend(sa.avg)
+of.legend <- g_legend(sa.avg)
 
-multi.scale<-(sa.avg + theme(legend.position="none")) / (np.legend) / (of.legend)/ (all.sites)  + plot_layout(heights = c(6,0.75,1.5,6)) 
-
-multi.scale
+# multi.scale<-(sa.avg + theme(legend.position="none")) / (np.legend) / (of.legend)/ (all.sites)  + plot_layout(heights = c(6,0.75,1.5,6)) 
+# 
+# multi.scale
 
 
 multi.scale<-(sa.avg + theme(legend.position="none")) / (np.legend) / (of.legend)  + plot_layout(heights = c(10,0.75,1)) 
@@ -284,11 +285,11 @@ multi.scale<-(sa.avg + theme(legend.position="none")) / (np.legend) / (of.legend
 multi.scale
 
 
-scales.fig <- (p.alpha.rich.fig | p.gamma.rich.fig   | p.beta.div.fig + theme(legend.position="none"))/(ysa.legend)/
-  (sa.avg + theme(legend.position="none")) / (np.legend) / (of.legend) + plot_layout(heights = c(6,1,8,0.75,1)) 
-
-# PORTRAIT 11 X 15
-scales.fig
+# scales.fig <- (p.alpha.rich.fig | p.gamma.rich.fig   | p.beta.div.fig + theme(legend.position="none"))/(ysa.legend)/
+#   (sa.avg + theme(legend.position="none")) / (np.legend) / (of.legend) + plot_layout(heights = c(6,1,8,0.75,1)) 
+# 
+# # PORTRAIT 11 X 15
+# scales.fig
 
 
 # MODEL THE SP ACCUM CURVES BY YSA ?

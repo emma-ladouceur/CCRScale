@@ -170,7 +170,7 @@ p.alpha.rich.fig<-ggplot() +
   geom_point(data = p.alpha.rich_fitted,
              aes(x = YSA, y = alpha_rich_p,
                  colour = Field),
-             size = 1.2, shape=1, position = position_jitter(width = 1, height=1)) +
+             size = 1.2, shape=1, position = position_jitter(width = 2, height=2.5)) +
   geom_line(data = obs_nest.alpha %>% unnest(cols = c(data, predicted)), aes(x = YSA, y= exp(predicted[,1]) ,
                      group = Field,
                      colour = Field),
@@ -191,10 +191,10 @@ p.alpha.rich.fig<-ggplot() +
   geom_line(data = p.alpha.rich_fitted,
             aes(x = YSA, y = exp(Estimate)),
             size = 1.5) +
-   scale_y_continuous( limits=c(10,210),breaks = c(25,50,100,150,200)) +
+   scale_y_continuous( limits=c(10,210),breaks = c(25,50,75,100,150,200)) +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
-    theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+    theme_bw(base_size=14 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none") +
   labs(#title = (expression(paste(italic(alpha), '-scale', sep = ''))),
        subtitle= 'c)'
@@ -378,11 +378,11 @@ p.gamma.rich.fig<-ggplot() +
   # geom_line(data = gamma.predict,
   #           aes(x=YSA, y = (pred_m)),
   #           size = 1.5) +
-  scale_y_continuous( limits=c(10,105),breaks = c(25,50,100)) +
+  scale_y_continuous( limits=c(10,105),breaks = c(25,50,65,75,100)) +
   #scale_x_continuous(trans = 'log2') +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
-    theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+    theme_bw(base_size=14 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none")  +
   labs(#title = (expression(paste(italic(gamma), '-scale', sep = '')))
        subtitle= 'd)' ) + ylab("Species Richness (%) Recovery")  + xlab("Years since agricultural abandonment")
@@ -622,10 +622,10 @@ p.beta.div.fig<-ggplot() +
   geom_line(data = p.beta.div_fitted,
             aes(x = YSA, y = exp(Estimate)),
             size = 1.5) +
-  scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
+  scale_y_continuous( limits=c(25,125),breaks = c(25,50,85,90,100,125)) +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
-    theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+    theme_bw(base_size=14 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                     legend.direction = "horizontal", legend.position="bottom")  +
   labs(#title = (expression(paste('', italic(beta), '-scale', sep = ''))), 
     color = "Old field", subtitle= 'b)') +
@@ -812,7 +812,7 @@ p.alpha.spie.fig<-ggplot() +
   scale_y_continuous( limits=c(10,210),breaks = c(25,50,100,150,200)) +
  # scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
-  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+  theme_bw(base_size=14 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none") +
   labs(#title = (expression(paste(italic(alpha), '-scale', sep = ''))) 
     subtitle = 'c)') +
@@ -996,7 +996,7 @@ p.gamma.spie.fig<-ggplot() +
   #scale_x_continuous(trans = 'log2') +
  # scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
-  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+  theme_bw(base_size=14 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none")  +
   labs(#title = (expression(paste(italic(gamma), '-scale', sep = '')))
     subtitle = 'd)') +
@@ -1176,7 +1176,7 @@ p.beta.spie.fig<-ggplot() +
   scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
-  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+  theme_bw(base_size=14 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.direction = "horizontal", legend.position="bottom")  +
   labs(#title = (expression(paste('', italic(beta), '-scale', sep = '')))
        subtitle= 'd)' ) +
@@ -1225,4 +1225,8 @@ b.fig
 
 (b.fig) + plot_annotation(title = (expression(paste('', italic(beta), '-scale', sep = ''))),
                                           theme = theme(plot.title = element_text(hjust = 0.5, size= 18))) + plot_layout(ncol=1)
+
+
+
+
  

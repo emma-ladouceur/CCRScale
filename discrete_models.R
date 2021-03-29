@@ -18,13 +18,12 @@ gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 
 # Note: Models are computationally intensive but in this case don't take too long to run
 # gamma and beta models are the fastest if you want to give it a try
 
-
 #----------------------------------------------------------------------------------------------
 # alpha rich 
 # alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-plowed","old field"))
 # 
 # d.alpha.rich <-  brm(alpha_rich ~  site_status +  ( 1 | Field) + (1 | Year), 
-#                   data = alpha_dat, family = 'poisson', cores = 4, iter=3000,warmup=1000, chains = 4)
+#                   data = alpha_dat, family = 'poisson', cores = 4, iter=3000, warmup=1000, chains = 4)
 # 
 # 
 # save(d.alpha.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.rich.Rdata')
@@ -68,7 +67,7 @@ d.alpha.rich.eff<-ggplot() +
   #ylim(0,60)+ 
   scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
   ggtitle((expression(paste(italic(alpha), '-scale', sep = ''))))+
-  theme_bw()+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+  theme_bw(base_size=18)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                                plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
                                # axis.text.y = element_text(size=6),
                                # axis.text.x = element_text(size=6),
@@ -127,7 +126,7 @@ d.alpha.spie.eff<-ggplot() +
   scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
   #ylim(0,200) +
   ggtitle((expression(paste(italic(alpha), '-scale', sep = ''))))+
-  theme_bw()+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+  theme_bw(base_size=18 )+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                                plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
                                # axis.text.y = element_text(size=6),
                                # axis.text.x = element_text(size=6),
@@ -181,7 +180,7 @@ d.gamma.rich.eff<-ggplot() +
   scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
   #ylim(0,60) +
   ggtitle((expression(paste(italic(gamma), '-scale', sep = ''))))+
-  theme_bw()+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+  theme_bw(base_size=18 )+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                                plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
                                # axis.text.y = element_text(size=6),
                                # axis.text.x = element_text(size=6),
@@ -238,7 +237,7 @@ d.gamma.spie.eff<-ggplot() +
   #scale_y_continuous( breaks = c(10, 20,50,100,150,200)) +
   scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
   ggtitle((expression(paste(italic(gamma), '-scale', sep = ''))))+
-  theme_bw()+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+  theme_bw(base_size=18 )+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                                plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
                                # axis.text.y = element_text(size=6),
                                # axis.text.x = element_text(size=6),
@@ -249,7 +248,7 @@ d.gamma.spie.eff<-ggplot() +
   ) +  ylab(expression(ENS[PIE])) 
 
 
-# theme_bw(base_size=14)
+# theme_bw(base_size=18)
 
 d.gamma.spie.eff
 
@@ -294,7 +293,7 @@ d.beta.div.eff<-ggplot() +
  # scale_y_continuous(trans = 'log2', breaks = c(12, 16, 24,36,48,66)) +
   scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
  # ggtitle((expression(paste('', italic(beta), '-scale', sep = ''))))+
-  theme_bw()+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+  theme_bw(base_size=18 )+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                                plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.3, unit = "cm"),
                                # axis.text.y = element_text(size=6),
                                # axis.text.x = element_text(size=6),
@@ -347,7 +346,7 @@ d.beta.spie.eff<-ggplot() +
  # geom_hline(yintercept = 0, lty = 2) +
   #scale_y_continuous(trans = 'log2', breaks = c(8,12, 16, 20)) +
   scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
-  theme_bw()+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+  theme_bw(base_size=18 )+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                                plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
                                # axis.text.y = element_text(size=6),
                                # axis.text.x = element_text(size=6),
