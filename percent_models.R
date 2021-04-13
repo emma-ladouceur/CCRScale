@@ -65,7 +65,7 @@ summary(p.alpha.rich.s)
 
 
 color_scheme_set("darkgray")
-pp_check(p.alpha.rich.s)+ theme_classic() # predicted vs. observed values
+pp_check(p.alpha.rich.s)+ xlab( "Species richness") + ylab("Density") + theme_classic() # predicted vs. observed values
 
 alpha_dat_of$Field<-as.factor(as.character(alpha_dat_of$Field))
 alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
@@ -246,7 +246,7 @@ summary(p.gamma.rich)
 
 
 color_scheme_set("darkgray")
-pp_check(p.gamma.rich)+ theme_classic() # predicted vs. observed values
+pp_check(p.gamma.rich)+ xlab( "Species richness") + ylab("Density") +theme_classic() # predicted vs. observed values
 
 gamma_dat_of$Field<-as.factor(as.character(gamma_dat_of$Field))
 gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
@@ -434,7 +434,7 @@ summary(p.beta.div)
 
 
 color_scheme_set("darkgray")
-pp_check(p.beta.div)+ theme_classic() # predicted vs. observed values
+pp_check(p.beta.div)+  xlab((expression(paste(italic(beta), '-Diversity', sep = '')))) +  ylab("Density") +theme_classic() # predicted vs. observed values
 
 
 gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
@@ -694,7 +694,7 @@ summary(p.alpha.spie)
 
 
 color_scheme_set("darkgray")
-pp_check(p.alpha.spie)+ theme_classic() # predicted vs. observed values
+pp_check(p.alpha.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("Density") +theme_classic() # predicted vs. observed values
 
 
 # models residuals
@@ -869,7 +869,7 @@ summary(p.gamma.spie)
 
 
 color_scheme_set("darkgray")
-pp_check(p.gamma.spie)+ theme_classic() # predicted vs. observed values
+pp_check(p.gamma.spie)+ xlab( expression(paste(ENS[PIE])) ) + ylab("Density") + theme_classic() # predicted vs. observed values
 
 gamma_dat_of$Field<-as.factor(as.character(gamma_dat_of$Field))
 gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
@@ -1046,7 +1046,7 @@ summary(p.beta.spie)
 
 
 color_scheme_set("darkgray")
-pp_check(p.beta.spie)+ theme_classic() # predicted vs. observed values
+pp_check(p.beta.spie)+ xlab((expression(paste(italic(beta), -ENS[PIE], sep = ' ')))) + ylab("Density") + theme_classic() # predicted vs. observed values
 
 
 gamma_dat_of$Field<-as.character(gamma_dat_of$Field)

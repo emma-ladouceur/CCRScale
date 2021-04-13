@@ -193,9 +193,6 @@ with(ar.plot, plot(Year, ma$Estimate))
 #                     inits = '0',
 #                     cores = 4, chains = 4)
 
-summary(ccr.nest)
-color_scheme_set("darkgray")
-pp_check(ccr.nest) + theme_classic()
 
 plot(ccr.nest)
 
@@ -204,6 +201,16 @@ plot(ccr.nest)
 
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/betat.Rdata") # object name: ccr.turnover
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/betan.Rdata") # object name: ccr.nest
+
+summary(ccr.nest)
+summary(ccr.turnover)
+
+
+color_scheme_set("darkgray")
+pp_check(ccr.nest) + xlab("Nestedness") + ylab("Density")+ theme_classic()
+pp_check(ccr.turnover) + xlab("Turnover") + ylab("Density")+ theme_classic()
+
+
 
 
 betat_fitted <- cbind(ccr.turnover$data,
