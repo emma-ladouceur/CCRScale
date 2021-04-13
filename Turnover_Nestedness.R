@@ -468,6 +468,8 @@ ysa.legend<-g_legend(nest.fig)
 turn.fig <- ggplot() +
   #facet_grid(~Site) +
   #geom_hline(yintercept = 0, lty = 2) +
+  annotate("text", x = -15, y = 0.7, label =  c( "a)"), size= 6) +
+  coord_cartesian(xlim = c(0, 80), ylim = c(0.15,0.7), clip = "off")+
   geom_point(data = betat_fitted2,
              aes(x = YSA, y = jtu,
                  colour = `Old field`),
@@ -510,7 +512,7 @@ turn.fig <- ggplot() +
   geom_line(data = betat_fitted,
             aes(x = YSA, y = (Estimate)),
             size = 1.5) +
-  ylim(0.15,0.7)+
+  #ylim(0.15,0.7)+
   # scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
@@ -530,14 +532,14 @@ turn.fig <- ggplot() +
     y = Inf,
     yend = Inf,
     x = -Inf,
-    xend = Inf, size=1.5
+    xend = Inf, size=0.75
   )+
   annotate(
     geom = 'segment',
     y = -Inf,
     yend = Inf,
     x = Inf,
-    xend = Inf, size=1.5
+    xend = Inf, size=0.75
   )+
   labs( color = "Old field") +
   ylab("Turnover")+  xlab("") +
@@ -553,6 +555,8 @@ nest.fig <- ggplot() +
   #facet_grid(~Site) +
   #geom_hline(yintercept = 0, lty = 2) +
   #geom_hline(yintercept = 1, lty = 2) +
+  annotate("text", x = -15, y = 0.7, label =  c( "b)"), size= 6) +
+  coord_cartesian(xlim = c(0, 80), ylim = c(0.2,0.7), clip = "off")+
   geom_point(data = betan_fitted2,
              aes(x = YSA, y = jne,
                  colour = `Old field`),
@@ -595,7 +599,7 @@ nest.fig <- ggplot() +
   geom_line(data = betan_fitted,
             aes(x = YSA, y = (Estimate)),
             size = 1.5) +
-  ylim(0.2,0.7)+
+#  ylim(0.2,0.7)+
   # scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 

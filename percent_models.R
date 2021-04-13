@@ -199,7 +199,7 @@ p.alpha.rich.fig<-ggplot() +
   labs(#title = (expression(paste(italic(alpha), '-scale', sep = ''))),
        subtitle= 'c)'
   ) +
- ylab("Species Richness (%) Recovery")  + xlab("Years since agricultural abandonment")
+ ylab("Species Richness (%)")  + xlab("Years since agricultural abandonment")
 
 p.alpha.rich.fig
 
@@ -385,7 +385,7 @@ p.gamma.rich.fig<-ggplot() +
     theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none")  +
   labs(#title = (expression(paste(italic(gamma), '-scale', sep = '')))
-       subtitle= 'd)' ) + ylab("Species Richness (%) Recovery")  + xlab("Years since agricultural abandonment")
+       subtitle= 'd)' ) + ylab("Species Richness (%)")  + xlab("Years since agricultural abandonment")
   #xlab("Years since restoration") 
 
 
@@ -629,7 +629,7 @@ p.beta.div.fig<-ggplot() +
                     legend.direction = "horizontal", legend.position="bottom")  +
   labs(#title = (expression(paste('', italic(beta), '-scale', sep = ''))), 
     color = "Old field", subtitle= 'b)') +
-  ylab((expression(''~paste(italic(beta), '-Diversity (%) Recovery', sep = '')))) +  xlab("Years since agricultural abandonment") +
+  ylab((expression(''~paste(italic(beta), '-Diversity (%)', sep = '')))) +  xlab("Years since agricultural abandonment") +
   guides(col = guide_legend(ncol = 9))
 
 
@@ -816,7 +816,7 @@ p.alpha.spie.fig<-ggplot() +
                      legend.position="none") +
   labs(#title = (expression(paste(italic(alpha), '-scale', sep = ''))) 
     subtitle = 'c)') +
-  xlab("Years since agricultural abandonment") +  ylab((expression(paste(italic(alpha), -ENS[PIE], " (%) Recovery", sep = ' '))))
+  xlab("Years since agricultural abandonment") +  ylab((expression(paste(italic(alpha), -ENS[PIE], " (%)", sep = ' '))))
 
 p.alpha.spie.fig
 
@@ -1001,7 +1001,7 @@ p.gamma.spie.fig<-ggplot() +
   labs(#title = (expression(paste(italic(gamma), '-scale', sep = '')))
     subtitle = 'd)') +
   xlab("Years since agricultural abandonment") +
-  ylab((expression(paste(italic(gamma), -ENS[PIE], " (%) Recovery", sep = ' '))))  
+  ylab((expression(paste(italic(gamma), -ENS[PIE], " (%)", sep = ' '))))  
 
 
 p.gamma.spie.fig
@@ -1180,7 +1180,7 @@ p.beta.spie.fig<-ggplot() +
                      legend.direction = "horizontal", legend.position="bottom")  +
   labs(#title = (expression(paste('', italic(beta), '-scale', sep = '')))
        subtitle= 'd)' ) +
-  ylab((expression(paste(italic(beta), -ENS[PIE], " (%) Recovery", sep = ' '))))  +  xlab("Years since agricultural abandonment") + guides(col = guide_legend(ncol = 13))
+  ylab((expression(paste(italic(beta), -ENS[PIE], " (%)", sep = ' '))))  +  xlab("Years since agricultural abandonment") + guides(col = guide_legend(ncol = 13))
 
 
 
