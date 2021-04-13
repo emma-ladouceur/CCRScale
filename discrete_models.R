@@ -34,7 +34,8 @@ summary(d.alpha.rich) # model summary
 
 
 color_scheme_set("darkgray")
-pp_check(d.alpha.rich)+ theme_classic() # predicted vs. observed values
+pp_check(d.alpha.rich) +   
+  xlab( "Species richness") + ylab("Density") + theme_classic() # predicted vs. observed values
 
 
 
@@ -101,7 +102,7 @@ summary(d.alpha.spie)
 
 
 color_scheme_set("darkgray")
-pp_check(d.alpha.spie)+ theme_classic() # predicted vs. observed values
+pp_check(d.alpha.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("Density") + theme_classic() # predicted vs. observed values
 
 
 d.alpha.spie_c <- conditional_effects(d.alpha.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
@@ -156,7 +157,7 @@ summary(d.gamma.rich)
 
 
 color_scheme_set("darkgray")
-pp_check(d.gamma.rich)+ theme_classic() # predicted vs. observed values
+pp_check(d.gamma.rich)+  xlab( "Species richness") + ylab("Density") + theme_classic() # predicted vs. observed values
 
 
 gamma_c <- conditional_effects(d.gamma.rich, effects = 'site_status', re_formula = NA, method = 'fitted')  
@@ -212,7 +213,7 @@ load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discr
 summary(d.gamma.spie)
 
 color_scheme_set("darkgray")
-pp_check(d.gamma.spie)+ theme_classic() # predicted vs. observed values
+pp_check(d.gamma.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("Density") + theme_classic() # predicted vs. observed values
 
 
 d.gamma.spie_c <- conditional_effects(d.gamma.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
@@ -269,7 +270,7 @@ load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discr
 summary(d.beta.div)
 
 
-pp_check(d.beta.div)+ theme_classic() # predicted vs. observed values
+pp_check(d.beta.div)+ xlab((expression(paste(italic(beta), '-Diversity', sep = '')))) +  ylab("Density") + theme_classic() # predicted vs. observed values
 
 
 d.beta_c <- conditional_effects(d.beta.div, effects = 'site_status', re_formula = NA, method = 'fitted')  
@@ -323,7 +324,7 @@ load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discr
 summary(d.beta.spie)
 
 
-pp_check(d.beta.spie)+ theme_classic() # predicted vs. observed values
+pp_check(d.beta.spie)+ xlab((expression(paste(italic(beta), -ENS[PIE], sep = ' ')))) + ylab("Density")+theme_classic() # predicted vs. observed values
 
 
 d.beta.spie_c <- conditional_effects(d.beta.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
