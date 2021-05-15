@@ -840,7 +840,7 @@ gamma_dat_of
 
 gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") 
 
-gamma_dat_of$gamma_ENSPIE_p<-(gamma_dat_of$gamma_ENSPIE/125.5786 *100)
+gamma_dat_of$gamma_ENSPIE_p<-(gamma_dat_of$gamma_ENSPIE/33.57118 *100)
 
 
 head(gamma_dat_of)
@@ -1009,6 +1009,7 @@ p.gamma.spie.fig
 
 
 #----------------------------------------------------------------------------------------------
+head(gamma_dat)
 
 gamma_dat_np <- gamma_dat %>% filter(site_status == "never-plowed") %>% 
   summarise(beta_rich_p_np = mean(beta_ENSPIE))
@@ -1022,7 +1023,7 @@ gamma_dat_of
 
 gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") 
 
-gamma_dat_of$beta_ENSPIE_p<-(gamma_dat_of$beta_ENSPIE/17.63 *100)
+gamma_dat_of$beta_ENSPIE_p<-(gamma_dat_of$beta_ENSPIE/4.361521 *100)
 
 head(gamma_dat_of)
 
