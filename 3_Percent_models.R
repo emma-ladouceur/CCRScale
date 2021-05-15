@@ -863,7 +863,8 @@ gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
 # went with gaussian
 
 #save(p.gamma.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.gamma.spie.Rdata')
-load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.gamma.spie.Rdata") 
+#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.gamma.spie.Rdata") 
+load("~/Desktop/mods/gamma_pie_c.Rdata") 
 
 summary(p.gamma.spie)
 
@@ -889,7 +890,7 @@ with(gr.plot, plot(Year, mg$Estimate))
 p.gamma.spie_fitted <- cbind(p.gamma.spie$data,
                              fitted(p.gamma.spie, re_formula = NA
                              )) %>% 
-  as_tibble() %>%
+  as_tibble() #%>%
   # join with plot data for figures
   inner_join(gamma_dat_of %>% distinct(Field, Year, log_YSA, YSA, log_gamma_ENSPIE_p, gamma_ENSPIE_p, gamma_ENSPIE),
              #by= c("Field", "Year", "log_YSA", "log_gamma_rich_p")
@@ -992,7 +993,7 @@ p.gamma.spie.fig<-ggplot() +
   # geom_line(data = gamma.predict,
   #           aes(x=YSA, y = (pred_m)),
   #           size = 1.5) +
-  scale_y_continuous( limits=c(10,105),breaks = c(25,50,100)) +
+  #scale_y_continuous( limits=c(10,105),breaks = c(25,50,100)) +
   #scale_x_continuous(trans = 'log2') +
  # scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 

@@ -198,18 +198,23 @@ d.gamma.rich.eff
 
 # gamma pie
 
-colnames(gamma_dat)
-gamma_dat$Field<-as.factor(as.character(gamma_dat$Field))
-gamma_dat$Year<-as.factor(as.character(gamma_dat$Year))
-gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-plowed","old field"))
+# colnames(gamma_dat)
+# gamma_dat$Field<-as.factor(as.character(gamma_dat$Field))
+# gamma_dat$Year<-as.factor(as.character(gamma_dat$Year))
+# gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-plowed","old field"))
+# 
+# View(gamma_dat)
+# 
+# d.gamma.spie <-  brm(gamma_ENSPIE ~  site_status + (1 | Field)  + (1 | Year),
+#                   data = gamma_dat, family = student(), cores = 4, iter=3000, warmup = 1000, chains = 4)
+# 
+# save(d.gamma.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.gamma.spie.Rdata')
+#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.gamma.spie.Rdata") 
 
-View(gamma_dat)
 
-d.gamma.spie <-  brm(gamma_ENSPIE ~  site_status + (1 | Field)  + (1 | Year),
-                  data = gamma_dat, family = student(), cores = 4, iter=3000, warmup = 1000, chains = 4)
+load("~/Desktop/mods/gamma_pie_d.Rdata") #d.gamma.spie
 
-save(d.gamma.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.gamma.spie.Rdata')
-load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.gamma.spie.Rdata") 
+
 
 summary(d.gamma.spie)
 
@@ -321,6 +326,7 @@ d.beta.div.eff
 # 
 # save(d.beta.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.beta.spie.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.beta.spie.Rdata") 
+load("~/Desktop/mods/beta_pie_d.Rdata") 
 
 summary(d.beta.spie)
 

@@ -132,7 +132,7 @@ alpha_ccr <- cover_long %>%
   summarise(
     Round_rel_cover = round(Relative_pCover),
     alpha_rich = n_distinct(Species),
-    alpha_S_PIE = mobr::calc_SPIE(Round_rel_cover),
+   # alpha_S_PIE = mobr::calc_SPIE(Round_rel_cover),
     alpha_ENSPIE = vegan::diversity(Relative_pCover, index='invsimpson')) %>%
   ungroup()  %>% arrange(Field, Transect, Plot, Year)
 
@@ -172,10 +172,49 @@ gamma_ccr2 <- gamma_ccr %>% left_join(alpha_mean)
 gamma_ccr2$beta_rich <- gamma_ccr2$gamma_rich/gamma_ccr2$mean_alpha_rich
 gamma_ccr2$beta_ENSPIE <- gamma_ccr2$gamma_ENSPIE/gamma_ccr2$mean_alpha_ENSPIE
 
-ccr_div <- alpha_ccr %>% left_join(gamma_ccr2) %>%
-  arrange(Exp, site_status, Year, YSA, Field, Transect, Plot)
 
-View(ccr_div)
+gamma_dat_np <- gamma_ccr2 %>% filter(site_status == "never-plowed") %>% 
+  summarise(gamma_rspie_p_np = mean(gamma_ENSPIE))
+
+gamma_dat_np
+
+gamma_dat_of <- gamma_ccr2 %>% filter(site_status == "old field") %>% 
+  summarise(gamma_spie_p = mean(gamma_ENSPIE))
+
+gamma_dat_of
+
+gamma_dat_of <- gamma_ccr2 %>% filter(site_status == "old field") 
+
+gamma_dat_of$gamma_ENSPIE_p<-(gamma_dat_of$gamma_ENSPIE/33.57118 *100)
+
+
+head(gamma_dat_of)
+
+beta_dat_np <- gamma_ccr2 %>% filter(site_status == "never-plowed") %>% 
+  summarise(beta_rich_p_np = mean(beta_ENSPIE))
+
+beta_dat_np
+
+beta_dat_of <- gamma_ccr2 %>% filter(site_status == "old field") %>% 
+  summarise(beta_rich_p = mean(beta_ENSPIE))
+
+beta_dat_of
+
+gamma_dat_of$beta_ENSPIE_p<-(gamma_dat_of$beta_ENSPIE/4.361521 *100)
+
+head(gamma_dat_of)
+
+gamma_dat_of$YSA <- as.numeric(gamma_dat_of$YSA)
+
+gamma_dat_of$log_gamma_ENSPIE_p <- log(gamma_dat_of$gamma_ENSPIE_p)
+gamma_dat_of$log_beta_ENSPIE_p <- log(gamma_dat_of$beta_ENSPIE_p)
+
+gamma_dat_of$log_YSA <- log(gamma_dat_of$YSA)
+gamma_dat_of$c.YSA<-gamma_dat_of$YSA-mean(gamma_dat_of$YSA)
+gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
+gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
+
+View(gamma_dat_of)
 
 
 write.csv(gamma_ccr2, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div.csv")
