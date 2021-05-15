@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH -J gamma_pie
+#SBATCH -J gamma_pie_d
 #SBATCH --time=24:00:00
 #SBATCH --mem-per-cpu=8G
 #SBATCH --cpus-per-task=4
@@ -11,6 +11,6 @@
 module load foss/2019b R/3.6.2-2
 export OFILE=/work/$USER/NutNet/$SLURM_JOB_NAME-$SLURM_JOB_ID.Rdata
 export LANG=en_US.UTF-8
-Rscript --vanilla /home/ladouceu/projects/CCRScale/cluster/gamma_pie.R
+Rscript --vanilla /home/ladouceu/projects/CCRScale/cluster/gamma_pie_d.R
 
 
