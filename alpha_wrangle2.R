@@ -7,7 +7,7 @@ library(tidyverse)
 library(vegan)
 library(mobr)
 
-cover <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+cover <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
 colnames(cover)
 head(cover)
@@ -110,29 +110,34 @@ cover_rel <- cover_long %>% group_by(Field, Year, Transect, Plot) %>%
   mutate( Relative_pCover = (pCover/pCover_plot_sum) *100 ) %>%
   arrange(Field,Year,Transect,Plot,Species) %>% ungroup()
 
-
+View(cover_rel)
 
 site_check <- distinct(cover_rel, Field)
 View(site_check)
 
-write.csv(cover_rel, "~/Dropbox/Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv")
+write.csv(cover_rel, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv")
 
-cover_long <- read.csv("~/Dropbox/Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+cover_long <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
 
-colnames(cover_long)
+View(cover_long)
+
+
+is.numeric(cover_long$Relative_pCover)
+
 
 # calculate alpha scale metrics
 alpha_ccr <- cover_long %>%
   group_by(Exp,site_status,YSA,Field,Year,Transect,Plot) %>%
   summarise(
+    Round_rel_cover = round(Relative_pCover),
     alpha_rich = n_distinct(Species),
-    alpha_S_PIE = mobr::calc_PIE(Relative_pCover, ENS = T),
+    alpha_S_PIE = mobr::calc_SPIE(Round_rel_cover),
     alpha_ENSPIE = vegan::diversity(Relative_pCover, index='invsimpson')) %>%
   ungroup()  %>% arrange(Field, Transect, Plot, Year)
 
 
-View(alpha_ccr)
+head(alpha_ccr)
 
 # have a look at the means to see if they look alright
 alpha_mean <- alpha_ccr %>% group_by(Exp,site_status,YSA,Field,Year) %>%
@@ -142,13 +147,24 @@ alpha_mean <- alpha_ccr %>% group_by(Exp,site_status,YSA,Field,Year) %>%
 View(alpha_mean)
 
 # calculate the gamma metrics
-gamma_ccr <- cover_long %>%
+gamma_mean <- cover_long %>%
+  group_by(Exp,site_status,YSA,Field,Year, Species) %>%
+   summarise( 
+    cover_mean = mean(Relative_pCover) )   %>%
+   ungroup()  %>% arrange(Exp,site_status,Field, Year,YSA) 
+    
+View(gamma_mean)
+
+gamma_ccr <- gamma_mean %>%
   group_by(Exp,site_status,YSA,Field,Year) %>%
-  summarise(
-    gamma_rich = n_distinct(Species),
-    gamma_S_PIE = mobr::calc_PIE(Relative_pCover, ENS = T),
-    gamma_ENSPIE = vegan::diversity(Relative_pCover, index='invsimpson')) %>%
+  summarise( 
+   gamma_rich = n_distinct(Species),
+    gamma_ENSPIE = vegan::diversity(cover_mean, index='invsimpson')) %>%
   ungroup()  %>% arrange(Exp,site_status,Field, Year,YSA)
+
+
+
+View(gamma_ccr)
 
 
 gamma_ccr2 <- gamma_ccr %>% left_join(alpha_mean)
@@ -162,6 +178,6 @@ ccr_div <- alpha_ccr %>% left_join(gamma_ccr2) %>%
 View(ccr_div)
 
 
-write.csv(gamma_ccr2, "~/Dropbox/Projects/CCRScale/E14 _133/gamma_div.csv")
+write.csv(gamma_ccr2, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div.csv")
 
-write.csv(alpha_ccr, "~/Dropbox/Projects/CCRScale/E14 _133/alpha_div.csv")
+write.csv(alpha_ccr, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/alpha_div.csv")
