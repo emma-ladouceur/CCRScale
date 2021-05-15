@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH -J beta_pie_c
-#SBATCH --time=24:00:00
+#SBATCH --time=2:00:00
 #SBATCH --mem-per-cpu=8G
 #SBATCH --cpus-per-task=4
 
