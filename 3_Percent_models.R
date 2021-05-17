@@ -22,33 +22,6 @@ head(alpha_dat)
 head(gamma_dat)
 head(ccr_dat)
 
-# check what the mean richness is for each field type
-# turn the grouping on or off to see details
-alpha_dat_np <- alpha_dat %>% filter(site_status == "never-plowed") %>% group_by(Year) %>%
-  summarise(alpha_rich_p_np = mean(alpha_rich))
-
-alpha_dat_np
-
-alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") %>%  #group_by(Field,YSA) %>%
-  summarise(alpha_rich_p = mean(alpha_rich))
-
-alpha_dat_of
-
-alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") 
-
-alpha_dat_of$alpha_rich_p <- (alpha_dat_of$alpha_rich/9.21 *100)
-  
-head(alpha_dat_of)
-
-is.numeric(alpha_dat_of$YSA)
-
-alpha_dat_of$YSA <- as.numeric(alpha_dat_of$YSA)
-alpha_dat_of$log_alpha_rich_p <- log(alpha_dat_of$alpha_rich_p)
-alpha_dat_of$log_YSA <- log(alpha_dat_of$YSA)
-alpha_dat_of$c.YSA<-alpha_dat_of$YSA-mean(alpha_dat_of$YSA)
-alpha_dat_of$Field<-as.factor(as.character(alpha_dat_of$Field))
-alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
-alpha_dat_of$Field<-as.factor(as.character(alpha_dat_of$Field))
 
 # This model takes some time to run so it is recommended to run on a  server or cluster 
 # possible to run on local machine but it takes some time
@@ -397,29 +370,6 @@ p.gamma.rich.fig
  #----------------------------------------------------------------------------------------------
 
 # 
-# gamma_dat_np <- gamma_dat %>% filter(site_status == "never-plowed") %>% 
-#   summarise(beta_rich_p_np = mean(beta_rich))
-# 
-# gamma_dat_np
-# 
-# gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") %>% 
-#   summarise(beta_rich_p = mean(beta_rich))
-# 
-# gamma_dat_of
-# 
-# gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") 
-# 
-# gamma_dat_of$beta_rich_p<-(gamma_dat_of$beta_rich/4.79 *100)
-# 
-# head(gamma_dat_of)
-# 
-# gamma_dat_of$YSA <- as.numeric(gamma_dat_of$YSA)
-# gamma_dat_of$log_beta_rich_p <- log(gamma_dat_of$beta_rich_p)
-# gamma_dat_of$log_YSA <- log(gamma_dat_of$YSA)
-# gamma_dat_of$c.YSA<-gamma_dat_of$YSA-mean(gamma_dat_of$YSA)
-# gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
-# gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
-# 
 
 # p.beta.div <-  brm(log_beta_rich_p ~  log_YSA + (1 + log_YSA | Field) + (1 | Year), 
 #                   data = gamma_dat_of, family=student(), cores = 4, iter=6000, warmup=1000, control =
@@ -657,29 +607,6 @@ ysa.legend<-g_legend(p.beta.div.fig)
 # 
 # head(alpha_dat)
 # 
-# alpha_dat_np <- alpha_dat %>% filter(site_status == "never-plowed") %>% #group_by(Field,YSA) %>%
-#   summarise(alpha_rich_p_np = mean(alpha_ENSPIE))
-# 
-# alpha_dat_np
-# 
-# alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") %>% # group_by(Field,YSA) %>%
-#   summarise(alpha_rich_p = mean(alpha_ENSPIE))
-# 
-# alpha_dat_of
-# 
-# alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") 
-# 
-# alpha_dat_of$alpha_ENSPIE_p<-(alpha_dat_of$alpha_ENSPIE/7.10 *100)
-# 
-# head(alpha_dat_of)
-# 
-# alpha_dat_of$YSA <- as.numeric(alpha_dat_of$YSA)
-# alpha_dat_of$log_alpha_ENSPIE_p <- log(alpha_dat_of$alpha_ENSPIE_p)
-# alpha_dat_of$log_YSA <- log(alpha_dat_of$YSA)
-# alpha_dat_of$c.YSA<-alpha_dat_of$YSA-mean(alpha_dat_of$YSA)
-# alpha_dat_of$Field<-as.factor(as.character(alpha_dat_of$Field))
-# alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
-
 
 
 # p.alpha.spie <-  brm(log_alpha_ENSPIE_p ~  log_YSA + ( 1 + log_YSA  | Field/Transect/Plot) + (1 | Year), 

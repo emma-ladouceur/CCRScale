@@ -13,7 +13,7 @@ alpha_dat$YSA<-as.factor(as.character(alpha_dat$YSA))
 alpha_dat$site_status <- factor(alpha_dat$site_status, levels=c("never-plowed","old field"))
 
 
-d.alpha.rich <-  brm(alpha_rich ~  site_status + (1 | Field)  + (1 | Year) + (1 | YSA),
+d.alpha.rich <-  brm(alpha_rich ~  site_status + (1 | Field)  + (1 | Year) ,
                      data = alpha_dat, family = student(), cores = 4, iter=3000, warmup = 1000, chains = 4)
 
 

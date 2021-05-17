@@ -8,7 +8,7 @@ gamma_dat <- read.csv(paste0(path, '/gamma_div_percent.csv'), header=T,fill=TRUE
 
 
 
-p.beta.div <-  brm(log_beta_rich_p ~  log_YSA + (1 + log_YSA | Field) + (1 | Year),
+p.beta.div <-  brm(log_beta_div_p ~  log_YSA + (1 + log_YSA | Field) + (1 | Year),
                   data = gamma_dat_of, family=student(), cores = 4, iter=6000, warmup=1000, control =
                     list(adapt_delta = 0.99), chains = 4)
 
