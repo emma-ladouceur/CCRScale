@@ -126,15 +126,12 @@ write.csv(cover_rel, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _
 
 cover_long <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
-
-View(cover_long)
-
-
+head(cover_long)
 is.numeric(cover_long$Relative_pCover)
 
 
 # calculate alpha scale metrics
-alpha_ccr <- cover_long %>%
+alpha_dat <- cover_long %>%
   group_by(Exp,site_status,YSA,Field,Year,Transect,Plot) %>%
   summarise(
     alpha_rich = n_distinct(Species),
@@ -142,10 +139,63 @@ alpha_ccr <- cover_long %>%
   ungroup()  %>% arrange(Field, Transect, Plot, Year)
 
 
-head(alpha_ccr)
+head(alpha_dat)
+
+# check what the mean richness is for each field type
+# turn the grouping on or off to see details
+alpha_dat_np <- alpha_dat %>% filter(site_status == "never-plowed") %>% 
+  summarise(alpha_rich_p_np = mean(alpha_rich))
+
+alpha_dat_np
+
+alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") %>%  #group_by(Field,YSA) %>%
+  summarise(alpha_rich_p = mean(alpha_rich))
+
+alpha_dat_of
+
+alpha_div_p <- alpha_dat %>% filter(site_status == "old field") 
+
+alpha_div_p$alpha_rich_p <- (alpha_div_p$alpha_rich/9.14 * 100)
+
+head(alpha_div_p)
+
+#spie
+
+alpha_dat_np <- alpha_dat %>% filter(site_status == "never-plowed") %>% #group_by(Field,YSA) %>%
+  summarise(alpha_rich_p_np = mean(alpha_ENSPIE))
+
+alpha_dat_np
+
+alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") %>% # group_by(Field,YSA) %>%
+  summarise(alpha_rich_p = mean(alpha_ENSPIE))
+
+alpha_dat_of
+
+alpha_div_p$alpha_ENSPIE_p<-(alpha_div_p$alpha_ENSPIE/7.10 *100)
+
+head(alpha_div_p)
+
+alpha_div_p$YSA <- as.numeric(alpha_div_p$YSA)
+alpha_div_p$log_alpha_rich_p <- log(alpha_div_p$alpha_rich_p)
+alpha_div_p$log_alpha_ENSPIE_p <- log(alpha_div_p$alpha_ENSPIE_p)
+alpha_div_p$log_YSA <- log(alpha_div_p$YSA)
+alpha_div_p$c.YSA<-alpha_div_p$YSA-mean(alpha_div_p$YSA)
+alpha_div_p$Field<-as.factor(as.character(alpha_div_p$Field))
+alpha_div_p$Year<-as.factor(as.character(alpha_div_p$Year))
+alpha_div_p$Field<-as.factor(as.character(alpha_div_p$Field))
+
+View(alpha_dat)
+View(alpha_div_p)
+
+# alpha diversity
+write.csv(alpha_dat, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/alpha_div.csv")
+# percentage of recovery of old fields compared to never plowed sites
+write.csv(alpha_div_p, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/alpha_div_percent.csv")
 
 
 # gamma scale
+cover_long <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+
 gamma_mean <- cover_long %>%
   group_by(Exp,site_status,YSA,Field,Year, Species) %>%
   summarise( 
@@ -178,7 +228,7 @@ gamma_ccr2$beta_div <- gamma_ccr2$gamma_rich/gamma_ccr2$mean_alpha_rich
 gamma_ccr2$beta_ENSPIE <- gamma_ccr2$gamma_ENSPIE/gamma_ccr2$mean_alpha_ENSPIE
 
 
-View(gamma_ccr2)
+
 
 gamma_dat_np <- gamma_ccr2 %>% filter(site_status == "never-plowed") %>% 
   summarise(gamma_rspie_p_np = mean(gamma_ENSPIE))
@@ -223,14 +273,14 @@ gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
 
 View(gamma_dat_of)
 
+View(gamma_ccr2)
+
+View(alpha_ccr)
 head(gamma_dat_of)
 
 # mean species cover at the gamma scale
 write.csv(gamma_mean, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_species_mean.csv")
 # gamma and beta diversity metrics (richness and spie) for all sites
-write.csv(gamma_ccr2, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div_full.csv")
+write.csv(gamma_ccr2, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div.csv")
 # percentage of recovery of old fields compared to never plowed sites
 write.csv(gamma_dat_of, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div_percent.csv")
-# alpha diversity
-write.csv(alpha_ccr, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/alpha_div.csv")
-

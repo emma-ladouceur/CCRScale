@@ -4,7 +4,7 @@ library(brms)
 
 
 path <- '/gpfs1/data/idiv_chase/emmala/CCRScale'
-gamma_dat <- read.csv(paste0(path, '/gamma_div.csv'), header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na"))
+gamma_dat <- read.csv(paste0(path, '/gamma_div_full.csv'), header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na"))
 
 
 gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-plowed","old field"))
