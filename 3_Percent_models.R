@@ -23,10 +23,6 @@ head(gamma_dat)
 head(ccr_dat)
 
 
-# This model takes some time to run so it is recommended to run on a  server or cluster 
-# possible to run on local machine but it takes some time
-# see alpha.rich.sh for cluster submit script and paired R script alpha.rich.R 
-
 # p.alpha.rich.s <-  brm(log_alpha_rich_p ~  log_YSA + ( 1 + log_YSA  | Field/Transect/Plot) + (1 | Year),
 #                        data = alpha_dat_of, family=student(), cores = 4, iter=10000,warmup = 1000, control =
 #                          list(adapt_delta = 0.99), chains = 4)
@@ -179,32 +175,6 @@ p.alpha.rich.fig
 
 
 #----------------------------------------------------------------------------------------------
-gamma_dat_np <- gamma_dat %>% filter(site_status == "never-plowed") %>% 
-  summarise(gamma_rich_p_np = mean(gamma_rich))
-
-gamma_dat_np
-
-gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") %>% 
-  summarise(gamma_rich_p = mean(gamma_rich))
-
-gamma_dat_of
-
-gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") 
-
-gamma_dat_of$gamma_rich_p<-(gamma_dat_of$gamma_rich/43.33 *100)
-
-
-head(gamma_dat_of)
-
-gamma_dat_of$YSA <- as.numeric(gamma_dat_of$YSA)
-gamma_dat_of$log_gamma_rich_p <- log(gamma_dat_of$gamma_rich_p)
-gamma_dat_of$log_YSA <- log(gamma_dat_of$YSA)
-gamma_dat_of$c.YSA<-gamma_dat_of$YSA-mean(gamma_dat_of$YSA)
-gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
-gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
-
-
-# ar(time = Year, gr = Field, p = 1),
 
 
 # p.gamma.rich<-  brm(log_gamma_rich_p ~  log_YSA  +  ( 1 + log_YSA  | Field) + (1 | Year), 
@@ -753,37 +723,6 @@ p.alpha.spie.fig
 
 #----------------------------------------------------------------------------------------------
 
-head(gamma_dat)
-# 
-# gamma_dat_np <- gamma_dat %>% filter(site_status == "never-plowed") %>% 
-#   summarise(gamma_rspie_p_np = mean(gamma_ENSPIE))
-# 
-# gamma_dat_np
-# 
-# gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") %>% 
-#   summarise(gamma_spie_p = mean(gamma_ENSPIE))
-# 
-# gamma_dat_of
-# 
-# gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") 
-# 
-# gamma_dat_of$gamma_ENSPIE_p<-(gamma_dat_of$gamma_ENSPIE/33.57118 *100)
-# 
-# 
-# head(gamma_dat_of)
-# 
-# is.numeric(gamma_dat_of$YSA)
-# 
-# gamma_dat_of$YSA <- as.numeric(gamma_dat_of$YSA)
-# gamma_dat_of$log_gamma_ENSPIE_p <- log(gamma_dat_of$gamma_ENSPIE_p)
-# gamma_dat_of$log_YSA <- log(gamma_dat_of$YSA)
-# gamma_dat_of$c.YSA<-gamma_dat_of$YSA-mean(gamma_dat_of$YSA)
-# gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
-# gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
-
-
-# ar(time = Year, gr = Field, p = 1),
-
 
 # p.gamma.spie<-  brm(log_gamma_ENSPIE_p ~  log_YSA  +  ( 1 + log_YSA  | Field) + (1 | Year), 
 #                     data = gamma_dat_of, control = list(adapt_delta = 0.99), cores = 4, iter=12000, warmup=1000, chains = 4)
@@ -947,30 +886,6 @@ p.gamma.spie.fig
 
 #----------------------------------------------------------------------------------------------
 head(gamma_dat)
-# 
-# gamma_dat_np <- gamma_dat %>% filter(site_status == "never-plowed") %>% 
-#   summarise(beta_rich_p_np = mean(beta_ENSPIE))
-# 
-# gamma_dat_np
-# 
-# gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") %>% 
-#   summarise(beta_rich_p = mean(beta_ENSPIE))
-# 
-# gamma_dat_of
-# 
-# gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") 
-# 
-# gamma_dat_of$beta_ENSPIE_p<-(gamma_dat_of$beta_ENSPIE/4.361521 *100)
-# 
-# head(gamma_dat_of)
-# 
-# gamma_dat_of$YSA <- as.numeric(gamma_dat_of$YSA)
-# gamma_dat_of$log_beta_ENSPIE_p <- log(gamma_dat_of$beta_ENSPIE_p)
-# gamma_dat_of$log_YSA <- log(gamma_dat_of$YSA)
-# gamma_dat_of$c.YSA<-gamma_dat_of$YSA-mean(gamma_dat_of$YSA)
-# gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
-# gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
-# 
 
 # p.beta.spie <-  brm(log_beta_ENSPIE_p ~  log_YSA + (1 + log_YSA | Field) + (1 | Year), 
 #                    data = gamma_dat_of, family=student(),cores = 4, iter=10000,warmup=1000, chains = 4)
