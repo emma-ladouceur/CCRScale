@@ -10,7 +10,7 @@ library(patchwork)
 # cleaned data and alpha, beta gamma div datasets
 ccr_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 alpha_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/alpha_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
-gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div_full.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
 # SPIE = mobr
 # ENSPIE = vegan - inverse Simpson's
@@ -44,6 +44,8 @@ pp_check(d.alpha.rich) +
 
 
 alpha_c <- conditional_effects(d.alpha.rich, effects = 'site_status', re_formula = NA, method = 'fitted')  # conditional effects
+
+View(alpha_c)
 
 alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("old field","never-plowed"))
 
@@ -107,6 +109,8 @@ pp_check(d.alpha.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("Density") +
 
 d.alpha.spie_c <- conditional_effects(d.alpha.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
 
+View(d.alpha.spie_c)
+
 alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("old field","never-plowed"))
 
 #View(d.alpha.spie_c)
@@ -161,11 +165,12 @@ pp_check(d.gamma.rich)+  xlab( "Species richness") + ylab("Density") + theme_cla
 
 
 gamma_c <- conditional_effects(d.gamma.rich, effects = 'site_status', re_formula = NA, method = 'fitted')  
+View(gamma_c)
 
 gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
 
 
-#View(gamma_c)
+View(gamma_dat)
 
 d.gamma.rich.eff<-ggplot() + 
   geom_point(data = gamma_dat,
@@ -224,6 +229,8 @@ pp_check(d.gamma.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("Density") +
 
 d.gamma.spie_c <- conditional_effects(d.gamma.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
 
+View(d.gamma.spie_c)
+
 gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
 
 #View(d.gamma.spie_c)
@@ -281,6 +288,8 @@ pp_check(d.beta.div)+ xlab((expression(paste(italic(beta), '-Diversity', sep = '
 
 d.beta_c <- conditional_effects(d.beta.div, effects = 'site_status', re_formula = NA, method = 'fitted')  
 
+
+View(d.beta_c)
 gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
 
 
@@ -336,13 +345,15 @@ pp_check(d.beta.spie)+ xlab((expression(paste(italic(beta), -ENS[PIE], sep = ' '
 
 d.beta.spie_c <- conditional_effects(d.beta.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
 
+
+View(d.beta.spie_c)
 gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
 
 
 #View(d.beta.spie_c)
 colnames(gamma_dat)
 
-d.beta.spie.eff<-ggplot() + 
+d.beta.spie.eff <- ggplot() + 
   geom_point(data = gamma_dat,
              aes(x = site_status, y = beta_ENSPIE, colour = 	"#C0C0C0"), 
              size = 0.25, gamma = 0.2, position = position_jitter(width = 0.02, height=0.05)) +

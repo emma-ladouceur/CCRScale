@@ -60,7 +60,7 @@ clean_cover <- savanna_clean %>% bind_rows(oldfield_cover)  %>% # bind cleaned o
   mutate(YSA = (Year-YearAb)) %>% # calculate year since agricultural abandonment
   mutate( YSA = ifelse(YearAb =="0" & site_status=="never-plowed","never-plowed",YSA))  %>% # if year ab = 0, then its never plowed
   filter(!LCD_species %in% c("Miscellaneous woody plants","Canopy Cover", "Miscellaneous species",
-                             "Mosses & lichens")) %>% droplevels() #remove some other riff raff
+                             "Mosses & lichens")) %>% droplevels() # remove some other riff raff
 
 
 plot_count <- clean_cover %>% distinct(Exp,Year,YSA,Field,Transect,Plot) %>%
@@ -173,6 +173,8 @@ gamma_ccr2$beta_rich <- gamma_ccr2$gamma_rich/gamma_ccr2$mean_alpha_rich
 gamma_ccr2$beta_ENSPIE <- gamma_ccr2$gamma_ENSPIE/gamma_ccr2$mean_alpha_ENSPIE
 
 
+View(gamma_ccr2)
+
 gamma_dat_np <- gamma_ccr2 %>% filter(site_status == "never-plowed") %>% 
   summarise(gamma_rspie_p_np = mean(gamma_ENSPIE))
 
@@ -216,7 +218,10 @@ gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
 
 View(gamma_dat_of)
 
+head(gamma_dat_of)
 
-write.csv(gamma_ccr2, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div.csv")
+write.csv(gamma_ccr2, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div_full.csv")
+
+write.csv(gamma_dat_of, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div.csv")
 
 write.csv(alpha_ccr, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/alpha_div.csv")

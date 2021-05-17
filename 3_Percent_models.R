@@ -396,30 +396,30 @@ p.gamma.rich.fig
 
  #----------------------------------------------------------------------------------------------
 
-
-gamma_dat_np <- gamma_dat %>% filter(site_status == "never-plowed") %>% 
-  summarise(beta_rich_p_np = mean(beta_rich))
-
-gamma_dat_np
-
-gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") %>% 
-  summarise(beta_rich_p = mean(beta_rich))
-
-gamma_dat_of
-
-gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") 
-
-gamma_dat_of$beta_rich_p<-(gamma_dat_of$beta_rich/4.79 *100)
-
-head(gamma_dat_of)
-
-gamma_dat_of$YSA <- as.numeric(gamma_dat_of$YSA)
-gamma_dat_of$log_beta_rich_p <- log(gamma_dat_of$beta_rich_p)
-gamma_dat_of$log_YSA <- log(gamma_dat_of$YSA)
-gamma_dat_of$c.YSA<-gamma_dat_of$YSA-mean(gamma_dat_of$YSA)
-gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
-gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
-
+# 
+# gamma_dat_np <- gamma_dat %>% filter(site_status == "never-plowed") %>% 
+#   summarise(beta_rich_p_np = mean(beta_rich))
+# 
+# gamma_dat_np
+# 
+# gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") %>% 
+#   summarise(beta_rich_p = mean(beta_rich))
+# 
+# gamma_dat_of
+# 
+# gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") 
+# 
+# gamma_dat_of$beta_rich_p<-(gamma_dat_of$beta_rich/4.79 *100)
+# 
+# head(gamma_dat_of)
+# 
+# gamma_dat_of$YSA <- as.numeric(gamma_dat_of$YSA)
+# gamma_dat_of$log_beta_rich_p <- log(gamma_dat_of$beta_rich_p)
+# gamma_dat_of$log_YSA <- log(gamma_dat_of$YSA)
+# gamma_dat_of$c.YSA<-gamma_dat_of$YSA-mean(gamma_dat_of$YSA)
+# gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
+# gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
+# 
 
 # p.beta.div <-  brm(log_beta_rich_p ~  log_YSA + (1 + log_YSA | Field) + (1 | Year), 
 #                   data = gamma_dat_of, family=student(), cores = 4, iter=6000, warmup=1000, control =
@@ -622,7 +622,7 @@ p.beta.div.fig<-ggplot() +
   geom_line(data = p.beta.div_fitted,
             aes(x = YSA, y = exp(Estimate)),
             size = 1.5) +
-  scale_y_continuous( limits=c(25,125),breaks = c(25,50,85,90,100,125)) +
+  scale_y_continuous( limits=c(25,125),breaks = c(25,50,80,90,100,125)) +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
     theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
@@ -654,31 +654,31 @@ ysa.legend<-g_legend(p.beta.div.fig)
 
 #SPIE
 # ALPHA
-
-head(alpha_dat)
-
-alpha_dat_np <- alpha_dat %>% filter(site_status == "never-plowed") %>% #group_by(Field,YSA) %>%
-  summarise(alpha_rich_p_np = mean(alpha_ENSPIE))
-
-alpha_dat_np
-
-alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") %>% # group_by(Field,YSA) %>%
-  summarise(alpha_rich_p = mean(alpha_ENSPIE))
-
-alpha_dat_of
-
-alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") 
-
-alpha_dat_of$alpha_ENSPIE_p<-(alpha_dat_of$alpha_ENSPIE/7.10 *100)
-
-head(alpha_dat_of)
-
-alpha_dat_of$YSA <- as.numeric(alpha_dat_of$YSA)
-alpha_dat_of$log_alpha_ENSPIE_p <- log(alpha_dat_of$alpha_ENSPIE_p)
-alpha_dat_of$log_YSA <- log(alpha_dat_of$YSA)
-alpha_dat_of$c.YSA<-alpha_dat_of$YSA-mean(alpha_dat_of$YSA)
-alpha_dat_of$Field<-as.factor(as.character(alpha_dat_of$Field))
-alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
+# 
+# head(alpha_dat)
+# 
+# alpha_dat_np <- alpha_dat %>% filter(site_status == "never-plowed") %>% #group_by(Field,YSA) %>%
+#   summarise(alpha_rich_p_np = mean(alpha_ENSPIE))
+# 
+# alpha_dat_np
+# 
+# alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") %>% # group_by(Field,YSA) %>%
+#   summarise(alpha_rich_p = mean(alpha_ENSPIE))
+# 
+# alpha_dat_of
+# 
+# alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") 
+# 
+# alpha_dat_of$alpha_ENSPIE_p<-(alpha_dat_of$alpha_ENSPIE/7.10 *100)
+# 
+# head(alpha_dat_of)
+# 
+# alpha_dat_of$YSA <- as.numeric(alpha_dat_of$YSA)
+# alpha_dat_of$log_alpha_ENSPIE_p <- log(alpha_dat_of$alpha_ENSPIE_p)
+# alpha_dat_of$log_YSA <- log(alpha_dat_of$YSA)
+# alpha_dat_of$c.YSA<-alpha_dat_of$YSA-mean(alpha_dat_of$YSA)
+# alpha_dat_of$Field<-as.factor(as.character(alpha_dat_of$Field))
+# alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
 
 
 
@@ -827,30 +827,32 @@ p.alpha.spie.fig
 #----------------------------------------------------------------------------------------------
 
 head(gamma_dat)
-
-gamma_dat_np <- gamma_dat %>% filter(site_status == "never-plowed") %>% 
-  summarise(gamma_rspie_p_np = mean(gamma_ENSPIE))
-
-gamma_dat_np
-
-gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") %>% 
-  summarise(gamma_spie_p = mean(gamma_ENSPIE))
-
-gamma_dat_of
-
-gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") 
-
-gamma_dat_of$gamma_ENSPIE_p<-(gamma_dat_of$gamma_ENSPIE/33.57118 *100)
-
-
-head(gamma_dat_of)
-
-gamma_dat_of$YSA <- as.numeric(gamma_dat_of$YSA)
-gamma_dat_of$log_gamma_ENSPIE_p <- log(gamma_dat_of$gamma_ENSPIE_p)
-gamma_dat_of$log_YSA <- log(gamma_dat_of$YSA)
-gamma_dat_of$c.YSA<-gamma_dat_of$YSA-mean(gamma_dat_of$YSA)
-gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
-gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
+# 
+# gamma_dat_np <- gamma_dat %>% filter(site_status == "never-plowed") %>% 
+#   summarise(gamma_rspie_p_np = mean(gamma_ENSPIE))
+# 
+# gamma_dat_np
+# 
+# gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") %>% 
+#   summarise(gamma_spie_p = mean(gamma_ENSPIE))
+# 
+# gamma_dat_of
+# 
+# gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") 
+# 
+# gamma_dat_of$gamma_ENSPIE_p<-(gamma_dat_of$gamma_ENSPIE/33.57118 *100)
+# 
+# 
+# head(gamma_dat_of)
+# 
+# is.numeric(gamma_dat_of$YSA)
+# 
+# gamma_dat_of$YSA <- as.numeric(gamma_dat_of$YSA)
+# gamma_dat_of$log_gamma_ENSPIE_p <- log(gamma_dat_of$gamma_ENSPIE_p)
+# gamma_dat_of$log_YSA <- log(gamma_dat_of$YSA)
+# gamma_dat_of$c.YSA<-gamma_dat_of$YSA-mean(gamma_dat_of$YSA)
+# gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
+# gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
 
 
 # ar(time = Year, gr = Field, p = 1),
@@ -885,12 +887,15 @@ with(gr.plot, plot(Field, mg$Estimate))
 with(gr.plot, plot(Year, mg$Estimate))
 
 
+gamma_dat_of <- gamma_dat #%>% mutate(log_gamma_ENSPIE_p = round(log_gamma_ENSPIE_p ,2)) 
+
+head(gamma_dat_of)
 
 # for plotting fixed effects
 p.gamma.spie_fitted <- cbind(p.gamma.spie$data,
                              fitted(p.gamma.spie, re_formula = NA
                              )) %>% 
-  as_tibble() #%>%
+  as_tibble() %>%
   # join with plot data for figures
   inner_join(gamma_dat_of %>% distinct(Field, Year, log_YSA, YSA, log_gamma_ENSPIE_p, gamma_ENSPIE_p, gamma_ENSPIE),
              #by= c("Field", "Year", "log_YSA", "log_gamma_rich_p")
@@ -911,6 +916,10 @@ p.gamma.spie_coef <- coef(p.gamma.spie)
 
 p.gamma.spie_coef 
 
+
+gamma_dat_of$Field<-as.factor(as.character(gamma_dat_of$Field))
+
+
 # predict estimates for each field across a sequence of log_YSA's and YSA's
 obs_nest.gamma.pie <- gamma_dat_of %>% 
   mutate(Field_group = Field) %>%
@@ -919,6 +928,7 @@ obs_nest.gamma.pie <- gamma_dat_of %>%
             YSA = seq(min(YSA), max(YSA), length.out = 6)) %>%
   nest(data = c(Field,YSA,log_YSA)) %>%
   mutate(predicted = map(data, ~predict(p.gamma.spie, newdata= .x, re_formula = ~(1 + log_YSA | Field) ))) 
+
 
 
 p.gamma.spie_coef2 <-  bind_cols(p.gamma.spie_coef$Field[,,'Intercept'] %>% 
@@ -958,8 +968,7 @@ save(p.gamma.spie_fitted,p.gamma.spie_fixef,p.gamma.spie_coef,p.gamma.spie_coef2
 load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/gamma.spie.mod_dat.Rdata')
 
 
-
-p.gamma.spie.fig<-ggplot() +
+p.gamma.spie.fig <- ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
   geom_point(data = p.gamma.spie_fitted,
              aes(x = YSA, y = gamma_ENSPIE_p,
@@ -1011,36 +1020,37 @@ p.gamma.spie.fig
 
 #----------------------------------------------------------------------------------------------
 head(gamma_dat)
-
-gamma_dat_np <- gamma_dat %>% filter(site_status == "never-plowed") %>% 
-  summarise(beta_rich_p_np = mean(beta_ENSPIE))
-
-gamma_dat_np
-
-gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") %>% 
-  summarise(beta_rich_p = mean(beta_ENSPIE))
-
-gamma_dat_of
-
-gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") 
-
-gamma_dat_of$beta_ENSPIE_p<-(gamma_dat_of$beta_ENSPIE/4.361521 *100)
-
-head(gamma_dat_of)
-
-gamma_dat_of$YSA <- as.numeric(gamma_dat_of$YSA)
-gamma_dat_of$log_beta_ENSPIE_p <- log(gamma_dat_of$beta_ENSPIE_p)
-gamma_dat_of$log_YSA <- log(gamma_dat_of$YSA)
-gamma_dat_of$c.YSA<-gamma_dat_of$YSA-mean(gamma_dat_of$YSA)
-gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
-gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
-
+# 
+# gamma_dat_np <- gamma_dat %>% filter(site_status == "never-plowed") %>% 
+#   summarise(beta_rich_p_np = mean(beta_ENSPIE))
+# 
+# gamma_dat_np
+# 
+# gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") %>% 
+#   summarise(beta_rich_p = mean(beta_ENSPIE))
+# 
+# gamma_dat_of
+# 
+# gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") 
+# 
+# gamma_dat_of$beta_ENSPIE_p<-(gamma_dat_of$beta_ENSPIE/4.361521 *100)
+# 
+# head(gamma_dat_of)
+# 
+# gamma_dat_of$YSA <- as.numeric(gamma_dat_of$YSA)
+# gamma_dat_of$log_beta_ENSPIE_p <- log(gamma_dat_of$beta_ENSPIE_p)
+# gamma_dat_of$log_YSA <- log(gamma_dat_of$YSA)
+# gamma_dat_of$c.YSA<-gamma_dat_of$YSA-mean(gamma_dat_of$YSA)
+# gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
+# gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
+# 
 
 # p.beta.spie <-  brm(log_beta_ENSPIE_p ~  log_YSA + (1 + log_YSA | Field) + (1 | Year), 
 #                    data = gamma_dat_of, family=student(),cores = 4, iter=10000,warmup=1000, chains = 4)
 # 
 # save(p.beta.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.beta.spie.Rdata')
-load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.beta.spie.Rdata") 
+#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.beta.spie.Rdata") 
+load("~/Desktop/mods/beta_pie_c.Rdata") 
 
 summary(p.beta.spie)
 
@@ -1064,8 +1074,7 @@ with(br.plot, plot(Field, mb$Estimate))
 with(br.plot, plot(Year, mb$Estimate))
 
 
-
-
+gamma_dat_of <- gamma_dat
 # for plotting fixed effects
 p.beta.spie_fitted <- cbind(p.beta.spie$data,
                            fitted(p.beta.spie, re_formula = NA)) %>% 
@@ -1084,7 +1093,8 @@ p.beta.spie_fixef <- fixef(p.beta.spie)
 p.beta.spie_coef <- coef(p.beta.spie)
 p.beta.spie_coef 
 
-gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
+
+gamma_dat_of$Field<-as.factor(as.character(gamma_dat_of$Field))
 
 
 # predict estimates for each field across a sequence of log_YSA's and YSA's
@@ -1122,18 +1132,18 @@ p.beta.spie_coef2 <-  bind_cols(p.beta.spie_coef$Field[,,'Intercept'] %>%
              by = 'Field')
 
 
-beta_dat_sum   <- gamma_dat_of %>% 
-  group_by(Field,YSA) %>% 
-  summarise(beta_ENSPIE_p = mean(beta_ENSPIE_p),
-            beta_ENSPIE = mean(beta_ENSPIE),
-            xmin = min(YSA),
-            xmax = max(YSA),
-            lxmin = min(log_YSA),
-            lxmax = max(log_YSA))
+# beta_dat_sum   <- gamma_dat_of %>% 
+#   group_by(Field,YSA) %>% 
+#   summarise(beta_ENSPIE_p = mean(beta_ENSPIE_p),
+#             beta_ENSPIE = mean(beta_ENSPIE),
+#             xmin = min(YSA),
+#             xmax = max(YSA),
+#             lxmin = min(log_YSA),
+#             lxmax = max(log_YSA))
 
 head(beta_dat_sum)
 
-p.beta.spie_fitted$YSA<- as.numeric(p.beta.spie_fitted$YSA)
+p.beta.spie_fitted$YSA <- as.numeric(p.beta.spie_fitted$YSA)
 p.beta.spie_fitted$Field<-as.character(p.beta.spie_fitted$Field)
 p.beta.spie_coef2$Field<-as.character(p.beta.spie_coef2$Field)
 
@@ -1175,7 +1185,7 @@ p.beta.spie.fig<-ggplot() +
   geom_line(data = p.beta.spie_fitted,
             aes(x = YSA, y = exp(Estimate)),
             size = 1.5) +
-  scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
+  scale_y_continuous( limits=c(25,125),breaks = c(25,50,70,80,100,125)) +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
   theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
