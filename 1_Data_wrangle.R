@@ -141,51 +141,34 @@ alpha_dat <- cover_long %>%
 
 head(alpha_dat)
 
-# check what the mean richness is for each field type
-# turn the grouping on or off to see details
-alpha_dat_np <- alpha_dat %>% filter(site_status == "never-plowed") %>% 
-  summarise(alpha_rich_p_np = mean(alpha_rich))
 
-alpha_dat_np
+np_alpha_means <- alpha_dat %>% filter(site_status == "never-plowed") %>% 
+  summarise(alpha_rich_mean_np = mean(alpha_rich),
+            alpha_spie_mean_np = mean(alpha_ENSPIE)
+  )
 
-alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") %>%  #group_by(Field,YSA) %>%
-  summarise(alpha_rich_p = mean(alpha_rich))
+View(np_alpha_means)
 
-alpha_dat_of
+colnames(np_alpha_means)
 
-alpha_div_p <- alpha_dat %>% filter(site_status == "old field") 
+alpha_p <- alpha_dat %>% filter(site_status == "old field") %>% 
+  mutate(alpha_rich_p = ((alpha_rich/np_alpha_means$alpha_rich_mean_np) * 100),
+         alpha_ENSPIE_p = (( alpha_ENSPIE/np_alpha_means$alpha_spie_mean_np ) * 100),
+         YSA = as.numeric(YSA)
+  ) %>%
+  mutate( 
+    log_alpha_rich_p  = log(alpha_rich_p),
+    log_alpha_ENSPIE_p = log(alpha_ENSPIE_p),
+    log_YSA = log(YSA),
+    c.YSA = (YSA-mean(YSA)) ) 
 
-alpha_div_p$alpha_rich_p <- (alpha_div_p$alpha_rich/9.14 * 100)
 
-head(alpha_div_p)
+alpha_p$Field<-as.character(alpha_p$Field)
+alpha_p$Year<-as.factor(as.character(alpha_p$Year))
 
-#spie
-
-alpha_dat_np <- alpha_dat %>% filter(site_status == "never-plowed") %>% #group_by(Field,YSA) %>%
-  summarise(alpha_rich_p_np = mean(alpha_ENSPIE))
-
-alpha_dat_np
-
-alpha_dat_of <- alpha_dat %>% filter(site_status == "old field") %>% # group_by(Field,YSA) %>%
-  summarise(alpha_rich_p = mean(alpha_ENSPIE))
-
-alpha_dat_of
-
-alpha_div_p$alpha_ENSPIE_p<-(alpha_div_p$alpha_ENSPIE/7.10 *100)
-
-head(alpha_div_p)
-
-alpha_div_p$YSA <- as.numeric(alpha_div_p$YSA)
-alpha_div_p$log_alpha_rich_p <- log(alpha_div_p$alpha_rich_p)
-alpha_div_p$log_alpha_ENSPIE_p <- log(alpha_div_p$alpha_ENSPIE_p)
-alpha_div_p$log_YSA <- log(alpha_div_p$YSA)
-alpha_div_p$c.YSA<-alpha_div_p$YSA-mean(alpha_div_p$YSA)
-alpha_div_p$Field<-as.factor(as.character(alpha_div_p$Field))
-alpha_div_p$Year<-as.factor(as.character(alpha_div_p$Year))
-alpha_div_p$Field<-as.factor(as.character(alpha_div_p$Field))
 
 View(alpha_dat)
-View(alpha_div_p)
+View(alpha_p)
 
 # alpha diversity
 write.csv(alpha_dat, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/alpha_div.csv")
@@ -216,71 +199,58 @@ gamma_ccr <- gamma_mean %>%
   arrange(Exp,site_status,Field, Year,YSA)
 
 
-
-
 View(gamma_ccr)
 
 View(gamma_mean)
 
 gamma_ccr2 <- gamma_ccr %>% left_join(alpha_mean)
 
-gamma_ccr2$beta_div <- gamma_ccr2$gamma_rich/gamma_ccr2$mean_alpha_rich
-gamma_ccr2$beta_ENSPIE <- gamma_ccr2$gamma_ENSPIE/gamma_ccr2$mean_alpha_ENSPIE
+head(gamma_ccr2)
+
+gamma_div <- gamma_ccr2 %>% 
+mutate( beta_div = (gamma_rich/mean_alpha_rich),
+        beta_ENSPIE = (gamma_ENSPIE/mean_alpha_ENSPIE))
+
+head(gamma_div)
 
 
+np_means <- gamma_div %>% filter(site_status == "never-plowed") %>% 
+   summarise(gamma_rich_mean_np = mean(gamma_rich),
+             beta_div_mean_np = mean(beta_div),
+     gamma_spie_mean_np = mean(gamma_ENSPIE),
+     beta_spie_mean_np = mean(beta_ENSPIE)
+             )
+
+View(np_means)
+
+colnames(gamma_div)
+
+gamma_p <- gamma_div %>% filter(site_status == "old field") %>% 
+  mutate(gamma_rich_p = ((gamma_rich/np_means$gamma_rich_mean_np) * 100),
+     beta_rich_p = (( beta_div/np_means$beta_div_mean_np ) * 100),
+     gamma_ENSPIE_p = (( gamma_ENSPIE/np_means$gamma_spie_mean_np) * 100 ),
+     beta_ENSPIE_p = (( beta_ENSPIE/np_means$beta_spie_mean_np) * 100 ),
+     YSA = as.numeric(YSA)
+    ) %>%
+mutate( 
+  log_gamma_rich_p  = log(gamma_rich_p),
+  log_beta_rich_p = log(beta_rich_p),
+  log_gamma_ENSPIE_p = log(gamma_ENSPIE_p),
+  log_beta_ENSPIE_p = log(beta_ENSPIE_p),
+  log_YSA = log(YSA),
+  c.YSA = (YSA-mean(YSA)) ) %>% 
+  select(-c(mean_alpha_rich, mean_alpha_ENSPIE))
+  
+  
+gamma_p$Field<-as.character(gamma_p$Field)
+gamma_p$Year<-as.factor(as.character(gamma_p$Year))
 
 
-gamma_dat_np <- gamma_ccr2 %>% filter(site_status == "never-plowed") %>% 
-  summarise(gamma_rspie_p_np = mean(gamma_ENSPIE))
-
-gamma_dat_np
-
-gamma_dat_of <- gamma_ccr2 %>% filter(site_status == "old field") %>% 
-  summarise(gamma_spie_p = mean(gamma_ENSPIE))
-
-gamma_dat_of
-
-gamma_dat_of <- gamma_ccr2 %>% filter(site_status == "old field") 
-
-gamma_dat_of$gamma_ENSPIE_p<-(gamma_dat_of$gamma_ENSPIE/12.2 *100)
-
-
-head(gamma_dat_of)
-
-beta_dat_np <- gamma_ccr2 %>% filter(site_status == "never-plowed") %>% 
-  summarise(beta_rich_p_np = mean(beta_ENSPIE))
-
-beta_dat_np
-
-beta_dat_of <- gamma_ccr2 %>% filter(site_status == "old field") %>% 
-  summarise(beta_rich_p = mean(beta_ENSPIE))
-
-beta_dat_of
-
-gamma_dat_of$beta_ENSPIE_p <- (gamma_dat_of$beta_ENSPIE/1.55 * 100)
-
-head(gamma_dat_of)
-
-gamma_dat_of$YSA <- as.numeric(gamma_dat_of$YSA)
-
-gamma_dat_of$log_gamma_ENSPIE_p <- log(gamma_dat_of$gamma_ENSPIE_p)
-gamma_dat_of$log_beta_ENSPIE_p <- log(gamma_dat_of$beta_ENSPIE_p)
-
-gamma_dat_of$log_YSA <- log(gamma_dat_of$YSA)
-gamma_dat_of$c.YSA<-gamma_dat_of$YSA-mean(gamma_dat_of$YSA)
-gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
-gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
-
-View(gamma_dat_of)
-
-View(gamma_ccr2)
-
-View(alpha_ccr)
-head(gamma_dat_of)
+View(gamma_p)
 
 # mean species cover at the gamma scale
 write.csv(gamma_mean, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_species_mean.csv")
 # gamma and beta diversity metrics (richness and spie) for all sites
-write.csv(gamma_ccr2, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div.csv")
+write.csv(gamma_div, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div.csv")
 # percentage of recovery of old fields compared to never plowed sites
-write.csv(gamma_dat_of, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div_percent.csv")
+write.csv(gamma_p, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div_percent.csv")
