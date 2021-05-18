@@ -11,9 +11,9 @@ library(ggdist)
 library(modelr)
 library(viridis)
 
-ccr_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
-alpha_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/alpha_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
-gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+#ccr_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+alpha_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/alpha_div_percent.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div_percent.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
 # SPIE = mobr
 # ENSPIE = vegan - inverse Simpson's
@@ -28,13 +28,14 @@ head(ccr_dat)
 #                          list(adapt_delta = 0.99), chains = 4)
 
 #save(p.alpha.rich.s, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.alpha.rich.Rdata')
-load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.alpha.rich.Rdata") 
+#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.alpha.rich.Rdata") 
+load("~/Desktop/mods/alpha_rich_c.Rdata") 
 
-summary(p.alpha.rich.s)
+summary(p.alpha.rich)
 
 
 color_scheme_set("darkgray")
-pp_check(p.alpha.rich.s)+ xlab( "Species richness") + ylab("Density") + theme_classic() # predicted vs. observed values
+pp_check(p.alpha.rich)+ xlab( "Species richness") + ylab("Density") + theme_classic() # predicted vs. observed values
 
 alpha_dat_of$Field<-as.factor(as.character(alpha_dat_of$Field))
 alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
@@ -51,10 +52,10 @@ with(ar.plot, plot(Year, ma$Estimate))
 alpha_dat_of$Field<-as.character(as.factor(alpha_dat_of$Field))
 
 # for plotting fixed effects
-p.alpha.rich_fitted <- cbind(p.alpha.rich.s$data,
-                          fitted(p.alpha.rich.s, re_formula = NA
+p.alpha.rich_fitted <- cbind(p.alpha.rich$data,
+                          fitted(p.alpha.rich, re_formula = NA
                                  )) %>% 
-  as_tibble() %>% inner_join(alpha_dat_of %>% distinct(Field, Year, log_YSA, YSA, log_alpha_rich_p, alpha_rich_p, alpha_rich),
+  as_tibble() %>% inner_join(alpha_dat %>% distinct(Field, Year, log_YSA, YSA, log_alpha_rich_p, alpha_rich_p, alpha_rich),
              #by= c("Field", "Year", "log_YSA", "log_alpha_rich_p")
              )
 
@@ -63,28 +64,26 @@ head(p.alpha.rich_fitted)
 
 
 # fixed effect coefficients
-p.alpha.rich_fixef <- fixef(p.alpha.rich.s)
+p.alpha.rich_fixef <- fixef(p.alpha.rich)
 
 
 head(p.alpha.rich_fixef)
 
-p.alpha.rich_coef <- coef(p.alpha.rich.s)
+p.alpha.rich_coef <- coef(p.alpha.rich)
 p.alpha.rich_coef 
 
-alpha_dat_of$Field<-as.character(alpha_dat_of$Field)
-
-## attempt predicted field effects for improved field level line fits in figures
-
+alpha_dat$Field<-as.character(alpha_dat$Field)
 
 # predict estimates for each field across a sequence of log_YSA's and YSA's
-obs_nest.alpha <- alpha_dat_of %>% 
+obs_nest.alpha <- alpha_dat %>% 
   mutate(Field_group = Field) %>%
   group_by(Field_group, Field) %>% 
   summarise(log_YSA = seq(min(log_YSA), max(log_YSA), length.out = 6 ),
          YSA = seq(min(YSA), max(YSA), length.out = 6)) %>%
   nest(data = c(Field,YSA,log_YSA)) %>%
-  mutate(predicted = map(data, ~predict(p.alpha.rich.s, newdata= .x, re_formula = ~(1 + log_YSA | Field) ))) 
+  mutate(predicted = map(data, ~predict(p.alpha.rich, newdata= .x, re_formula = ~(1 + log_YSA | Field) ))) 
 
+alpha_dat$Field<- as.factor(as.character(alpha_dat$Field))
 
 # linear/lazy version version of site-level coefs
 p.alpha.rich_coef2 <-  bind_cols(p.alpha.rich_coef$Field[,,'Intercept'] %>% 
@@ -101,7 +100,7 @@ p.alpha.rich_coef2 <-  bind_cols(p.alpha.rich_coef$Field[,,'Intercept'] %>%
                                        Slope_upper = Q97.5) %>% 
                                 select(-Estimate, -Est.Error, -Q2.5, -Q97.5)) %>% 
   # join with min and max of the x-values
-  inner_join(alpha_dat_of %>% 
+  inner_join(alpha_dat %>% 
                group_by(Field) %>% 
                summarise(xmin = min(YSA),
                          xmax = max(YSA),
@@ -111,14 +110,7 @@ p.alpha.rich_coef2 <-  bind_cols(p.alpha.rich_coef$Field[,,'Intercept'] %>%
              by = 'Field')
 
 
- alpha_dat_sum   <- alpha_dat_of %>% 
-                      group_by(Field,YSA) %>% 
-                        summarise(alpha_rich_p = mean(alpha_rich_p),
-                          alpha_rich = mean(alpha_rich),
-                            xmin = min(YSA),
-                                xmax = max(YSA))
 
-head(alpha_dat_sum)
 
 p.alpha.rich_fitted$YSA<- as.numeric(p.alpha.rich_fitted$YSA)
 p.alpha.rich_fitted$Field<-as.character(p.alpha.rich_fitted$Field)
@@ -133,7 +125,9 @@ save(p.alpha.rich_fitted,p.alpha.rich_fixef,p.alpha.rich_coef,p.alpha.rich_coef2
 load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/a.rich.mod_dat.Rdata')
 
 
-p.alpha.rich.fig<-ggplot() +
+
+
+p.alpha.rich.fig<-ggplot() + 
  # facet_grid(~Field, scales="free") +
   geom_hline(yintercept = 100, lty = 2) +
   geom_point(data = p.alpha.rich_fitted,
@@ -182,7 +176,8 @@ p.alpha.rich.fig
 # 
 # 
 # save(p.gamma.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.gamma.rich.Rdata')
-load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.gamma.rich.Rdata") 
+#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.gamma.rich.Rdata") 
+load("~/Desktop/mods/gamma_rich_c.Rdata") 
 
 summary(p.gamma.rich)
 
@@ -211,7 +206,7 @@ p.gamma.rich_fitted <- cbind(p.gamma.rich$data,
                               )) %>% 
    as_tibble() %>%
   # join with plot data for figures
-  inner_join(gamma_dat_of %>% distinct(Field, Year, log_YSA, YSA, log_gamma_rich_p, gamma_rich_p, gamma_rich),
+  inner_join(gamma_dat %>% distinct(Field, Year, log_YSA, YSA, log_gamma_rich_p, gamma_rich_p, gamma_rich),
   #by= c("Field", "Year", "log_YSA", "log_gamma_rich_p")
   )
 
@@ -230,9 +225,9 @@ p.gamma.rich_coef <- coef(p.gamma.rich)
 
 p.gamma.rich_coef 
 
-
+gamma_dat$Field<- as.character(gamma_dat$Field)
 # predict estimates for each field across a sequence of log_YSA's and YSA's
-obs_nest.gamma <- gamma_dat_of %>% 
+obs_nest.gamma <- gamma_dat %>% 
   mutate(Field_group = Field) %>%
   group_by(Field_group, Field) %>% 
   summarise(log_YSA = seq(min(log_YSA), max(log_YSA), length.out = 6 ),
@@ -266,16 +261,6 @@ p.gamma.rich_coef2 <-  bind_cols(p.gamma.rich_coef$Field[,,'Intercept'] %>%
              by = 'Field')
 
 
-
-
-gamma_dat_sum   <- gamma_dat_of %>% 
-  group_by(Field,YSA) %>% 
-  summarise(gamma_rich_p = mean(gamma_rich_p),
-            gamma_rich = mean(gamma_rich),
-            xmin = min(YSA),
-            xmax = max(YSA))
-
-head(gamma_dat_sum)
 
 
 #setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
@@ -346,12 +331,10 @@ p.gamma.rich.fig
 #                     list(adapt_delta = 0.99), chains = 4)
 
 #save(p.beta.div, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.beta.div.Rdata')
-load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.beta.div.Rdata") 
+#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.beta.div.Rdata") 
+load("~/Desktop/mods/beta_div_c.Rdata") 
 
 summary(p.beta.div)
-
-
-
 
 color_scheme_set("darkgray")
 pp_check(p.beta.div)+  xlab((expression(paste(italic(beta), '-Diversity', sep = '')))) +  ylab("Density") +theme_classic() # predicted vs. observed values
@@ -371,14 +354,16 @@ with(br.plot, plot(Year, mb$Estimate))
 
 
 
+colnames(gamma_dat)
 
+gamma_dat$Field<-as.numeric(gamma_dat$Field)
 # for plotting fixed effects
 p.beta.div_fitted <- cbind(p.beta.div$data,
                           fitted(p.beta.div, re_formula = NA)) %>% 
   as_tibble() %>% 
   # join with plot data for figures
-  inner_join(gamma_dat_of %>% distinct(Field, Year, log_YSA, YSA, log_beta_rich_p, beta_rich_p, beta_rich),
-             by= c("Field", "Year", "log_YSA", "log_beta_rich_p"))
+  inner_join(gamma_dat %>% distinct(Field, Year, log_YSA, YSA, log_beta_div_p, beta_div_p, beta_div),
+             by= c("Field", "Year", "log_YSA", "log_beta_div_p"))
 
 
 head(p.beta.div_fitted)
@@ -390,10 +375,10 @@ p.beta.div_fixef <- fixef(p.beta.div)
 p.beta.div_coef <- coef(p.beta.div)
 p.beta.div_coef 
 
-gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
+gamma_dat$Field<-as.character(gamma_dat$Field)
 
 # predict estimates for each field across a sequence of log_YSA's and YSA's
-obs_nest.beta.div <- gamma_dat_of %>% 
+obs_nest.beta.div <- gamma_dat %>% 
   mutate(Field_group = Field) %>%
   group_by(Field_group, Field) %>% 
   summarise(log_YSA = seq(min(log_YSA), max(log_YSA), length.out = 6 ),
@@ -416,7 +401,7 @@ p.beta.div_coef2 <-  bind_cols(p.beta.div_coef$Field[,,'Intercept'] %>%
                                        Slope_upper = Q97.5) %>% 
                                 select(-Estimate, -Est.Error, -Q2.5, -Q97.5)) %>% 
   # join with min and max of the x-values
-  inner_join(gamma_dat_of %>% 
+  inner_join(gamma_dat %>% 
                group_by(Field) %>% 
                summarise(xmin = min(YSA),
                          xmax = max(YSA),
@@ -426,16 +411,6 @@ p.beta.div_coef2 <-  bind_cols(p.beta.div_coef$Field[,,'Intercept'] %>%
              by = 'Field')
 
 
-beta_dat_sum   <- gamma_dat_of %>% 
-  group_by(Field,YSA) %>% 
-  summarise(beta_rich_p = mean(beta_rich_p),
-            beta_rich = mean(beta_rich),
-            xmin = min(YSA),
-            xmax = max(YSA),
-            lxmin = min(log_YSA),
-            lxmax = max(log_YSA))
-
-head(beta_dat_sum)
 
 p.beta.div_fitted$YSA<- as.numeric(p.beta.div_fitted$YSA)
 p.beta.div_fitted$Field<-as.character(p.beta.div_fitted$Field)
@@ -501,7 +476,7 @@ p.beta.div_coef3<-p.beta.div_coef2 %>% mutate( `Old field` = fct_recode( Field, 
 p.beta.div.fig<-ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
   geom_point(data = p.beta.div_fitted2,
-             aes(x = YSA, y = beta_rich_p,
+             aes(x = YSA, y = beta_div_p,
                  colour = `Old field`),
              size = 1.2, shape=1) +
   geom_line(data = obs_nest.beta.div %>% unnest(cols = c(data, predicted))%>% mutate( `Old field` = fct_recode( Field,  "A" = "10",
@@ -585,7 +560,8 @@ ysa.legend<-g_legend(p.beta.div.fig)
 # 
 # 
 #save(p.alpha.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.alpha.spie.Rdata')
-load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.alpha.spie.Rdata") 
+#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.alpha.spie.Rdata") 
+load("~/Desktop/mods/alpha_pie_c.Rdata") 
 
 summary(p.alpha.spie)
 
@@ -607,13 +583,14 @@ with(ar.plot, plot(Year, ma$Estimate))
 alpha_dat_of$Field<-as.factor(as.character(alpha_dat_of$Field))
 alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
 
+alpha_dat$Field<-as.numeric(alpha_dat$Field)
 
 # for plotting fixed effects
 p.alpha.spie_fitted <- cbind(p.alpha.spie$data,
                              fitted(p.alpha.spie, re_formula = NA)) %>% 
   as_tibble() %>% 
   # join with plot data for figures
-  inner_join(alpha_dat_of %>% distinct(Field, Year, log_YSA, YSA, log_alpha_ENSPIE_p, alpha_ENSPIE_p,alpha_ENSPIE),
+  inner_join(alpha_dat %>% distinct(Field, Year, log_YSA, YSA, log_alpha_ENSPIE_p, alpha_ENSPIE_p,alpha_ENSPIE),
              by= c("Field", "Year", "log_YSA", "log_alpha_ENSPIE_p"))
 
 
@@ -626,10 +603,10 @@ p.alpha.spie_fixef <- fixef(p.alpha.spie)
 p.alpha.spie_coef <- coef(p.alpha.spie)
 p.alpha.spie_coef 
 
-alpha_dat_of$Field<-as.character(alpha_dat_of$Field)
+alpha_dat$Field<-as.character(alpha_dat$Field)
 
 # predict estimates for each field across a sequence of log_YSA's and YSA's
-obs_nest.alpha.pie <- alpha_dat_of %>% 
+obs_nest.alpha.pie <- alpha_dat %>% 
   mutate(Field_group = Field) %>%
   group_by(Field_group, Field) %>% 
   summarise(log_YSA = seq(min(log_YSA), max(log_YSA), length.out = 6 ),
@@ -652,7 +629,7 @@ p.alpha.spie_coef2 <-  bind_cols(p.alpha.spie_coef$Field[,,'Intercept'] %>%
                                           Slope_upper = Q97.5) %>% 
                                    select(-Estimate, -Est.Error, -Q2.5, -Q97.5)) %>% 
   # join with min and max of the x-values
-  inner_join(alpha_dat_of %>% 
+  inner_join(alpha_dat %>% 
                group_by(Field) %>% 
                summarise(xmin = min(YSA),
                          xmax = max(YSA),
@@ -662,8 +639,6 @@ p.alpha.spie_coef2 <-  bind_cols(p.alpha.spie_coef$Field[,,'Intercept'] %>%
              by = 'Field')
 
 
-
-head(alpha_dat_sum)
 
 p.alpha.spie_fitted$YSA<- as.numeric(p.alpha.spie_fitted$YSA)
 p.alpha.spie_fitted$Field<-as.character(p.alpha.spie_fitted$Field)
@@ -679,7 +654,7 @@ load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/alpha.spie.mod_d
 
 
 
-p.alpha.spie.fig<-ggplot() +
+p.alpha.spie.fig <- ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
   geom_point(data = p.alpha.spie_fitted,
              aes(x = YSA, y = alpha_ENSPIE_p,
@@ -757,13 +732,15 @@ gamma_dat_of <- gamma_dat #%>% mutate(log_gamma_ENSPIE_p = round(log_gamma_ENSPI
 
 head(gamma_dat_of)
 
+gamma_dat$Field<-as.numeric(gamma_dat$Field)
+
 # for plotting fixed effects
 p.gamma.spie_fitted <- cbind(p.gamma.spie$data,
                              fitted(p.gamma.spie, re_formula = NA
                              )) %>% 
   as_tibble() %>%
   # join with plot data for figures
-  inner_join(gamma_dat_of %>% distinct(Field, Year, log_YSA, YSA, log_gamma_ENSPIE_p, gamma_ENSPIE_p, gamma_ENSPIE),
+  inner_join(gamma_dat %>% distinct(Field, Year, log_YSA, YSA, log_gamma_ENSPIE_p, gamma_ENSPIE_p, gamma_ENSPIE),
              #by= c("Field", "Year", "log_YSA", "log_gamma_rich_p")
   )
 
@@ -783,11 +760,10 @@ p.gamma.spie_coef <- coef(p.gamma.spie)
 p.gamma.spie_coef 
 
 
-gamma_dat_of$Field<-as.factor(as.character(gamma_dat_of$Field))
-
+gamma_dat$Field<-as.factor(as.character(gamma_dat$Field))
 
 # predict estimates for each field across a sequence of log_YSA's and YSA's
-obs_nest.gamma.pie <- gamma_dat_of %>% 
+obs_nest.gamma.pie <- gamma_dat %>% 
   mutate(Field_group = Field) %>%
   group_by(Field_group, Field) %>% 
   summarise(log_YSA = seq(min(log_YSA), max(log_YSA), length.out = 6 ),
@@ -811,7 +787,7 @@ p.gamma.spie_coef2 <-  bind_cols(p.gamma.spie_coef$Field[,,'Intercept'] %>%
                                           Slope_upper = Q97.5) %>% 
                                    select(-Estimate, -Est.Error, -Q2.5, -Q97.5)) %>% 
   # join with min and max of the x-values
-  inner_join(gamma_dat_of %>% 
+  inner_join(gamma_dat %>% 
                group_by(Field) %>% 
                summarise(xmin = min(YSA),
                          xmax = max(YSA),
@@ -897,8 +873,6 @@ load("~/Desktop/mods/beta_pie_c.Rdata")
 summary(p.beta.spie)
 
 
-
-
 color_scheme_set("darkgray")
 pp_check(p.beta.spie)+ xlab((expression(paste(italic(beta), -ENS[PIE], sep = ' ')))) + ylab("Density") + theme_classic() # predicted vs. observed values
 
@@ -906,7 +880,7 @@ pp_check(p.beta.spie)+ xlab((expression(paste(italic(beta), -ENS[PIE], sep = ' '
 gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
 gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
 
-# models residuals
+# models residuals 
 mb<-residuals(p.beta.spie)
 mb<-as.data.frame(mb)
 br.plot<-cbind(gamma_dat_of,mb$Estimate)
@@ -916,16 +890,17 @@ with(br.plot, plot(Field, mb$Estimate))
 with(br.plot, plot(Year, mb$Estimate))
 
 
-gamma_dat_of <- gamma_dat
+gamma_dat$Field <- as.numeric(gamma_dat$Field)
+
 # for plotting fixed effects
 p.beta.spie_fitted <- cbind(p.beta.spie$data,
                            fitted(p.beta.spie, re_formula = NA)) %>% 
   as_tibble() %>% 
   # join with plot data for figures
-  inner_join(gamma_dat_of %>% distinct(Field, Year, log_YSA, YSA, log_beta_ENSPIE_p, beta_ENSPIE_p, beta_ENSPIE),
+  inner_join(gamma_dat %>% distinct(Field, Year, log_YSA, YSA, log_beta_ENSPIE_p, beta_ENSPIE_p, beta_ENSPIE),
              by= c("Field", "Year", "log_YSA", "log_beta_ENSPIE_p"))
 
-
+View(gamma_dat)
 head(p.beta.spie_fitted)
 
 # fixed effect coefficients
@@ -936,11 +911,10 @@ p.beta.spie_coef <- coef(p.beta.spie)
 p.beta.spie_coef 
 
 
-gamma_dat_of$Field<-as.factor(as.character(gamma_dat_of$Field))
-
+gamma_dat$Field<-as.factor(as.character(gamma_dat$Field))
 
 # predict estimates for each field across a sequence of log_YSA's and YSA's
-obs_nest.beta.pie <- gamma_dat_of %>% 
+obs_nest.beta.pie <- gamma_dat %>% 
   mutate(Field_group = Field) %>%
   group_by(Field_group, Field) %>% 
   summarise(log_YSA = seq(min(log_YSA), max(log_YSA), length.out = 6 ),
@@ -964,7 +938,7 @@ p.beta.spie_coef2 <-  bind_cols(p.beta.spie_coef$Field[,,'Intercept'] %>%
                                         Slope_upper = Q97.5) %>% 
                                  select(-Estimate, -Est.Error, -Q2.5, -Q97.5)) %>% 
   # join with min and max of the x-values
-  inner_join(gamma_dat_of %>% 
+  inner_join(gamma_dat %>% 
                group_by(Field) %>% 
                summarise(xmin = min(YSA),
                          xmax = max(YSA),
@@ -974,16 +948,7 @@ p.beta.spie_coef2 <-  bind_cols(p.beta.spie_coef$Field[,,'Intercept'] %>%
              by = 'Field')
 
 
-# beta_dat_sum   <- gamma_dat_of %>% 
-#   group_by(Field,YSA) %>% 
-#   summarise(beta_ENSPIE_p = mean(beta_ENSPIE_p),
-#             beta_ENSPIE = mean(beta_ENSPIE),
-#             xmin = min(YSA),
-#             xmax = max(YSA),
-#             lxmin = min(log_YSA),
-#             lxmax = max(log_YSA))
 
-head(beta_dat_sum)
 
 p.beta.spie_fitted$YSA <- as.numeric(p.beta.spie_fitted$YSA)
 p.beta.spie_fitted$Field<-as.character(p.beta.spie_fitted$Field)

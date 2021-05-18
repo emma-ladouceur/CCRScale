@@ -151,12 +151,12 @@ View(np_alpha_means)
 
 colnames(np_alpha_means)
 
-alpha_p <- alpha_dat %>% filter(site_status == "old field") %>% 
+alpha_p <- alpha_dat %>% filter(site_status == "old field") %>%  # calculate percent recovery relative to mean of never plowed sites
   mutate(alpha_rich_p = ((alpha_rich/np_alpha_means$alpha_rich_mean_np) * 100),
          alpha_ENSPIE_p = (( alpha_ENSPIE/np_alpha_means$alpha_spie_mean_np ) * 100),
          YSA = as.numeric(YSA)
   ) %>%
-  mutate( 
+  mutate( # prep for modelling
     log_alpha_rich_p  = log(alpha_rich_p),
     log_alpha_ENSPIE_p = log(alpha_ENSPIE_p),
     log_YSA = log(YSA),
@@ -225,16 +225,16 @@ View(np_means)
 
 colnames(gamma_div)
 
-gamma_p <- gamma_div %>% filter(site_status == "old field") %>% 
-  mutate(gamma_rich_p = ((gamma_rich/np_means$gamma_rich_mean_np) * 100),
-     beta_rich_p = (( beta_div/np_means$beta_div_mean_np ) * 100),
+gamma_p <- gamma_div %>% filter(site_status == "old field") %>%  # calculate the percentage of recovery relative to the never plowed site mean
+  mutate(gamma_rich_p = ((gamma_rich/np_means$gamma_rich_mean_np) * 100), # for each metric
+     beta_div_p = (( beta_div/np_means$beta_div_mean_np ) * 100),
      gamma_ENSPIE_p = (( gamma_ENSPIE/np_means$gamma_spie_mean_np) * 100 ),
      beta_ENSPIE_p = (( beta_ENSPIE/np_means$beta_spie_mean_np) * 100 ),
      YSA = as.numeric(YSA)
     ) %>%
 mutate( 
-  log_gamma_rich_p  = log(gamma_rich_p),
-  log_beta_rich_p = log(beta_rich_p),
+  log_gamma_rich_p  = log(gamma_rich_p), # prep data for modelling
+  log_beta_div_p = log(beta_div_p),
   log_gamma_ENSPIE_p = log(gamma_ENSPIE_p),
   log_beta_ENSPIE_p = log(beta_ENSPIE_p),
   log_YSA = log(YSA),
