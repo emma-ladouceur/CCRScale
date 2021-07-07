@@ -28,7 +28,7 @@ gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 
 # 
 # save(d.alpha.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.rich.Rdata')
 load("~/Desktop/mods/alpha_rich_d.Rdata") 
-load( '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.rich.Rdata')
+#load( '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.rich.Rdata')
 
 summary(d.alpha.rich) # model summary
 
@@ -98,7 +98,8 @@ colnames(alpha_dat)
 #                   data = alpha_dat,cores = 4, family = 'lognormal', iter=3000, warmup=1000, chains = 4)
 # 
 # save(d.alpha.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.spie.Rdata')
-load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.spie.Rdata") 
+#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.spie.Rdata") 
+load("~/Desktop/mods/alpha_pie_d.Rdata") 
 
 summary(d.alpha.spie)
 
@@ -155,6 +156,7 @@ d.alpha.spie.eff
 # 
 # save(d.gamma.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.gamma.rich.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.gamma.rich.Rdata") 
+load("~/Desktop/mods/gamma_rich_d.Rdata") 
 
 
 summary(d.gamma.rich)
@@ -278,7 +280,8 @@ colnames(gamma_dat)
 #                   data = gamma_dat,family=student(), cores = 4, iter=10000,warmup=1000, chains = 4)
 # 
 # save(d.beta.div, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.beta.div.Rdata')
-load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.beta.div.Rdata") 
+#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.beta.div.Rdata") 
+load("~/Desktop/mods/beta_div_d.Rdata") 
 
 summary(d.beta.div)
 
@@ -298,7 +301,7 @@ colnames(gamma_dat)
 
 d.beta.div.eff<-ggplot() + 
   geom_point(data = gamma_dat,
-             aes(x = site_status, y = beta_rich, colour = 	"#C0C0C0"), 
+             aes(x = site_status, y = beta_div, colour = 	"#C0C0C0"), 
              size = 0.25, gamma = 0.2, position = position_jitter(width = 0.02, height=0.05)) +
   geom_point(data = d.beta_c$site_status,
              aes(x = site_status, y = estimate__, colour = site_status), size = 3) +
@@ -334,7 +337,7 @@ d.beta.div.eff
 #                  data = gamma_dat, family=student(),cores = 4, iter=4000,warmup=1000, chains = 4)
 # 
 # save(d.beta.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.beta.spie.Rdata')
-load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.beta.spie.Rdata") 
+#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.beta.spie.Rdata") 
 load("~/Desktop/mods/beta_pie_d.Rdata") 
 
 summary(d.beta.spie)
