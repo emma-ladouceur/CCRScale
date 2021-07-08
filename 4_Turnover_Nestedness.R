@@ -31,9 +31,21 @@ ccr_dat$pres<-1
 head(ccr_dat)
 
 ccr_dat$Year <- as.factor(as.character(ccr_dat$Year))
+levels(ccr_dat$Year)
+
+ccr_dat %>% distinct(Exp, site_status ,  Year)
+
+
+fix_dat <- ccr_dat %>% filter(site_status == "never-plowed") %>% 
+  filter(Year == "2010") %>% # seperate out 2010 data and change to 2016 for comparison with 2016 old fields
+  mutate(Year = fct_recode(Year,
+                           "2016" = "2010",
+  )) 
+
 
 # regional gamma never-plowed field within calendar year
-np_wide <-ccr_dat %>% filter(site_status == "never-plowed") %>% 
+np_wide <- ccr_dat %>% filter(site_status == "never-plowed") %>% 
+  bind_rows(fix_dat) %>% # add in 2016 comparison dat
   as_tibble() %>% 
   mutate(species2 = paste0('sp_', Species)) %>% 
   group_by(site_status,Year,YSA,species2) %>% 
@@ -46,7 +58,9 @@ np_wide <-ccr_dat %>% filter(site_status == "never-plowed") %>%
                            "1994" = "1995",
                           "1997" = "2000",
                           "2002" = "2005",
-                          "2006" = "2010")) 
+                          "2006" = "2010", # 2010 data is used for 2006 and 2016 comparison
+                          )) 
+
 
 View(np_wide)
 colnames(np_wide)
