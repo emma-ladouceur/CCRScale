@@ -15,6 +15,9 @@ library(viridis)
 alpha_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/alpha_div_percent.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div_percent.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
+
+View(alpha_dat)
+
 # SPIE = mobr
 # ENSPIE = vegan - inverse Simpson's
 
@@ -28,8 +31,8 @@ head(ccr_dat)
 #                          list(adapt_delta = 0.99), chains = 4)
 
 #save(p.alpha.rich.s, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.alpha.rich.Rdata')
-#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.alpha.rich.Rdata") 
-load("~/Desktop/mods/alpha_rich_c.Rdata") 
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/alpha_rich_c.Rdata") 
+
 
 summary(p.alpha.rich)
 
@@ -176,8 +179,8 @@ p.alpha.rich.fig
 # 
 # 
 # save(p.gamma.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.gamma.rich.Rdata')
-#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.gamma.rich.Rdata") 
-load("~/Desktop/mods/gamma_rich_c.Rdata") 
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/gamma_rich_c.Rdata") 
+
 
 summary(p.gamma.rich)
 
@@ -251,7 +254,7 @@ p.gamma.rich_coef2 <-  bind_cols(p.gamma.rich_coef$Field[,,'Intercept'] %>%
                                              Slope_upper = Q97.5) %>% 
                                       select(-Estimate, -Est.Error, -Q2.5, -Q97.5)) %>% 
   # join with min and max of the x-values
-  inner_join(gamma_dat_of %>% 
+  inner_join(gamma_dat %>% 
                group_by(Field) %>% 
                summarise(xmin = min(YSA),
                          xmax = max(YSA),
@@ -263,7 +266,7 @@ p.gamma.rich_coef2 <-  bind_cols(p.gamma.rich_coef$Field[,,'Intercept'] %>%
 
 
 
-#setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
+setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
 save(p.gamma.rich_fitted,p.gamma.rich_fixef,p.gamma.rich_coef,p.gamma.rich_coef2,obs_nest.gamma, file = 'g.rich.mod_dat.Rdata')
 load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/g.rich.mod_dat.Rdata')
 
@@ -331,8 +334,8 @@ p.gamma.rich.fig
 #                     list(adapt_delta = 0.99), chains = 4)
 
 #save(p.beta.div, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.beta.div.Rdata')
-#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.beta.div.Rdata") 
-load("~/Desktop/mods/beta_div_c.Rdata") 
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/beta_div_c.Rdata") 
+
 
 summary(p.beta.div)
 
@@ -447,8 +450,10 @@ p.beta.div_fitted2<-p.beta.div_fitted %>% mutate( `Old field` = fct_recode( Fiel
                                                       "N" = "47",
                                                       "O" = "5",
                                                       "P" = "53",
-                                                      "Q" = "70",
-                                                      "R" = "72"))
+                                                      "Q" = "600",
+                                                      "R" = "601",
+                                                      "S" = "70",
+                                                      "T" = "72"))
 
 p.beta.div_coef3
 p.beta.div_coef2$Field<-as.factor(p.beta.div_coef2$Field)
@@ -470,8 +475,10 @@ p.beta.div_coef3<-p.beta.div_coef2 %>% mutate( `Old field` = fct_recode( Field, 
                                                                           "N" = "47",
                                                                           "O" = "5",
                                                                           "P" = "53",
-                                                                          "Q" = "70",
-                                                                          "R" = "72"))
+                                                                          "Q" = "600",
+                                                                          "R" = "601",
+                                                                         "S" = "70",
+                                                                         "T" = "72"))
 
 p.beta.div.fig<-ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
@@ -495,8 +502,10 @@ p.beta.div.fig<-ggplot() +
                                                                                                              "N" = "47",
                                                                                                              "O" = "5",
                                                                                                              "P" = "53",
-                                                                                                             "Q" = "70",
-                                                                                                             "R" = "72")),
+                                                                                                             "Q" = "600",
+                                                                                                             "R" = "601",
+                                                                                                             "S" = "70",
+                                                                                                             "T" = "72")),
             aes(x = YSA, y= exp(predicted[,1]) ,
                    group = `Old field`,
                     colour = `Old field`),
@@ -560,8 +569,8 @@ ysa.legend<-g_legend(p.beta.div.fig)
 # 
 # 
 #save(p.alpha.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.alpha.spie.Rdata')
-#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.alpha.spie.Rdata") 
-load("~/Desktop/mods/alpha_pie_c.Rdata") 
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/alpha_pie_c.Rdata") 
+
 
 summary(p.alpha.spie)
 
@@ -580,8 +589,8 @@ with(ar.plot, plot(Field, ma$Estimate))
 with(ar.plot, plot(Year, ma$Estimate))
 
 
-alpha_dat_of$Field<-as.factor(as.character(alpha_dat_of$Field))
-alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
+alpha_dat$Field<-as.factor(as.character(alpha_dat$Field))
+alpha_dat$Year<-as.factor(as.character(alpha_dat$Year))
 
 alpha_dat$Field<-as.numeric(alpha_dat$Field)
 
@@ -706,8 +715,8 @@ p.alpha.spie.fig
 # went with gaussian
 
 #save(p.gamma.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.gamma.spie.Rdata')
-#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.gamma.spie.Rdata") 
-load("~/Desktop/mods/gamma_pie_c.Rdata") 
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/gamma_pie_c.Rdata") 
+
 
 summary(p.gamma.spie)
 
@@ -771,7 +780,7 @@ obs_nest.gamma.pie <- gamma_dat %>%
   nest(data = c(Field,YSA,log_YSA)) %>%
   mutate(predicted = map(data, ~predict(p.gamma.spie, newdata= .x, re_formula = ~(1 + log_YSA | Field) ))) 
 
-
+View(obs_nest.gamma.pie)
 
 p.gamma.spie_coef2 <-  bind_cols(p.gamma.spie_coef$Field[,,'Intercept'] %>% 
                                    as_tibble() %>% 
@@ -867,8 +876,7 @@ head(gamma_dat)
 #                    data = gamma_dat_of, family=student(),cores = 4, iter=10000,warmup=1000, chains = 4)
 # 
 # save(p.beta.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.beta.spie.Rdata')
-#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.beta.spie.Rdata") 
-load("~/Desktop/mods/beta_pie_c.Rdata") 
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/beta_pie_c.Rdata") 
 
 summary(p.beta.spie)
 
@@ -953,6 +961,8 @@ p.beta.spie_coef2 <-  bind_cols(p.beta.spie_coef$Field[,,'Intercept'] %>%
 p.beta.spie_fitted$YSA <- as.numeric(p.beta.spie_fitted$YSA)
 p.beta.spie_fitted$Field<-as.character(p.beta.spie_fitted$Field)
 p.beta.spie_coef2$Field<-as.character(p.beta.spie_coef2$Field)
+
+head(p.beta.spie_coef2)
 
 setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
 # avoid running above code everytime

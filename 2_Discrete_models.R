@@ -27,8 +27,7 @@ gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 
 # 
 # 
 # save(d.alpha.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.rich.Rdata')
-load("~/Desktop/mods/alpha_rich_d.Rdata") 
-#load( '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.rich.Rdata')
+load( '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/alpha_rich_d.Rdata')
 
 summary(d.alpha.rich) # model summary
 
@@ -98,14 +97,14 @@ colnames(alpha_dat)
 #                   data = alpha_dat,cores = 4, family = 'lognormal', iter=3000, warmup=1000, chains = 4)
 # 
 # save(d.alpha.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.spie.Rdata')
-#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.spie.Rdata") 
-load("~/Desktop/mods/alpha_pie_d.Rdata") 
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/alpha_pie_d.Rdata") 
+
 
 summary(d.alpha.spie)
 
 
 color_scheme_set("darkgray")
-pp_check(d.alpha.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("Density") + theme_classic() # predicted vs. observed values
+pp_check(d.alpha.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("Density") + xlim(-20,20) + theme_classic() # predicted vs. observed values
 
 
 d.alpha.spie_c <- conditional_effects(d.alpha.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
@@ -155,15 +154,15 @@ d.alpha.spie.eff
 #                   data = gamma_dat,family = 'poisson',cores = 4, iter=2000, chains = 4)
 # 
 # save(d.gamma.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.gamma.rich.Rdata')
-load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.gamma.rich.Rdata") 
-load("~/Desktop/mods/gamma_rich_d.Rdata") 
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/gamma_rich_d.Rdata") 
+
 
 
 summary(d.gamma.rich)
 
 
 color_scheme_set("darkgray")
-pp_check(d.gamma.rich)+  xlab( "Species richness") + ylab("Density") + theme_classic() # predicted vs. observed values
+pp_check(d.gamma.rich)+  xlab( "Species richness") + ylab("Density") + xlim(0,70) + theme_classic() # predicted vs. observed values
 
 
 gamma_c <- conditional_effects(d.gamma.rich, effects = 'site_status', re_formula = NA, method = 'fitted')  
@@ -216,10 +215,7 @@ d.gamma.rich.eff
 #                   data = gamma_dat, family = student(), cores = 4, iter=3000, warmup = 1000, chains = 4)
 # 
 # save(d.gamma.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.gamma.spie.Rdata')
-#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.gamma.spie.Rdata") 
-
-
-load("~/Desktop/mods/gamma_pie_d.Rdata") #d.gamma.spie
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/gamma_pie_d.Rdata") 
 
 
 
@@ -280,8 +276,8 @@ colnames(gamma_dat)
 #                   data = gamma_dat,family=student(), cores = 4, iter=10000,warmup=1000, chains = 4)
 # 
 # save(d.beta.div, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.beta.div.Rdata')
-#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.beta.div.Rdata") 
-load("~/Desktop/mods/beta_div_d.Rdata") 
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/beta_div_d.Rdata") 
+
 
 summary(d.beta.div)
 
@@ -337,8 +333,8 @@ d.beta.div.eff
 #                  data = gamma_dat, family=student(),cores = 4, iter=4000,warmup=1000, chains = 4)
 # 
 # save(d.beta.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.beta.spie.Rdata')
-#load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.beta.spie.Rdata") 
-load("~/Desktop/mods/beta_pie_d.Rdata") 
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/beta_pie_d.Rdata") 
+
 
 summary(d.beta.spie)
 
