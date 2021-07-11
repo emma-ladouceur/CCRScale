@@ -433,6 +433,8 @@ head(p.beta.div_fitted)
 p.beta.div_fitted$Field<-as.factor(p.beta.div_fitted$Field)
 levels(p.beta.div_fitted$Field)
 
+
+
 # rename fields to be letters instead of numbers- because numbers get confusing when you're looking at YSA & Field #'s
 p.beta.div_fitted2<-p.beta.div_fitted %>% mutate( `Old field` = fct_recode( Field,  "A" = "10",
                                                       "B" = "21",
@@ -1024,19 +1026,17 @@ g_legend<-function(a.gplot){
 
 ysa.legend<-g_legend(p.beta.div.fig)
 
-(p.alpha.spie.fig | p.gamma.spie.fig   | p.beta.spie.fig + theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,1)) 
-
-(p.alpha.rich.fig| p.alpha.spie.fig)/ (p.gamma.rich.fig | p.gamma.spie.fig)/( p.beta.div.fig + theme(legend.position="none") | p.beta.spie.fig + theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,10,10,2)) 
-
-
-
-(p.alpha.rich.fig|p.gamma.rich.fig  )/ ( p.alpha.spie.fig| p.gamma.spie.fig)/( p.beta.div.fig + theme(legend.position="none") | p.beta.spie.fig + theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,10,10,2)) 
-
-
-(d.alpha.rich.eff | d.gamma.rich.eff  ) / (d.alpha.spie.eff | d.gamma.spie.eff) / (d.beta.div.eff | d.beta.spie.eff + theme(legend.position="none")) + plot_layout(heights = c(10,10,10)) 
+# (p.alpha.spie.fig | p.gamma.spie.fig   | p.beta.spie.fig + theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,1)) 
+# 
+# (p.alpha.rich.fig| p.alpha.spie.fig)/ (p.gamma.rich.fig | p.gamma.spie.fig)/( p.beta.div.fig + theme(legend.position="none") | p.beta.spie.fig + theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,10,10,2)) 
+# 
+# (p.alpha.rich.fig|p.gamma.rich.fig  )/ ( p.alpha.spie.fig| p.gamma.spie.fig)/( p.beta.div.fig + theme(legend.position="none") | p.beta.spie.fig + theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,10,10,2)) 
+# 
+# 
+# (d.alpha.rich.eff | d.gamma.rich.eff  ) / (d.alpha.spie.eff | d.gamma.spie.eff) / (d.beta.div.eff | d.beta.spie.eff + theme(legend.position="none")) + plot_layout(heights = c(10,10,10)) 
 
 
-# MIX UP
+# FOR PAPER
 # LANDSCAPE 10X11
 
 # FIG 1 ALPHA GAMMA
@@ -1059,7 +1059,7 @@ b.fig
 
 
 
-# PRESSIE
+# PRESENTATIONS
 
 
 (d.alpha.rich.eff | p.alpha.rich.fig  )/ (ysa.legend) + plot_layout(heights = c(10,2)) 

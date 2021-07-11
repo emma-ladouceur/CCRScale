@@ -213,8 +213,8 @@ plot(ccr.nest)
 #save(ccr.nest, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/betan.Rdata')
 
 
-load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/betat.Rdata") # object name: ccr.turnover
-load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/betan.Rdata") # object name: ccr.nest
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/turnover.Rdata") # object name: ccr.turnover
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/nest.Rdata") # object name: ccr.nest
 
 summary(ccr.nest)
 summary(ccr.turnover)
@@ -334,8 +334,10 @@ betat_fitted2<-betat_fitted %>% mutate( `Old field` = fct_recode( Field,  "A" = 
                                                                      "N" = "47",
                                                                      "O" = "5",
                                                                      "P" = "53",
-                                                                     "Q" = "70",
-                                                                     "R" = "72"))
+                                                                  "Q" = "600",
+                                                                  "R" = "601",
+                                                                  "S" = "70",
+                                                                  "T" = "72"))
 
 betat_coef3<-betat_coef2 %>% mutate( `Old field` = fct_recode( Field,  "A" = "10",
                                                                   "B" = "21",
@@ -353,8 +355,10 @@ betat_coef3<-betat_coef2 %>% mutate( `Old field` = fct_recode( Field,  "A" = "10
                                                                   "N" = "47",
                                                                   "O" = "5",
                                                                   "P" = "53",
-                                                                  "Q" = "70",
-                                                                  "R" = "72"))
+                                                               "Q" = "600",
+                                                               "R" = "601",
+                                                               "S" = "70",
+                                                               "T" = "72"))
 
 turn.fig <- ggplot() +
   #facet_grid(~Site) +
@@ -410,8 +414,10 @@ betan_fitted2<-betan_fitted %>% mutate( `Old field` = fct_recode( Field,  "A" = 
                                                            "N" = "47",
                                                            "O" = "5",
                                                            "P" = "53",
-                                                           "Q" = "70",
-                                                           "R" = "72"))
+                                                           "Q" = "600",
+                                                           "R" = "601",
+                                                           "S" = "70",
+                                                           "T" = "72"))
 
 betan_coef3<-betan_coef2 %>% mutate( `Old field` = fct_recode( Field,  "A" = "10",
                                                         "B" = "21",
@@ -429,8 +435,10 @@ betan_coef3<-betan_coef2 %>% mutate( `Old field` = fct_recode( Field,  "A" = "10
                                                         "N" = "47",
                                                         "O" = "5",
                                                         "P" = "53",
-                                                        "Q" = "70",
-                                                        "R" = "72"))
+                                                        "Q" = "600",
+                                                        "R" = "601",
+                                                        "S" = "70",
+                                                        "T" = "72"))
 
 nest.fig <- ggplot() +
   #facet_grid(~Site) +
@@ -483,8 +491,9 @@ ysa.legend<-g_legend(nest.fig)
 
 (turn.fig + theme(legend.position="none") | nest.fig+ theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,1)) 
 
-# REARRANGE STACK PLOTS
 
+
+# REARRANGE STACK PLOTS  FOR PAPER
 
 turn.fig <- ggplot() +
   #facet_grid(~Site) +
@@ -511,8 +520,10 @@ turn.fig <- ggplot() +
                                                                                                              "N" = "47",
                                                                                                              "O" = "5",
                                                                                                              "P" = "53",
-                                                                                                             "Q" = "70",
-                                                                                                             "R" = "72")),
+                                                                                                             "Q" = "600",
+                                                                                                             "R" = "601",
+                                                                                                             "S" = "70",
+                                                                                                             "T" = "72")),
             aes(x = YSA, y= (predicted[,1]) ,
                 group = `Old field`,
                 colour = `Old field`),
@@ -598,8 +609,10 @@ nest.fig <- ggplot() +
                                                                                                              "N" = "47",
                                                                                                              "O" = "5",
                                                                                                              "P" = "53",
-                                                                                                             "Q" = "70",
-                                                                                                             "R" = "72")),
+                                                                                                             "Q" = "600",
+                                                                                                             "R" = "601",
+                                                                                                             "S" = "70",
+                                                                                                             "T" = "72")),
             aes(x = YSA, y= (predicted[,1]) ,
                 group = `Old field`,
                 colour = `Old field`),
