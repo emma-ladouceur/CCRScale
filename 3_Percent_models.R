@@ -128,27 +128,59 @@ save(p.alpha.rich_fitted,p.alpha.rich_fixef,p.alpha.rich_coef,p.alpha.rich_coef2
 load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/a.rich.mod_dat.Rdata')
 
 
-
-
 p.alpha.rich.fig<-ggplot() + 
  # facet_grid(~Field, scales="free") +
   geom_hline(yintercept = 100, lty = 2) +
-  geom_point(data = p.alpha.rich_fitted,
+  geom_point(data = p.alpha.rich_fitted %>% mutate( `Old field` = fct_recode( Field,  "A" = "601",
+                                                                           "B" = "600",
+                                                                           "C" = "10",
+                                                                           "D" = "28",
+                                                                           "E" = "41",
+                                                                           "F" = "39",
+                                                                           "G" = "40",
+                                                                           "H" = "4",
+                                                                           "I" = "44",
+                                                                           "J" = "53",
+                                                                           "K" = "47",
+                                                                           "L" = "21",
+                                                                           "M" = "70",
+                                                                           "N" = "5",
+                                                                           "O" = "27",
+                                                                           "P" = "45",
+                                                                           "Q" = "32",
+                                                                           "R" = "35",
+                                                                           "S" = "72"
+  )) %>% 
+    mutate( `Old field` = as.character(`Old field`)) %>%
+    arrange(`Old field`)
+  ,
              aes(x = YSA, y = alpha_rich_p,
-                 colour = Field),
+                 colour = `Old field`),
              size = 1.2, shape=1, position = position_jitter(width = 2, height=2.5)) +
-  geom_line(data = obs_nest.alpha %>% unnest(cols = c(data, predicted)), aes(x = YSA, y= exp(predicted[,1]) ,
+  geom_line(data = obs_nest.alpha  %>% unnest(cols = c(data, predicted)) %>% mutate( `Old field` = fct_recode( Field,   "A" = "601",
+                                                                                                               "B" = "600",
+                                                                                                               "C" = "10",
+                                                                                                               "D" = "28",
+                                                                                                               "E" = "41",
+                                                                                                               "F" = "39",
+                                                                                                               "G" = "40",
+                                                                                                               "H" = "4",
+                                                                                                               "I" = "44",
+                                                                                                               "J" = "53",
+                                                                                                               "K" = "47",
+                                                                                                               "L" = "21",
+                                                                                                               "M" = "70",
+                                                                                                               "N" = "5",
+                                                                                                               "O" = "27",
+                                                                                                               "P" = "45",
+                                                                                                               "Q" = "32",
+                                                                                                               "R" = "35",
+                                                                                                               "S" = "72")) %>%  
+              mutate( `Old field` = as.character(`Old field`)) %>%
+              arrange(`Old field`), aes(x = YSA, y= exp(predicted[,1]) ,
                      group = Field,
-                     colour = Field),
+                     colour = `Old field`),
                      size = 1.2) +
-  # geom_segment(data = p.alpha.rich_coef2,
-  #              aes(x = xmin,
-  #                  xend = xmax,
-  #                  y = exp(Intercept + Slope * lxmin),
-  #                  yend = exp(Intercept + Slope * lxmax ),
-  #                  group = Field,
-  #                  colour = Field),
-  #           size = 1.2) +
   # uncertainy in fixed effect
   geom_ribbon(data = p.alpha.rich_fitted,
               aes(x = YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
@@ -278,13 +310,55 @@ p.gamma.rich_coef2$Field<-as.character(p.gamma.rich_coef2$Field)
 
 p.gamma.rich.fig<-ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
-  geom_point(data = p.gamma.rich_fitted,
+  geom_point(data = p.gamma.rich_fitted %>%  mutate( `Old field` = fct_recode( Field,  "A" = "601",
+                                                                               "B" = "600",
+                                                                               "C" = "10",
+                                                                               "D" = "28",
+                                                                               "E" = "41",
+                                                                               "F" = "39",
+                                                                               "G" = "40",
+                                                                               "H" = "4",
+                                                                               "I" = "44",
+                                                                               "J" = "53",
+                                                                               "K" = "47",
+                                                                               "L" = "21",
+                                                                               "M" = "70",
+                                                                               "N" = "5",
+                                                                               "O" = "27",
+                                                                               "P" = "45",
+                                                                               "Q" = "32",
+                                                                               "R" = "35",
+                                                                               "S" = "72"
+  )) %>% 
+    mutate( `Old field` = as.character(`Old field`)) %>%
+    arrange(`Old field`)
+  ,
              aes(x = YSA, y = gamma_rich_p,
-                 colour = Field),
+                 colour = `Old field`),
              size = 1.2, shape=1) +
-  geom_line(data = obs_nest.gamma %>% unnest(cols = c(data, predicted)), aes(x = YSA, y= exp(predicted[,1]) ,
+  geom_line(data = obs_nest.gamma %>% unnest(cols = c(data, predicted)) %>% mutate( `Old field` = fct_recode( Field,   "A" = "601",
+                                                                                                                                                   "B" = "600",
+                                                                                                                                                   "C" = "10",
+                                                                                                                                                   "D" = "28",
+                                                                                                                                                   "E" = "41",
+                                                                                                                                                   "F" = "39",
+                                                                                                                                                   "G" = "40",
+                                                                                                                                                   "H" = "4",
+                                                                                                                                                   "I" = "44",
+                                                                                                                                                   "J" = "53",
+                                                                                                                                                   "K" = "47",
+                                                                                                                                                   "L" = "21",
+                                                                                                                                                   "M" = "70",
+                                                                                                                                                   "N" = "5",
+                                                                                                                                                   "O" = "27",
+                                                                                                                                                   "P" = "45",
+                                                                                                                                                   "Q" = "32",
+                                                                                                                                                   "R" = "35",
+                                                                                                                                                   "S" = "72")) %>%  
+              mutate( `Old field` = as.character(`Old field`)) %>%
+              arrange(`Old field`), aes(x = YSA, y= exp(predicted[,1]) ,
                  group = Field,
-                 colour = Field),
+                 colour = `Old field`),
             size = 1.2) +
   # geom_segment(data = p.gamma.rich_coef2,
   #              aes(x = xmin,
@@ -292,7 +366,7 @@ p.gamma.rich.fig<-ggplot() +
   #                  y = exp(Intercept + Slope * lxmin),
   #                  yend = exp(Intercept + Slope * lxmax),
   #                  group = Field,
-  #                  colour = Field),
+  #                  colour = `Old field`),
   #              size = 1.2) +
   #uncertainy in fixed effect
   geom_ribbon(data = p.gamma.rich_fitted,
@@ -433,54 +507,52 @@ head(p.beta.div_fitted)
 p.beta.div_fitted$Field<-as.factor(p.beta.div_fitted$Field)
 levels(p.beta.div_fitted$Field)
 
+head(p.beta.div_fitted)
 
+p.beta.div_fitted %>% distinct(Field, YSA)
+
+ysa_range <- p.beta.div_fitted %>% group_by(Field) %>%
+  summarise(min_YSA = min(YSA),
+            max_YSA = max(YSA)) %>%
+  unite("range_YSA",min_YSA:max_YSA, sep="-", remove = F ) %>%
+  mutate(min_YSA = as.numeric(min_YSA),
+         max_YSA = as.numeric(max_YSA))
+
+
+head(ysa_range)
+
+field_ysa <- p.beta.div_fitted %>% left_join(ysa_range) %>% arrange(min_YSA, max_YSA) %>%
+  mutate(Field =  as.factor(Field)) %>% distinct(Field,min_YSA, max_YSA)
+
+levels(p.beta.div_fitted_t$Field)
+
+write_csv(field_ysa, "~/Desktop/field_ysa.csv")
 
 # rename fields to be letters instead of numbers- because numbers get confusing when you're looking at YSA & Field #'s
-p.beta.div_fitted2<-p.beta.div_fitted %>% mutate( `Old field` = fct_recode( Field,  "A" = "10",
-                                                      "B" = "21",
-                                                      "C" = "27",
+p.beta.div_fitted2<-p.beta.div_fitted %>% left_join(ysa_range) %>%
+  mutate( `Old field` = fct_recode( Field,  "A" = "601",
+                                                      "B" = "600",
+                                                      "C" = "10",
                                                       "D" = "28",
-                                                      "E" = "32",
-                                                      "F" = "35",
-                                                      "G" = "39",
+                                                      "E" = "41",
+                                                      "F" = "39",
+                                                      "G" = "40",
                                                       "H" = "4",
-                                                      "I" = "40",
-                                                      "J" = "41",
-                                                      "K" = "44",
-                                                      "L" = "45",
-                                                      "M" = "47",
-                                                      "N" = "47",
-                                                      "O" = "5",
-                                                      "P" = "53",
-                                                      "Q" = "600",
-                                                      "R" = "601",
-                                                      "S" = "70",
-                                                      "T" = "72"))
+                                                      "I" = "44",
+                                                      "J" = "53",
+                                                      "K" = "47",
+                                                      "L" = "21",
+                                                      "M" = "70",
+                                                      "N" = "5",
+                                                      "O" = "27",
+                                                      "P" = "45",
+                                                      "Q" = "32",
+                                                      "R" = "35",
+                                                      "S" = "72"
+                                                      )) %>% 
+  mutate( `Old field` = as.character(`Old field`)) %>%
+  arrange(`Old field`)
 
-p.beta.div_coef3
-p.beta.div_coef2$Field<-as.factor(p.beta.div_coef2$Field)
-levels(p.beta.div_coef2$Field)
-
-p.beta.div_coef3<-p.beta.div_coef2 %>% mutate( `Old field` = fct_recode( Field,  "A" = "10",
-                                                                          "B" = "21",
-                                                                          "C" = "27",
-                                                                          "D" = "28",
-                                                                          "E" = "32",
-                                                                          "F" = "35",
-                                                                          "G" = "39",
-                                                                          "H" = "4",
-                                                                          "I" = "40",
-                                                                          "J" = "41",
-                                                                          "K" = "44",
-                                                                          "L" = "45",
-                                                                          "M" = "47",
-                                                                          "N" = "47",
-                                                                          "O" = "5",
-                                                                          "P" = "53",
-                                                                          "Q" = "600",
-                                                                          "R" = "601",
-                                                                         "S" = "70",
-                                                                         "T" = "72"))
 
 p.beta.div.fig<-ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
@@ -488,38 +560,31 @@ p.beta.div.fig<-ggplot() +
              aes(x = YSA, y = beta_div_p,
                  colour = `Old field`),
              size = 1.2, shape=1) +
-  geom_line(data = obs_nest.beta.div %>% unnest(cols = c(data, predicted))%>% mutate( `Old field` = fct_recode( Field,  "A" = "10",
-                                                                                                             "B" = "21",
-                                                                                                             "C" = "27",
-                                                                                                             "D" = "28",
-                                                                                                             "E" = "32",
-                                                                                                             "F" = "35",
-                                                                                                             "G" = "39",
-                                                                                                             "H" = "4",
-                                                                                                             "I" = "40",
-                                                                                                             "J" = "41",
-                                                                                                             "K" = "44",
-                                                                                                             "L" = "45",
-                                                                                                             "M" = "47",
-                                                                                                             "N" = "47",
-                                                                                                             "O" = "5",
-                                                                                                             "P" = "53",
-                                                                                                             "Q" = "600",
-                                                                                                             "R" = "601",
-                                                                                                             "S" = "70",
-                                                                                                             "T" = "72")),
+  geom_line(data = obs_nest.beta.div %>% unnest(cols = c(data, predicted))%>% mutate( `Old field` = fct_recode( Field,   "A" = "601",
+                                                                                                                "B" = "600",
+                                                                                                                "C" = "10",
+                                                                                                                "D" = "28",
+                                                                                                                "E" = "41",
+                                                                                                                "F" = "39",
+                                                                                                                "G" = "40",
+                                                                                                                "H" = "4",
+                                                                                                                "I" = "44",
+                                                                                                                "J" = "53",
+                                                                                                                "K" = "47",
+                                                                                                                "L" = "21",
+                                                                                                                "M" = "70",
+                                                                                                                "N" = "5",
+                                                                                                                "O" = "27",
+                                                                                                                "P" = "45",
+                                                                                                                "Q" = "32",
+                                                                                                                "R" = "35",
+                                                                                                                "S" = "72")) %>%  
+              mutate( `Old field` = as.character(`Old field`)) %>%
+              arrange(`Old field`),
             aes(x = YSA, y= exp(predicted[,1]) ,
                    group = `Old field`,
                     colour = `Old field`),
             size = 1.2) +
-  # geom_segment(data = p.beta.div_coef3,
-  #              aes(x = xmin,
-  #                  xend = xmax,
-  #                  y = exp(Intercept + Slope * lxmin),
-  #                  yend = exp(Intercept + Slope * lxmax),
-  #                  group = `Old field`,
-  #                  colour = `Old field`),
-  #              size = 1.2) +
   # uncertainy in fixed effect
   geom_ribbon(data = p.beta.div_fitted,
               aes(x = YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
@@ -667,14 +732,56 @@ load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/alpha.spie.mod_d
 
 p.alpha.spie.fig <- ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
-  geom_point(data = p.alpha.spie_fitted,
+  geom_point(data = p.alpha.spie_fitted %>%  mutate( `Old field` = fct_recode( Field,  "A" = "601",
+                                                                               "B" = "600",
+                                                                               "C" = "10",
+                                                                               "D" = "28",
+                                                                               "E" = "41",
+                                                                               "F" = "39",
+                                                                               "G" = "40",
+                                                                               "H" = "4",
+                                                                               "I" = "44",
+                                                                               "J" = "53",
+                                                                               "K" = "47",
+                                                                               "L" = "21",
+                                                                               "M" = "70",
+                                                                               "N" = "5",
+                                                                               "O" = "27",
+                                                                               "P" = "45",
+                                                                               "Q" = "32",
+                                                                               "R" = "35",
+                                                                               "S" = "72"
+  )) %>% 
+    mutate( `Old field` = as.character(`Old field`)) %>%
+    arrange(`Old field`)
+  ,
              aes(x = YSA, y = alpha_ENSPIE_p,
-                 colour = Field),
+                 colour = `Old field`),
              size = 1.2, shape=1, position = position_jitter(width = 0.95, height=0.95)) +
-  geom_line(data = obs_nest.alpha.pie %>% unnest(cols = c(data, predicted)), # predict version
+  geom_line(data = obs_nest.alpha.pie %>% unnest(cols = c(data, predicted))%>% mutate( `Old field` = fct_recode( Field,   "A" = "601",
+                                                                                                                 "B" = "600",
+                                                                                                                 "C" = "10",
+                                                                                                                 "D" = "28",
+                                                                                                                 "E" = "41",
+                                                                                                                 "F" = "39",
+                                                                                                                 "G" = "40",
+                                                                                                                 "H" = "4",
+                                                                                                                 "I" = "44",
+                                                                                                                 "J" = "53",
+                                                                                                                 "K" = "47",
+                                                                                                                 "L" = "21",
+                                                                                                                 "M" = "70",
+                                                                                                                 "N" = "5",
+                                                                                                                 "O" = "27",
+                                                                                                                 "P" = "45",
+                                                                                                                 "Q" = "32",
+                                                                                                                 "R" = "35",
+                                                                                                                 "S" = "72")) %>%  
+              mutate( `Old field` = as.character(`Old field`)) %>%
+              arrange(`Old field`),
             aes(x = YSA, y= exp(predicted[,1]) ,
                 group = Field,
-                colour = Field),
+                colour = `Old field`),
             size = 1.2) +
   # geom_segment(data = p.alpha.spie_coef2, # coef version
   #              aes(x = xmin,
@@ -682,7 +789,7 @@ p.alpha.spie.fig <- ggplot() +
   #                  y = exp(Intercept + Slope * lxmin),
   #                  yend = exp(Intercept + Slope * lxmax ),
   #                  group = Field,
-  #                  colour = Field),
+  #                  colour = `Old field`),
   #           size = 1.2) +
   # uncertainy in fixed effect
   geom_ribbon(data = p.alpha.spie_fitted,
@@ -823,14 +930,56 @@ load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/gamma.spie.mod_d
 
 p.gamma.spie.fig <- ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
-  geom_point(data = p.gamma.spie_fitted,
+  geom_point(data = p.gamma.spie_fitted %>%  mutate( `Old field` = fct_recode( Field,  "A" = "601",
+                                                                               "B" = "600",
+                                                                               "C" = "10",
+                                                                               "D" = "28",
+                                                                               "E" = "41",
+                                                                               "F" = "39",
+                                                                               "G" = "40",
+                                                                               "H" = "4",
+                                                                               "I" = "44",
+                                                                               "J" = "53",
+                                                                               "K" = "47",
+                                                                               "L" = "21",
+                                                                               "M" = "70",
+                                                                               "N" = "5",
+                                                                               "O" = "27",
+                                                                               "P" = "45",
+                                                                               "Q" = "32",
+                                                                               "R" = "35",
+                                                                               "S" = "72"
+  )) %>% 
+    mutate( `Old field` = as.character(`Old field`)) %>%
+    arrange(`Old field`)
+  ,
              aes(x = YSA, y = gamma_ENSPIE_p,
-                 colour = Field),
+                 colour = `Old field`),
              size = 1.2, shape=1) +
-  geom_line(data = obs_nest.gamma.pie %>% unnest(cols = c(data, predicted)),
+  geom_line(data = obs_nest.gamma.pie %>% unnest(cols = c(data, predicted))%>% mutate( `Old field` = fct_recode( Field,   "A" = "601",
+                                                                                                                 "B" = "600",
+                                                                                                                 "C" = "10",
+                                                                                                                 "D" = "28",
+                                                                                                                 "E" = "41",
+                                                                                                                 "F" = "39",
+                                                                                                                 "G" = "40",
+                                                                                                                 "H" = "4",
+                                                                                                                 "I" = "44",
+                                                                                                                 "J" = "53",
+                                                                                                                 "K" = "47",
+                                                                                                                 "L" = "21",
+                                                                                                                 "M" = "70",
+                                                                                                                 "N" = "5",
+                                                                                                                 "O" = "27",
+                                                                                                                 "P" = "45",
+                                                                                                                 "Q" = "32",
+                                                                                                                 "R" = "35",
+                                                                                                                 "S" = "72")) %>%  
+              mutate( `Old field` = as.character(`Old field`)) %>%
+              arrange(`Old field`),
             aes(x = YSA, y= exp(predicted[,1]) ,
                 group = Field,
-                colour = Field),
+                colour = `Old field`),
             size = 1.2) +
   # geom_segment(data = p.gamma.spie_coef2,
   #              aes(x = xmin,
@@ -838,7 +987,7 @@ p.gamma.spie.fig <- ggplot() +
   #                  y = exp(Intercept + Slope * lxmin),
   #                  yend = exp(Intercept + Slope * lxmax),
   #                  group = Field,
-  #                  colour = Field),
+  #                  colour = `Old field`),
   #              size = 1.2) +
   #uncertainy in fixed effect
   geom_ribbon(data = p.gamma.spie_fitted,
@@ -979,24 +1128,57 @@ head(p.beta.spie_fitted)
 
 p.beta.spie.fig<-ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
-  geom_point(data = p.beta.spie_fitted,
+  geom_point(data = p.beta.spie_fitted %>%  mutate( `Old field` = fct_recode( Field,  "A" = "601",
+                                                                              "B" = "600",
+                                                                              "C" = "10",
+                                                                              "D" = "28",
+                                                                              "E" = "41",
+                                                                              "F" = "39",
+                                                                              "G" = "40",
+                                                                              "H" = "4",
+                                                                              "I" = "44",
+                                                                              "J" = "53",
+                                                                              "K" = "47",
+                                                                              "L" = "21",
+                                                                              "M" = "70",
+                                                                              "N" = "5",
+                                                                              "O" = "27",
+                                                                              "P" = "45",
+                                                                              "Q" = "32",
+                                                                              "R" = "35",
+                                                                              "S" = "72"
+  )) %>% 
+    mutate( `Old field` = as.character(`Old field`)) %>%
+    arrange(`Old field`)
+  ,
              aes(x = YSA, y = beta_ENSPIE_p,
-                 colour = Field),
+                 colour = `Old field`),
              size = 1.2, shape=1) +
-  geom_line(data = obs_nest.beta.pie %>% unnest(cols = c(data, predicted)),
+  geom_line(data = obs_nest.beta.pie %>% unnest(cols = c(data, predicted))%>% mutate( `Old field` = fct_recode( Field,   "A" = "601",
+                                                                                                                "B" = "600",
+                                                                                                                "C" = "10",
+                                                                                                                "D" = "28",
+                                                                                                                "E" = "41",
+                                                                                                                "F" = "39",
+                                                                                                                "G" = "40",
+                                                                                                                "H" = "4",
+                                                                                                                "I" = "44",
+                                                                                                                "J" = "53",
+                                                                                                                "K" = "47",
+                                                                                                                "L" = "21",
+                                                                                                                "M" = "70",
+                                                                                                                "N" = "5",
+                                                                                                                "O" = "27",
+                                                                                                                "P" = "45",
+                                                                                                                "Q" = "32",
+                                                                                                                "R" = "35",
+                                                                                                                "S" = "72")) %>%  
+              mutate( `Old field` = as.character(`Old field`)) %>%
+              arrange(`Old field`),
             aes(x = YSA, y= exp(predicted[,1]) ,
                 group = Field,
-                colour = Field),
+                colour = `Old field`),
             size = 1.2) +
-  # geom_segment(data = p.beta.spie_coef2,
-  #              aes(x = xmin,
-  #                  xend = xmax,
-  #                  y = exp(Intercept + Slope * lxmin),
-  #                  yend = exp(Intercept + Slope * lxmax),
-  #                  group = Field,
-  #                  colour = Field),
-  #              size = 1.2) +
-  # uncertainy in fixed effect
   geom_ribbon(data = p.beta.spie_fitted,
               aes(x = YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
               alpha = 0.3) +

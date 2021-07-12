@@ -44,12 +44,12 @@ pp_check(d.alpha.rich) +
 
 alpha_c <- conditional_effects(d.alpha.rich, effects = 'site_status', re_formula = NA, method = 'fitted')  # conditional effects
 
-View(alpha_c)
+head(alpha_c)
 
 alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("old field","never-plowed"))
 
 
-#View(alpha_c)
+#head(alpha_c)
 
 d.alpha.rich.eff<-ggplot() + 
   geom_point(data = alpha_dat,
@@ -109,11 +109,11 @@ pp_check(d.alpha.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("Density") +
 
 d.alpha.spie_c <- conditional_effects(d.alpha.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
 
-View(d.alpha.spie_c)
+head(d.alpha.spie_c)
 
 alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("old field","never-plowed"))
 
-#View(d.alpha.spie_c)
+#head(d.alpha.spie_c)
 
 d.alpha.spie.eff<-ggplot() + 
   geom_point(data = alpha_dat,
@@ -166,12 +166,12 @@ pp_check(d.gamma.rich)+  xlab( "Species richness") + ylab("Density") + xlim(0,70
 
 
 gamma_c <- conditional_effects(d.gamma.rich, effects = 'site_status', re_formula = NA, method = 'fitted')  
-View(gamma_c)
+head(gamma_c)
 
 gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
 
 
-View(gamma_dat)
+head(gamma_dat)
 
 d.gamma.rich.eff<-ggplot() + 
   geom_point(data = gamma_dat,
@@ -209,7 +209,7 @@ d.gamma.rich.eff
 # gamma_dat$Year<-as.factor(as.character(gamma_dat$Year))
 # gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-plowed","old field"))
 # 
-# View(gamma_dat)
+# head(gamma_dat)
 # 
 # d.gamma.spie <-  brm(gamma_ENSPIE ~  site_status + (1 | Field)  + (1 | Year),
 #                   data = gamma_dat, family = student(), cores = 4, iter=3000, warmup = 1000, chains = 4)
@@ -227,11 +227,11 @@ pp_check(d.gamma.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("Density") +
 
 d.gamma.spie_c <- conditional_effects(d.gamma.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
 
-View(d.gamma.spie_c)
+head(d.gamma.spie_c)
 
 gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
 
-#View(d.gamma.spie_c)
+#head(d.gamma.spie_c)
 
 d.gamma.spie.eff<-ggplot() + 
   geom_point(data = gamma_dat,
@@ -288,11 +288,11 @@ pp_check(d.beta.div)+ xlab((expression(paste(italic(beta), '-Diversity', sep = '
 d.beta_c <- conditional_effects(d.beta.div, effects = 'site_status', re_formula = NA, method = 'fitted')  
 
 
-View(d.beta_c)
+head(d.beta_c)
 gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
 
 
-#View(d.beta_c)
+#head(d.beta_c)
 colnames(gamma_dat)
 
 d.beta.div.eff<-ggplot() + 
@@ -345,11 +345,11 @@ pp_check(d.beta.spie)+ xlab((expression(paste(italic(beta), -ENS[PIE], sep = ' '
 d.beta.spie_c <- conditional_effects(d.beta.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
 
 
-View(d.beta.spie_c)
+head(d.beta.spie_c)
 gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
 
 
-#View(d.beta.spie_c)
+#head(d.beta.spie_c)
 colnames(gamma_dat)
 
 d.beta.spie.eff <- ggplot() + 
