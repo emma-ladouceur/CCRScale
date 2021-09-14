@@ -27,7 +27,7 @@ head(ccr_dat)
 
 
 # p.alpha.rich.s <-  brm(log_alpha_rich_p ~  log_YSA + ( 1 + log_YSA  | Field/Transect/Plot) + (1 | Year),
-#                        data = alpha_dat_of, family=student(), cores = 4, iter=10000,warmup = 1000, control =
+#                        data = alpha_dat_of, family=student(), cores = 4, iter = 10000, warmup = 1000, control =
 #                          list(adapt_delta = 0.99), chains = 4)
 
 #save(p.alpha.rich.s, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.alpha.rich.Rdata')

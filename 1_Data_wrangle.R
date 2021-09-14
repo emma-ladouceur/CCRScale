@@ -20,7 +20,7 @@ live_cover <- cover %>% filter(!Count_Species %in% c( "0") ) # remove not a spec
 
 head(`905_cover`)
 
-# never-plowed, E133
+# never-plowed, E133, savannas
 savanna_cover <- live_cover %>% 
   filter(HasBeenPlowed %in% c("0")) %>% # remnant savannas only
   filter(!burn_freq %in% c( "0") ) %>% # remove sites that have never been burned

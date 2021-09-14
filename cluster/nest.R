@@ -13,7 +13,8 @@ ccr.nest <- brm(jne ~  YSA + (1 + YSA | Field) + (1 | Year),
                     family=zero_inflated_beta(),
                     data = beta,
                     inits = '0',
-                    cores = 4, chains = 4)
+                    cores = 4, chains = 4,
+                control = list(adapt_delta = 0.99))
 
 
 save(ccr.nest,
