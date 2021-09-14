@@ -20,11 +20,11 @@ gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 
 
 #----------------------------------------------------------------------------------------------
 # alpha rich 
-# alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-plowed","old field"))
+alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-plowed","old field"))
 # 
-# d.alpha.rich <-  brm(alpha_rich ~  site_status +  ( 1 | Field) + (1 | Year), 
-#                   data = alpha_dat, family = 'poisson', cores = 4, iter=3000, warmup=1000, chains = 4)
-# 
+d.alpha.rich <-  brm(alpha_rich ~  site_status +  ( 1 | Field) + (1 | Year),
+                  data = alpha_dat, family = 'poisson', cores = 4, iter=3000, warmup=1000, chains = 4)
+
 # 
 # save(d.alpha.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.rich.Rdata')
 load( '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/alpha_rich_d.Rdata')
