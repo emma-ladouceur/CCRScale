@@ -62,7 +62,7 @@ np_wide <- ccr_dat %>% filter(site_status == "never-plowed") %>%
                           )) 
 
 
-View(np_wide)
+head(np_wide)
 colnames(np_wide)
 
 # every old field by calendar year and YSA
@@ -75,7 +75,7 @@ of_wide <- ccr_dat %>% filter(site_status == "old field") %>%
   arrange(Year, Field)
 
 
-View(of_wide)
+head(of_wide)
 colnames(of_wide)
 
 of_wide$Year <- as.factor(as.character(of_wide$Year))
@@ -85,7 +85,7 @@ ccr_wide <-  of_wide %>% bind_rows(np_wide) %>%
   select(-OYear) %>%
   arrange(Year, Field)
 
-View(ccr_wide)
+head(ccr_wide)
 
 colnames(ccr_wide)
 
@@ -143,7 +143,7 @@ wide.df <- ccr_wide %>%
   group_by(Year) %>%
     nest_legacy(starts_with('sp_'), site_status, Field, YSA)
  
-View(wide.df)
+head(wide.df)
 
 wide.df <- wide.df %>% 
   mutate(beta = purrr::map(data, ~ beta_pairs(.x)))
@@ -157,7 +157,7 @@ beta.df = wide.df %>%
 
 
 
-View(beta.df)
+head(beta.df)
 
 
 
@@ -220,11 +220,16 @@ summary(ccr.nest)
 summary(ccr.turnover)
 
 
-color_scheme_set("darkgray")
-pp_check(ccr.nest) + xlab("Nestedness") + ylab("Density")+ theme_classic()
-pp_check(ccr.turnover) + xlab("Turnover") + ylab("Density")+ theme_classic()
 
+fig_s6a <- pp_check(ccr.turnover) + 
+  labs(title= "a)")+
+  xlab("Turnover") + ylab("Density")+ theme_classic()+  theme(legend.position= "none")
+fig_s6a
 
+fig_s6b <- pp_check(ccr.nest) + 
+  labs(title= "b)")+
+  xlab("Nestedness") + ylab("")+ theme_classic()+  theme(legend.position= "bottom")
+fig_s6b
 
 
 betat_fitted <- cbind(ccr.turnover$data,
@@ -267,7 +272,7 @@ betat_coef2 <-  bind_cols(betat_coef$Field[,,'Intercept'] %>%
                          xmax = max(YSA)),
              by = 'Field')
 
-View(betat_coef2)
+head(betat_coef2)
 
  setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/')
  save(betat_fitted,betat_fixef,betat_coef,betat_coef2,obs_nest.betat, file = 'betat.mod_dat.Rdata')
@@ -366,43 +371,6 @@ betat_coef3<-betat_coef2 %>% mutate( `Old field` = fct_recode( Field,  "A" = "60
   arrange(`Old field`)
 
 
-turn.fig <- ggplot() +
-  #facet_grid(~Site) +
-  geom_hline(yintercept = 0, lty = 2) +
-  geom_point(data = betat_fitted2,
-             aes(x = YSA, y = jtu,
-                 colour = `Old field`),
-             size = 1.2, shape=1) +
-  # geom_line(data = p.beta.div_fitted,aes(x = YSA, y= beta_rich_p,
-  #                                       group = Field,
-  #                                       colour = Field),
-  #            size = 0.55)+
-  geom_segment(data = betat_coef3,
-               aes(x = xmin,
-                   xend = xmax,
-                   y = plogis(Intercept + Slope * xmin),
-                   yend = plogis(Intercept + Slope * xmax),
-                   group = `Old field`,
-                   colour = `Old field`),
-               size = 1.2) +
-  # uncertainy in fixed effect
-  geom_ribbon(data = betat_fitted,
-              aes(x = YSA, ymin = (Q2.5), ymax = (Q97.5)),
-              alpha = 0.3) +
-  # fixed effect
-  geom_line(data = betat_fitted,
-            aes(x = YSA, y = (Estimate)),
-            size = 1.5) +
- # scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
-  #scale_color_manual(values = mycolors) +
-  scale_color_viridis(discrete = T, option="D")  + 
-  theme_bw(base_size=18) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
-                     legend.direction = "horizontal", legend.position="bottom")  +
-  labs(subtitle= 'a)', color = "Old field") +
-  ylab("Turnover")+  xlab("Years since agricultural abandonment") +
-  guides(col = guide_legend(ncol = 9))
-
-turn.fig
 
 betan_fitted2<-betan_fitted %>% mutate( `Old field` = fct_recode( Field,  "A" = "601",
                                                                   "B" = "600",
@@ -451,64 +419,10 @@ betan_coef3<-betan_coef2%>% mutate( `Old field` = fct_recode( Field,  "A" = "601
   mutate( `Old field` = as.character(`Old field`)) %>%
   arrange(`Old field`)
 
-nest.fig <- ggplot() +
-  #facet_grid(~Site) +
-  geom_hline(yintercept = 0, lty = 2) +
-  geom_point(data = betan_fitted2,
-             aes(x = YSA, y = jne,
-                 colour = `Old field`),
-             size = 1.2, shape=1) +
-  # geom_line(data = p.beta.div_fitted,aes(x = YSA, y= beta_rich_p,
-  #                                       group = Field,
-  #                                       colour = Field),
-  #            size = 0.55)+
-  geom_segment(data = betan_coef3,
-               aes(x = xmin,
-                   xend = xmax,
-                   y = plogis(Intercept + Slope * xmin),
-                   yend = plogis(Intercept + Slope * xmax),
-                   group = `Old field`,
-                   colour = `Old field`),
-               size = 1.2) +
-  # uncertainy in fixed effect
-  geom_ribbon(data = betan_fitted,
-              aes(x = YSA, ymin = (Q2.5), ymax = (Q97.5)),
-              alpha = 0.3) +
-  # fixed effect
-  geom_line(data = betan_fitted,
-            aes(x = YSA, y = (Estimate)),
-            size = 1.5) +
-  # scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
-  #scale_color_manual(values = mycolors) +
-  scale_color_viridis(discrete = T, option="D")  + 
-  theme_bw(base_size=18) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
-                     legend.direction = "horizontal", legend.position="bottom") +
-labs( subtitle= 'b)', color = "Old field") +
-ylab("Nestedness") +  xlab("Years since agricultural abandonment") +
-guides(col = guide_legend(ncol = 9))
-
-nest.fig
 
 
 
-
-g_legend<-function(a.gplot){
-  tmp <- ggplot_gtable(ggplot_build(a.gplot))
-  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
-  legend <- tmp$grobs[[leg]]
-  return(legend)}
-
-ysa.legend<-g_legend(nest.fig)
-
-(turn.fig + theme(legend.position="none") | nest.fig+ theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,1)) 
-
-
-
-# REARRANGE STACK PLOTS  FOR PAPER
-
-turn.fig <- ggplot() +
-  #facet_grid(~Site) +
-  #geom_hline(yintercept = 0, lty = 2) +
+fig_4a <- ggplot() +
   annotate("text", x = -15, y = 0.7, label =  c( "a)"), size= 6) +
   coord_cartesian(xlim = c(0, 80), ylim = c(0.15,0.7), clip = "off")+
   geom_point(data = betat_fitted2,
@@ -539,14 +453,6 @@ turn.fig <- ggplot() +
                 group = `Old field`,
                 colour = `Old field`),
             size = 1.2) +
-  # geom_segment(data = betat_coef3,
-  #              aes(x = xmin,
-  #                  xend = xmax,
-  #                  y = plogis(Intercept + Slope * xmin),
-  #                  yend = plogis(Intercept + Slope * xmax),
-  #                  group = `Old field`,
-  #                  colour = `Old field`),
-  #              size = 1.2) +
   # uncertainy in fixed effect
   geom_ribbon(data = betat_fitted,
               aes(x = YSA, ymin = (Q2.5), ymax = (Q97.5)),
@@ -555,9 +461,6 @@ turn.fig <- ggplot() +
   geom_line(data = betat_fitted,
             aes(x = YSA, y = (Estimate)),
             size = 1.5) +
-  #ylim(0.15,0.7)+
-  # scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
-  #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
   theme_bw(base_size=18) + 
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -588,16 +491,13 @@ turn.fig <- ggplot() +
   ylab("Turnover")+  xlab("") +
   guides(col = guide_legend(ncol = 9))
 
-turn.fig
+fig_4a
 
 head(betan_fitted2)
 head(betan_coef3)
 head(betan_fitted)
 
-nest.fig <- ggplot() +
-  #facet_grid(~Site) +
-  #geom_hline(yintercept = 0, lty = 2) +
-  #geom_hline(yintercept = 1, lty = 2) +
+fig_4b <- ggplot() +
   annotate("text", x = -15, y = 0.7, label =  c( "b)"), size= 6) +
   coord_cartesian(xlim = c(0, 80), ylim = c(0.2,0.7), clip = "off")+
   geom_point(data = betan_fitted2,
@@ -628,14 +528,6 @@ nest.fig <- ggplot() +
                 group = `Old field`,
                 colour = `Old field`),
             size = 1.2) +
-  # geom_segment(data = betan_coef3,
-  #              aes(x = xmin,
-  #                  xend = xmax,
-  #                  y = plogis(Intercept + Slope * xmin),
-  #                  yend = plogis(Intercept + Slope * xmax),
-  #                  group = `Old field`,
-  #                  colour = `Old field`),
-  #              size = 1.2) +
   # uncertainy in fixed effect
   geom_ribbon(data = betan_fitted,
               aes(x = YSA, ymin = (Q2.5), ymax = (Q97.5)),
@@ -644,9 +536,6 @@ nest.fig <- ggplot() +
   geom_line(data = betan_fitted,
             aes(x = YSA, y = (Estimate)),
             size = 1.5) +
-#  ylim(0.2,0.7)+
-  # scale_y_continuous( limits=c(25,125),breaks = c(25,50,100,125)) +
-  #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
   theme_bw(base_size=18) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
                                  panel.border = element_blank(),
@@ -666,24 +555,19 @@ nest.fig <- ggplot() +
   ylab("Nestedness") +  xlab("Years since agricultural abandonment") +
   guides(col = guide_legend(ncol = 2))
 
-nest.fig
+fig_4b
 
-ysa.legend<-g_legend(nest.fig)
-
-
+ysa.legend<-g_legend(fig_4b)
 
 
 # DRAW THE CENTRE BIT
-Model <-c((expression(paste(italic(gamma), -ENS[PIE], " (%) Recovery", sep = ' '))))
-Model <- c('Never-Plowed Regional Species Pool')
-conceptdat<- data.frame(Model)
-conceptdat  
+Label <-c((expression(paste(italic(gamma), -ENS[PIE], " (%) Recovery", sep = ' '))))
+Label <- c('Never-Plowed Regional Species Pool')
+label_dat<- data.frame(Label)
+label_dat  
 
 
-conceptual <- ggplot(data = conceptdat) +
-  #facet_grid(~Model) +
-  #labs(title = (expression(paste( 'Never-Plowed Regional ', italic(gamma), '-scale', sep = ''))) ) +
- # annotate("text", x = -1, y = 0, label = "  paste( 'Never-Plowed Regional ',italic(gamma), '-scale')", size= 6, parse=TRUE ) +
+middle_bit <- ggplot(data = label_dat) +
   annotate("text", x = -1.7:-1.7, y = 0.5:-0.5, label =  c( "Never-Plowed" , "paste( 'Regional ',italic(gamma), '-scale')" ), size= 6, parse=TRUE ) +
   coord_cartesian(xlim = c(0, 8), ylim = c(-1,1), clip = "off")+
    geom_hline( yintercept = 0, linetype="longdash") + theme_classic() + 
@@ -695,16 +579,22 @@ conceptual <- ggplot(data = conceptdat) +
         axis.text.x = element_blank(), axis.ticks.x = element_blank(),  axis.title.x = element_blank(),
         panel.background = element_rect(color = NA),
         axis.line = element_line(colour = NA),
-        # text = element_text(size=rel(14)),
-        # plot.title=element_text(size=18, hjust=0.5)
          )
   
-conceptual
+middle_bit
 
 #  PORTRAIT 11X14
-p.lot <- (turn.fig + theme(legend.position="none") ) / (conceptual) / ( nest.fig + theme(legend.position="none"))  + plot_layout(heights = c(10,1.5,10)) 
+almost_fig_4 <- (fig_4a + theme(legend.position="none") ) / (middle_bit) / ( fig_4b + theme(legend.position="none"))  + plot_layout(heights = c(10,1.5,10)) 
 
-(p.lot | ysa.legend) + plot_layout(widths = c(30,5) )
+fig_4 <- (almost_fig_4 | ysa.legend) + plot_layout(widths = c(30,5) )
 
+fig_4
+
+# posterior predictive check for turnover and nestedness supp figure
+
+fig_s6_legend <- g_legend(fig_s6b)
+
+fig_s6 <- (fig_s6a | fig_s6b +  theme(legend.position= "none") ) / (fig_s6_legend)+ plot_layout(heights = c(10,0.75))
+fig_s6
 
 
