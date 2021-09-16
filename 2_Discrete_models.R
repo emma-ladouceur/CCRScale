@@ -35,8 +35,9 @@ summary(d.alpha.rich) # model summary
 color_scheme_set("darkgray")
 fig_s3a <-pp_check(d.alpha.rich) +   
   xlab( "Species richness") + ylab("Density") + 
-  labs(title= "a)")+
-  theme_classic() +  theme(legend.position= "none")# predicted vs. observed values
+  ggtitle((expression(paste(italic(alpha), '-scale', sep = ''))))+
+  labs(subtitle= "a)")+
+  theme_classic() +  theme( plot.title=element_text(size=18, hjust=0.5), legend.position= "none")# predicted vs. observed values
 
 fig_s3a
 
@@ -100,8 +101,9 @@ summary(d.alpha.spie)
 
 color_scheme_set("darkgray")
 fig_s4a <- pp_check(d.alpha.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("Density") + 
-  labs(title= "a)")+
-  xlim(-20,20) + theme_classic() +  theme(legend.position= "none")# predicted vs. observed values
+  ggtitle((expression(paste(italic(alpha), '-scale', sep = ''))))+
+  labs(subtitle= "a)")+
+  xlim(-20,20) + theme_classic() +  theme(plot.title=element_text(size=18, hjust=0.5), legend.position= "none")# predicted vs. observed values
 fig_s4a
 
 d.alpha.spie_c <- conditional_effects(d.alpha.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
@@ -153,8 +155,9 @@ summary(d.gamma.rich)
 
 color_scheme_set("darkgray")
 fig_s3b <- pp_check(d.gamma.rich)+  xlab( "Species richness") + ylab("") + 
-  labs(title= "b)")+
-  xlim(0,70) + theme_classic() +  theme(legend.position= "none")# predicted vs. observed values
+  ggtitle((expression(paste(italic(gamma), '-scale', sep = ''))))+
+  labs(subtitle= "b)")+
+  xlim(0,70) + theme_classic() +  theme( plot.title=element_text(size=18, hjust=0.5),legend.position= "none")# predicted vs. observed values
 
 fig_s3b
 
@@ -211,8 +214,9 @@ summary(d.gamma.spie)
 
 color_scheme_set("darkgray")
 fig_s4b <- pp_check(d.gamma.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("") + 
-  labs(title= "b)")+
-  theme_classic() +  theme(legend.position= "none")# predicted vs. observed values
+  ggtitle((expression(paste(italic(gamma), '-scale', sep = ''))))+
+  labs(subtitle= "b)")+  scale_x_continuous(limits = c(-20,25))+ 
+  theme_classic() +  theme(plot.title=element_text(size=18, hjust=0.5),legend.position= "none")# predicted vs. observed values
 fig_s4b
 
 d.gamma.spie_c <- conditional_effects(d.gamma.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
@@ -341,7 +345,7 @@ fig_3c <- ggplot() +
                 aes(x = site_status, ymin = lower__, ymax = upper__, colour = site_status),
                 size = 1, width = 0) +
   scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
-  theme_bw(base_size=18 )+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+  theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                                plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
                                strip.background = element_blank(),legend.position="none") +
   labs(title =  '',
