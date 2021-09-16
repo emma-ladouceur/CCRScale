@@ -1211,7 +1211,11 @@ fig_s4
 #s5
 fig_s5_legend <- g_legend(fig_s5b)
 
-fig_s5 <- (fig_s5a | fig_s5b +  theme(legend.position= "none") )/(fig_s5c | fig_s5d)/(fig_s5_legend) + plot_layout(heights = c(10,10, 0.75))
+almost_fig_s5 <- (fig_s5a | fig_s5b +  theme(legend.position= "none") )/(fig_s5c | fig_s5d)/(fig_s5_legend) + plot_layout(heights = c(10,10, 0.75))
+
+fig_s5 <- (almost_fig_s5) + plot_annotation(title = (expression(paste('', italic(beta), '-scale', sep = ''))),
+                                            theme = theme(plot.title = element_text(hjust = 0.5, size= 18))) + plot_layout(ncol=1)
+
 fig_s5
 
 
