@@ -10,6 +10,8 @@ library(viridis)
 library(brms)
 library(bayesplot)
 
+citation("iNEXT")
+
 
 clean_cover <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
@@ -350,6 +352,11 @@ ccr.extrap.df <- ccr_dat %>% filter(method == "extrapolated" ,
 
 head(ccr.extrap.df)
 
+write.csv(ccr.extrap.df, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/extrap.df.csv")
+
+ccr.extrap.df <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/extrap.df.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+
+
 # d.extrap.rich <-  brm(y ~  site_status +  ( 1 | Field) + (1 | Year),
 #                       data = ccr.extrap.df, family = student(), cores = 4, iter = 3000, warmup = 1000, chains = 4)
 # 
@@ -389,7 +396,7 @@ fig_s3 <- ggplot() +
                                   plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
                                   strip.background = element_blank(),legend.position="none") +
   labs(title =  '',
-       subtitle= 'Extrapolated species richness at 50 samples'
+       subtitle = (expression(paste('Exrapolated ', italic(gamma), '-scale at 50 samples', sep = '')))
   )+
   ylab('Extrapolated richness') + xlab('')
 
