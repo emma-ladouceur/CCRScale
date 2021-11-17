@@ -221,15 +221,15 @@ summary(ccr.turnover)
 
 
 
-fig_s6a <- pp_check(ccr.turnover) + 
+fig_s7a <- pp_check(ccr.turnover) + 
   labs(title= "a)")+
   xlab("Turnover") + ylab("Density")+ theme_classic()+  theme(legend.position= "none")
-fig_s6a
+fig_s7a
 
-fig_s6b <- pp_check(ccr.nest) + 
+fig_s7b <- pp_check(ccr.nest) + 
   labs(title= "b)")+
   xlab("Nestedness") + ylab("")+ theme_classic()+  theme(legend.position= "bottom")
-fig_s6b
+fig_s7b
 
 
 betat_fitted <- cbind(ccr.turnover$data,
@@ -592,9 +592,9 @@ fig_4
 
 # posterior predictive check for turnover and nestedness supp figure
 
-fig_s6_legend <- g_legend(fig_s6b)
+fig_s7_legend <- g_legend(fig_s7b)
 
-fig_s6 <- (fig_s6a | fig_s6b +  theme(legend.position= "none") ) / (fig_s6_legend)+ plot_layout(heights = c(10,0.75))
-fig_s6
+fig_s7 <- (fig_s7a | fig_s7b +  theme(legend.position= "none") ) / (fig_s7_legend)+ plot_layout(heights = c(10,0.75))
+fig_s7
 
 

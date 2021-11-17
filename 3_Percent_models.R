@@ -37,11 +37,11 @@ summary(p.alpha.rich)
 
 
 color_scheme_set("darkgray")
-fig_s3c <- pp_check(p.alpha.rich)+ xlab( "Species richness (%)") + ylab("Density") +
+fig_s4c <- pp_check(p.alpha.rich)+ xlab( "Species richness (%)") + ylab("Density") +
   labs(title= "c)")+
   theme_classic()+  theme(legend.position= "bottom") # predicted vs. observed values
 
-fig_s3c
+fig_s4c
 
 alpha_dat_of$Field<-as.factor(as.character(alpha_dat_of$Field))
 alpha_dat_of$Year<-as.factor(as.character(alpha_dat_of$Year))
@@ -218,12 +218,11 @@ load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/perce
 summary(p.gamma.rich)
 
 
-
 color_scheme_set("darkgray")
-fig_s3d <- pp_check(p.gamma.rich)+ xlab( "Species richness (%)") + ylab("") +
+fig_s4d <- pp_check(p.gamma.rich)+ xlab( "Species richness (%)") + ylab("") +
   labs(title= "d)")+
   theme_classic()+  theme(legend.position= "none") # predicted vs. observed values
-fig_s3d
+fig_s4d
 
 
 gamma_dat_of$Field<-as.factor(as.character(gamma_dat_of$Field))
@@ -274,6 +273,36 @@ obs_nest.gamma <- gamma_dat %>%
             YSA = seq(min(YSA), max(YSA), length.out = 6)) %>%
   nest(data = c(Field,YSA,log_YSA)) %>%
   mutate(predicted = map(data, ~predict(p.gamma.rich, newdata= .x, re_formula = ~(1 + log_YSA | Field) ))) 
+
+
+View(obs_nest.gamma)
+
+
+# try predicting for longer time frames
+## predict response for new data
+
+head(gamma_dat)
+
+ysa_summary <- gamma_dat %>% select(YSA, log_YSA) %>% distinct() %>%
+  arrange(YSA)
+
+View(ysa_summary)
+
+newdata <- data.frame(YSA =  c(80,90,100,150,200,250,300,350,400))
+
+head(newdata)
+
+ newdata <- newdata %>%  mutate(
+   log_YSA = log(YSA))
+
+predicted.gamma <- predict(p.gamma.rich, newdata = newdata, re_formula = ~(1 + log_YSA) )
+
+
+gamma_predicts <-  mutate(as.data.frame(predicted.gamma)) %>% 
+  bind_cols(newdata)
+
+View(gamma_predicts)
+
 
 
 # coefs
@@ -402,10 +431,10 @@ load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/perce
 summary(p.beta.div)
 
 color_scheme_set("darkgray")
-fig_s5b <- pp_check(p.beta.div)+  xlab((expression(paste(italic(beta), '-Diversity (%)', sep = '')))) +  ylab("") +
+fig_s6b <- pp_check(p.beta.div)+  xlab((expression(paste(italic(beta), '-Diversity (%)', sep = '')))) +  ylab("") +
   labs(title= "b)")+
   theme_classic() +  theme(legend.position= "bottom")# predicted vs. observed values
-fig_s5b
+fig_s6b
 
 gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
 gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
@@ -617,10 +646,10 @@ summary(p.alpha.spie)
 
 
 color_scheme_set("darkgray")
-fig_s4c <- pp_check(p.alpha.spie)+  xlab((expression(paste(italic(alpha), -ENS[PIE], " (%)", sep = ' ')))) + ylab("Density") +
+fig_s5c <- pp_check(p.alpha.spie)+  xlab((expression(paste(italic(alpha), -ENS[PIE], " (%)", sep = ' ')))) + ylab("Density") +
   labs(title= "c)")+
   theme_classic() +  theme(legend.position= "bottom")# predicted vs. observed values
-fig_s4c
+fig_s5c
 
 # models residuals
 ma<-residuals(p.alpha.spie)
@@ -797,10 +826,10 @@ summary(p.gamma.spie)
 
 
 color_scheme_set("darkgray")
-fig_s4d <- pp_check(p.gamma.spie) + xlab((expression(paste(italic(gamma), -ENS[PIE], " (%)", sep = ' '))))  + ylab("") + 
+fig_s5d <- pp_check(p.gamma.spie) + xlab((expression(paste(italic(gamma), -ENS[PIE], " (%)", sep = ' '))))  + ylab("") + 
   labs(title= "d)")+
   theme_classic() +  theme(legend.position= "none")# predicted vs. observed values
-fig_s4d
+fig_s5d
 
 
 gamma_dat_of$Field<-as.factor(as.character(gamma_dat_of$Field))
@@ -984,10 +1013,10 @@ summary(p.beta.spie)
 
 
 color_scheme_set("darkgray")
-fig_s5d <- pp_check(p.beta.spie)+   xlab((expression(paste(italic(beta), -ENS[PIE], " (%)", sep = ' '))))  +  ylab("") +
+fig_s6d <- pp_check(p.beta.spie)+   xlab((expression(paste(italic(beta), -ENS[PIE], " (%)", sep = ' '))))  +  ylab("") +
   labs(title= "d)")+
   theme_classic()+  theme(legend.position= "none") # predicted vs. observed values
-fig_s5d
+fig_s6d
 
 gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
 gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
@@ -1196,12 +1225,6 @@ fig_3
 
 # posterior predictive checks plots for supplementary info
 
-#s3
-fig_s3_legend <- g_legend(fig_s3c)
-
-fig_s3 <- (fig_s3a | fig_s3b)/(fig_s3c +  theme(legend.position= "none") | fig_s3d)/(fig_s3_legend) + plot_layout(heights = c(10,10, 0.75))
-fig_s3
-
 #s4
 fig_s4_legend <- g_legend(fig_s4c)
 
@@ -1209,14 +1232,20 @@ fig_s4 <- (fig_s4a | fig_s4b)/(fig_s4c +  theme(legend.position= "none") | fig_s
 fig_s4
 
 #s5
-fig_s5_legend <- g_legend(fig_s5b)
+fig_s5_legend <- g_legend(fig_s5c)
 
-almost_fig_s5 <- (fig_s5a | fig_s5b +  theme(legend.position= "none") )/(fig_s5c | fig_s5d)/(fig_s5_legend) + plot_layout(heights = c(10,10, 0.75))
+fig_s5 <- (fig_s5a | fig_s5b)/(fig_s5c +  theme(legend.position= "none") | fig_s5d)/(fig_s5_legend) + plot_layout(heights = c(10,10, 0.75))
+fig_s5
 
-fig_s5 <- (almost_fig_s5) + plot_annotation(title = (expression(paste('', italic(beta), '-scale', sep = ''))),
+#s6
+fig_s6_legend <- g_legend(fig_s6b)
+
+almost_fig_s6 <- (fig_s6a | fig_s6b +  theme(legend.position= "none") )/(fig_s6c | fig_s6d)/(fig_s6_legend) + plot_layout(heights = c(10,10, 0.75))
+
+fig_s6 <- (almost_fig_s6) + plot_annotation(title = (expression(paste('', italic(beta), '-scale', sep = ''))),
                                             theme = theme(plot.title = element_text(hjust = 0.5, size= 18))) + plot_layout(ncol=1)
 
-fig_s5
+fig_s6
 
 
 

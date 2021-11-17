@@ -33,13 +33,13 @@ summary(d.alpha.rich) # model summary
 
 
 color_scheme_set("darkgray")
-fig_s3a <-pp_check(d.alpha.rich) +   
+fig_s4a <-pp_check(d.alpha.rich) +   
   xlab( "Species richness") + ylab("Density") + 
   ggtitle((expression(paste(italic(alpha), '-scale', sep = ''))))+
   labs(subtitle= "a)")+
   theme_classic() +  theme( plot.title=element_text(size=18, hjust=0.5), legend.position= "none")# predicted vs. observed values
 
-fig_s3a
+fig_s4a
 
 
  alpha.rich_fixef <- fixef(d.alpha.rich) # look @ fixed effects
@@ -100,11 +100,11 @@ summary(d.alpha.spie)
 
 
 color_scheme_set("darkgray")
-fig_s4a <- pp_check(d.alpha.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("Density") + 
+fig_s5a <- pp_check(d.alpha.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("Density") + 
   ggtitle((expression(paste(italic(alpha), '-scale', sep = ''))))+
   labs(subtitle= "a)")+
   xlim(-20,20) + theme_classic() +  theme(plot.title=element_text(size=18, hjust=0.5), legend.position= "none")# predicted vs. observed values
-fig_s4a
+fig_s5a
 
 d.alpha.spie_c <- conditional_effects(d.alpha.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
 
@@ -142,9 +142,13 @@ fig_2a
 # gamma rich 
 # gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-plowed","old field"))
 # 
-# d.gamma.rich <-  brm(gamma_rich ~  site_status +  (1 | Field) + (1 | Year), 
-#                   data = gamma_dat,family = 'poisson',cores = 4, iter=2000, chains = 4)
+# head(gamma_dat)
 # 
+d.gamma.rich <-  brm(gamma_rich ~  site_status +  (1 | Field) +  (1 | Year),
+                     data = gamma_dat,family = 'poisson', cores = 4, iter=2000, chains = 4)
+
+
+
 # save(d.gamma.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.gamma.rich.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/gamma_rich_d.Rdata") 
 
@@ -154,15 +158,15 @@ summary(d.gamma.rich)
 
 
 color_scheme_set("darkgray")
-fig_s3b <- pp_check(d.gamma.rich)+  xlab( "Species richness") + ylab("") + 
+fig_s4b <- pp_check(d.gamma.rich)+  xlab( "Species richness") + ylab("") + 
   ggtitle((expression(paste(italic(gamma), '-scale', sep = ''))))+
   labs(subtitle= "b)")+
   xlim(0,70) + theme_classic() +  theme( plot.title=element_text(size=18, hjust=0.5),legend.position= "none")# predicted vs. observed values
 
-fig_s3b
+fig_s4b
 
 
-gamma_c <- conditional_effects(d.gamma.rich, effects = 'site_status', re_formula = NA, method = 'fitted')  
+gamma_c <- conditional_effects(d.gamma.rich.test, effects = 'site_status', re_formula = NA, method = 'fitted')  
 head(gamma_c)
 
 gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
@@ -213,11 +217,11 @@ load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discr
 summary(d.gamma.spie)
 
 color_scheme_set("darkgray")
-fig_s4b <- pp_check(d.gamma.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("") + 
+fig_s5b <- pp_check(d.gamma.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("") + 
   ggtitle((expression(paste(italic(gamma), '-scale', sep = ''))))+
   labs(subtitle= "b)")+  scale_x_continuous(limits = c(-20,25))+ 
   theme_classic() +  theme(plot.title=element_text(size=18, hjust=0.5),legend.position= "none")# predicted vs. observed values
-fig_s4b
+fig_s5b
 
 d.gamma.spie_c <- conditional_effects(d.gamma.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
 
@@ -267,11 +271,11 @@ load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discr
 summary(d.beta.div)
 
 
-fig_s5a <- pp_check(d.beta.div)+ xlab((expression(paste(italic(beta), '-Diversity', sep = '')))) +  ylab("Density") + 
+fig_s6a <- pp_check(d.beta.div)+ xlab((expression(paste(italic(beta), '-Diversity', sep = '')))) +  ylab("Density") + 
   labs(title= "a)")+
   theme_classic() +  theme(legend.position= "none")# predicted vs. observed values
 
-fig_s5a
+fig_s6a
 
 d.beta_c <- conditional_effects(d.beta.div, effects = 'site_status', re_formula = NA, method = 'fitted')  
 
@@ -320,10 +324,10 @@ load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discr
 summary(d.beta.spie)
 
 
-fig_s5c <- pp_check(d.beta.spie)+ xlab((expression(paste(italic(beta), -ENS[PIE], sep = ' ')))) + ylab("Density")+
+fig_s6c <- pp_check(d.beta.spie)+ xlab((expression(paste(italic(beta), -ENS[PIE], sep = ' ')))) + ylab("Density")+
   labs(title= "c)")+
   theme_classic() +  theme(legend.position= "none")# predicted vs. observed values
-fig_s5c
+fig_s6c
 
 d.beta.spie_c <- conditional_effects(d.beta.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
 

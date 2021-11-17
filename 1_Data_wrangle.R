@@ -106,7 +106,7 @@ colnames(cover_wide)
 
 
 cover_select<- cover_wide %>% group_by(Exp,Year,YSA,Field) %>%
-  sample_n(20) %>% ungroup() # select only 20 random plots to keep it even
+  sample_n(20) %>% ungroup() # select only 20 random plots to keep sample effort across fields consistent
 
 colnames(cover_select)
 
