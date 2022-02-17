@@ -1,5 +1,5 @@
 
-
+rm(list=ls())
 
 library(tidyverse)
 library(ggplot2)
@@ -42,26 +42,32 @@ alphdata <- alphdata %>%  mutate(
 
 predicted.alpha <- predict(p.alpha.rich, newdata = alphdata, re_formula = ~(1 + log_YSA) )
 
+head(predicted.alpha)
+
 alpha_predicts <-  mutate(as.data.frame(predicted.alpha)) %>% 
   bind_cols(alphdata) %>% mutate(Method = "Predicted")
 
+head(alpha_predicts)
 
 p.alpha.rich_fitted <- p.alpha.rich_fitted %>% mutate(Method = "Estimated from observed values") %>%
   bind_rows(alpha_predicts)
 
 
+head(p.alpha.rich_fitted)
+
 fig_5a <-ggplot() + 
   # facet_grid(~Field, scales="free") +
   geom_hline(yintercept = 100, lty = 2) +
   # uncertainy in fixed effect
-  # geom_ribbon(data = p.alpha.rich_fitted,
-  #             aes(x = YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
-  #             alpha = 0.3) +
+  geom_ribbon(data = p.alpha.rich_fitted,
+              aes(x = YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
+              alpha = 0.3) +
   # fixed effect
   geom_line(data = p.alpha.rich_fitted,
             aes(x = YSA, y = exp(Estimate), linetype= Method),
             size = 1.5) +
-  scale_y_continuous( limits=c(10,110),breaks = c(25,50,75,95,100)) +
+ scale_y_continuous( breaks = c(25,50,75,95,100, 125)) +
+  coord_cartesian( ylim = c(25,125)) +
   scale_color_viridis(discrete = T, option="D")  + 
   theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                                   legend.position="none") +
@@ -96,13 +102,14 @@ p.gamma.rich_fitted <- cbind(p.gamma.rich$data,
 
 head(gamma_dat)
 
-gamdata <- data.frame(YSA =  c(80,90,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500, 525,550,575,600,725,750,775,800,825,850,900))
+gamdata <- data.frame(YSA =  c(80,90,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500, 525,550,575,600,725,750,775,800,825,850,900, 1000))
 
 gamdata <- gamdata %>%  mutate(
   log_YSA = log(YSA))
 
 predicted.gamma <- predict(p.gamma.rich, newdata = gamdata, re_formula = ~(1 + log_YSA) )
 
+head(predicted.gamma)
 
 gamma_predicts <-  mutate(as.data.frame(predicted.gamma)) %>% 
   bind_cols(gamdata) %>% mutate(Method = "Predicted")
@@ -120,14 +127,15 @@ head(p.gamma.rich_fitted)
 fig_5b <- ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
   #uncertainy in fixed effect
-  # geom_ribbon(data = p.gamma.rich_fitted,
-  #             aes(x=YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
-  #             alpha = 0.3) +
+  geom_ribbon(data = p.gamma.rich_fitted,
+              aes(x=YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
+              alpha = 0.3) +
   # fixed effect
   geom_line(data = p.gamma.rich_fitted,
             aes(x=YSA, y = exp(Estimate), linetype = Method),
             size = 1.5) +
-  scale_y_continuous( limits=c(10,110),breaks = c(25,50,65,75,95,100)) +
+  scale_y_continuous( breaks = c(25,50,75,95,100, 125)) +
+  coord_cartesian( ylim = c(25,125)) +
   scale_color_viridis(discrete = T, option="D")  + 
   theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                                   legend.position="bottom")  +
@@ -154,14 +162,14 @@ p.beta.div_fitted <- cbind(p.beta.div$data,
 
 
 
-betadata <- data.frame(YSA =  c(80,90,100,125,150,175,200))
+betadata <- data.frame(YSA =  c(80,90,100,125,150,175,250,500,750,1000))
 
 head(betadata)
 
 betadata <- betadata %>%  mutate(
   log_YSA = log(YSA))
 
-predicted.beta<- predict(p.beta.div, newdata = betadata, re_formula = ~(1 + log_YSA) )
+predicted.beta <-  predict(p.beta.div, newdata = betadata, re_formula = ~(1 + log_YSA) )
 
 beta_predicts <-  mutate(as.data.frame(predicted.beta)) %>% 
   bind_cols(betadata) %>% mutate(Method = "Predicted")
@@ -175,14 +183,15 @@ p.beta.div_fitted <- p.beta.div_fitted %>% mutate(Method = "Estimated from obser
 fig_5c <- ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
   # uncertainy in fixed effect
-  # geom_ribbon(data = p.beta.div_fitted,
-  #             aes(x = YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
-  #             alpha = 0.3) +
+  geom_ribbon(data = p.beta.div_fitted,
+              aes(x = YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
+              alpha = 0.3) +
   # fixed effect
   geom_line(data = p.beta.div_fitted,
             aes(x = YSA, y = exp(Estimate), linetype=Method),
             size = 1.5) +
-  scale_y_continuous( limits=c(10,110),breaks = c(25,50,65,75,95,100)) +
+  scale_y_continuous( breaks = c(25,50,75,95,100,125)) +
+  coord_cartesian( ylim = c(10,125)) +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
   theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
@@ -205,3 +214,4 @@ g_legend<-function(a.gplot){
 line.legend <- g_legend(fig_5b)
 
 ( (fig_5a | fig_5b + theme(legend.position="none") | fig_5c) / (line.legend) + plot_layout(heights = c(10,1)) )
+

@@ -81,7 +81,7 @@ write.csv(ccr_comm_prep, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E
 ccr_comm_prep <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/star_prep.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
 
-summary(ccr_comm_prep)
+head(ccr_comm_prep)
 
 Fields <- distinct(ccr_comm_prep, Field, YSA)
 View(Fields)
@@ -91,7 +91,7 @@ View(Fields)
 ccr.list.all <- ccr_comm_prep %>%
   split(.$site_id)
 
-ccr.list.all <- map(ccr.list.all, ~ .x %>% 
+ccr.list.all <- purrr::map(ccr.list.all, ~ .x %>% 
                       select(Species,sample_id,Pres) %>%
                       distinct() %>%
                       spread(key = sample_id, value = Pres) %>%
