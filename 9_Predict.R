@@ -66,7 +66,8 @@ fig_5a <-ggplot() +
   geom_line(data = p.alpha.rich_fitted,
             aes(x = YSA, y = exp(Estimate), linetype= Method),
             size = 1.5) +
- scale_y_continuous( breaks = c(25,50,75,95,100, 125)) +
+ scale_y_continuous( breaks = c(25, 50,70, 75, 80 , 90, 95,100, 125)) +
+  scale_x_continuous( breaks = c(0, 80, 250, 500, 750, 1000)) +
   coord_cartesian( ylim = c(25,125)) +
   scale_color_viridis(discrete = T, option="D")  + 
   theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
@@ -76,6 +77,7 @@ fig_5a <-ggplot() +
   ylab("Species Richness (%)")  + xlab("")
 
 fig_5a
+
 
 
 
@@ -134,13 +136,14 @@ fig_5b <- ggplot() +
   geom_line(data = p.gamma.rich_fitted,
             aes(x=YSA, y = exp(Estimate), linetype = Method),
             size = 1.5) +
-  scale_y_continuous( breaks = c(25,50,75,95,100, 125)) +
+  scale_y_continuous( breaks = c(25, 50,60,70, 75, 80 , 90, 95,100, 125)) +
+  scale_x_continuous( breaks = c(0, 80, 250, 500, 750, 1000)) +
   coord_cartesian( ylim = c(25,125)) +
   scale_color_viridis(discrete = T, option="D")  + 
   theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                                   legend.position="bottom")  +
   labs( subtitle= expression(paste('b) ',italic(gamma), '-scale', sep = ''))
-        ) + ylab("Species Richness (%)")  + xlab("Years since agricultural abandonment") +
+        ) + ylab("Species Richness (%)")  + xlab("Years since agricultural \n abandonment") +
   theme(legend.key.width = unit(2,"cm"))
 
 
@@ -190,7 +193,8 @@ fig_5c <- ggplot() +
   geom_line(data = p.beta.div_fitted,
             aes(x = YSA, y = exp(Estimate), linetype=Method),
             size = 1.5) +
-  scale_y_continuous( breaks = c(25,50,75,95,100,125)) +
+  scale_y_continuous( breaks = c(25, 50,60,70, 75, 80 , 90, 95,100, 125)) +
+  scale_x_continuous( breaks = c(0, 80, 250, 500, 750, 1000)) +
   coord_cartesian( ylim = c(10,125)) +
   #scale_color_manual(values = mycolors) +
   scale_color_viridis(discrete = T, option="D")  + 
@@ -213,5 +217,82 @@ g_legend<-function(a.gplot){
 
 line.legend <- g_legend(fig_5b)
 
-( (fig_5a | fig_5b + theme(legend.position="none") | fig_5c) / (line.legend) + plot_layout(heights = c(10,1)) )
+ fig_5 <- ( (fig_5a | fig_5b + theme(legend.position="none") | fig_5c) / (line.legend) + plot_layout(heights = c(10,1)) )
 
+ fig_5
+
+# Instead of Predicting Beta..... Lets' Calc from alpha gamma
+
+
+head(p.alpha.rich_fitted)
+
+head(p.gamma.rich_fitted)
+
+alpha.rich.predict.est <- p.alpha.rich_fitted %>% filter(Method == "Predicted") %>% 
+  select(log_YSA, YSA, Estimate, Q2.5, Q97.5) %>%
+  mutate(alpha.Estimate = Estimate,
+         alpha.lower = Q2.5,
+         alpha.upper = Q97.5) %>%
+  select(-c(Estimate, Q2.5, Q97.5))
+
+head(alpha.rich.predict.est)
+
+
+gamma.rich.predict.est <- p.gamma.rich_fitted %>% filter(Method == "Predicted") %>% 
+  #select(log_YSA, YSA, Estimate, Q2.5, Q97.5)%>%
+  mutate(gamma.Estimate = Estimate,
+         gamma.lower = Q2.5,
+         gamma.upper = Q97.5) %>%
+  select(-c(Estimate, Q2.5, Q97.5))
+
+head(gamma.rich.predict.est)
+
+div.predict <- alpha.rich.predict.est %>% left_join(gamma.rich.predict.est) %>%
+  mutate( beta.Estimate = (gamma.Estimate/alpha.Estimate),
+          beta.lower = (gamma.lower/alpha.lower),
+          beta.upper = (gamma.upper/alpha.upper)) %>% 
+  select(log_YSA, YSA, beta.Estimate, beta.lower, beta.upper) %>% 
+  filter(YSA >= 80) %>% mutate(Method = "Predicted")
+
+head(div.predict)
+
+
+beta.div <- p.beta.div_fitted %>% 
+  filter(Method == "Estimated from observed values") %>%
+  mutate( beta.Estimate = Estimate,
+          beta.lower = Q2.5,
+          beta.upper = Q97.5 ) %>%
+  select(log_YSA, YSA, beta.Estimate, beta.lower, beta.upper , Method) %>%
+  bind_rows(div.predict)
+  
+
+max(beta.div$YSA)
+
+head(beta.div)
+  
+
+fig_5c_2 <- ggplot() +
+  geom_hline(yintercept = 100, lty = 2) +
+  # uncertainy in fixed effect
+  geom_ribbon(data = div.predict %>% 
+                filter(Method == "Estimated from observed values") ,
+              aes(x = YSA, ymin = exp(beta.lower), ymax = exp(beta.upper)),
+              alpha = 0.3) +
+  # fixed effect
+  geom_line(data = div.predict %>% 
+              filter(Method == "Estimated from observed values") ,
+            aes(x = YSA, y = exp(beta.Estimate), linetype = Method),
+            size = 1.5) +
+  # scale_y_continuous( breaks = c(25,50,75,95,100,125)) +
+  # coord_cartesian( ylim = c(10,125)) +
+  #scale_color_manual(values = mycolors) +
+  scale_color_viridis(discrete = T, option="D")  + 
+  theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+                                  legend.direction = "horizontal", legend.position="none")  +
+  labs(color = "Old field", subtitle= expression(paste('c) ', italic(beta), '-scale', sep = ''))) +
+  ylab((expression(''~paste(italic(beta), '-Diversity (%)', sep = '')))) +  xlab("") +
+  guides(col = guide_legend(ncol = 9))
+
+
+
+fig_5c_2
