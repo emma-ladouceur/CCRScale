@@ -1,4 +1,7 @@
 
+
+
+
 rm(list=ls())
 
 library(tidyverse)
@@ -18,70 +21,33 @@ alpha_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/alpha_rich_c.Rdata") 
 
 
-p.alpha.rich_fitted <- cbind(p.alpha.rich$data,
-                             fitted(p.alpha.rich, re_formula = NA
-                             )) %>% 
-  as_tibble() %>% inner_join(alpha_dat %>% distinct(Field, Year, log_YSA, YSA, log_alpha_rich_p, alpha_rich_p, alpha_rich),
-                             #by= c("Field", "Year", "log_YSA", "log_alpha_rich_p")
-  )
+# p.alpha.rich_fitted <- cbind(p.alpha.rich$data,
+#                              fitted(p.alpha.rich, re_formula = NA
+#                              )) %>% 
+#   as_tibble() %>% inner_join(alpha_dat %>% distinct(Field, Year, log_YSA, YSA, log_alpha_rich_p, alpha_rich_p, alpha_rich),
+#                              #by= c("Field", "Year", "log_YSA", "log_alpha_rich_p")
+#   )
 
 
-head(gamma_dat)
+head(alpha_dat)
+summary(p.alpha.rich)
 
-ysa_summary <- alpha_dat %>% select(YSA, log_YSA) %>% distinct() %>%
-  arrange(YSA)
+obs_nest.alpha <- alpha_dat %>% 
+  mutate(Field_group = Field) %>%
+  group_by(Field_group, Field, Transect, Plot) %>% 
+  summarise(log_YSA = seq(max(log_YSA), 6.907755, length.out = 920 ),
+            YSA = seq(80, 1000, length.out = 920) ) %>%
+  nest(data = c(Field,YSA, log_YSA, Transect, Plot)) %>%
+  mutate(predicted = map(data, ~predict(p.alpha.rich, newdata= .x, re_formula = ~(1 + log_YSA | Field/Transect/Plot) ))) 
 
-View(ysa_summary)
+View(obs_nest.alpha)
 
-alphdata <- data.frame(YSA =  c(80,90,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500, 525,550,575,600,725,750,775,800,825,850,900,925,950,1000))
+obs_nest.alpha.df <- obs_nest.alpha  %>% unnest(cols = c(data, predicted))%>% 
+  filter(YSA >= 80) %>% mutate(predicted_exp = exp(predicted))
 
-head(alphdata)
+View(obs_nest.alpha.df)                       
 
-alphdata <- alphdata %>%  mutate(
-  log_YSA = log(YSA))
-
-predicted.alpha <- predict(p.alpha.rich, newdata = alphdata, re_formula = ~(1 + log_YSA) )
-
-
-head(predicted.alpha)
-
-alpha_predicts <-  mutate(as.data.frame(predicted.alpha)) %>% 
-  bind_cols(alphdata) %>% mutate(Method = "Predicted") %>% 
-  filter(YSA >= 80)
-
-head(alpha_predicts)
-
-p.alpha.rich_fitted <- p.alpha.rich_fitted %>% mutate(Method = "Estimated from observed values") %>%
-  bind_rows(alpha_predicts)
-
-
-head(p.alpha.rich_fitted)
-
-fig_5a <-ggplot() + 
-  # facet_grid(~Field, scales="free") +
-  geom_hline(yintercept = 100, lty = 2) +
-  # uncertainy in fixed effect
-  geom_ribbon(data = p.alpha.rich_fitted,
-              aes(x = YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
-              alpha = 0.3) +
-  # fixed effect
-  geom_line(data = p.alpha.rich_fitted,
-            aes(x = YSA, y = exp(Estimate), linetype= Method),
-            size = 1.5) +
- scale_y_continuous( breaks = c(25, 50,70, 75, 80 , 90, 95,100, 125)) +
-  scale_x_continuous( breaks = c(0, 80, 250, 500, 750, 1000)) +
-  coord_cartesian( ylim = c(25,125)) +
-  scale_color_viridis(discrete = T, option="D")  + 
-  theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
-                                  legend.position="none") +
-  labs(subtitle = expression(paste('a) ',italic(alpha), '-scale', sep = ''))
-  ) +
-  ylab("Species Richness (%)")  + xlab("")
-
-fig_5a
-
-
-
+write.csv(obs_nest.alpha.df, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/predicted_alpha.csv")
 
 #gamma
 gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div_percent.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
@@ -90,42 +56,58 @@ gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 
 # save(p.gamma.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.gamma.rich.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/gamma_rich_c.Rdata") 
 
-# for plotting fixed effects
-p.gamma.rich_fitted <- cbind(p.gamma.rich$data,
-                             fitted(p.gamma.rich, re_formula = NA
-                             )) %>% 
-  as_tibble() %>%
-  # join with plot data for figures
-  inner_join(gamma_dat %>% distinct(Field, Year, log_YSA, YSA, log_gamma_rich_p, gamma_rich_p, gamma_rich),
-             #by= c("Field", "Year", "log_YSA", "log_gamma_rich_p")
-  )
+head(gamma_dat)
+summary(p.gamma.rich)
+
+max(gamma_dat$log_YSA)
+log(1000)
+
+obs_nest.gamma <- gamma_dat %>% 
+  mutate(Field_group = Field) %>%
+  group_by(Field_group, Field) %>% 
+  summarise(log_YSA = seq(max(log_YSA), 6.907755, length.out = 920 ),
+            YSA = seq(80, 1000, length.out = 920) ) %>%
+  nest(data = c(Field, YSA, log_YSA)) %>%
+  mutate(predicted = map(data, ~predict(p.gamma.rich, newdata= .x, re_formula = ~(1 + log_YSA | Field) ))) 
+
+View(obs_nest.gamma)
+
+obs_nest.gamma.df <- obs_nest.gamma  %>% unnest(cols = c(data, predicted)) %>% 
+  filter(YSA >= 80) %>% mutate(predicted_exp = exp(predicted))
+
+View(obs_nest.gamma.df)   
+
+write.csv(obs_nest.gamma.df, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/predicted_gamma.csv")
 
 
-# try predicting for longer time frames
-## predict response for new data
+head(obs_nest.alpha.df) 
+head(obs_nest.gamma.df) 
+
+mean_alpha <- obs_nest.alpha.df %>%
+  group_by(Field, YSA) %>%
+  summarise(mean_alpha = mean(predicted_exp))
+
+
+head(mean_alpha)
+
+mean_gamma <- obs_nest.gamma.df %>%
+  group_by(Field, YSA) %>%
+  summarise(mean_gamma = mean(predicted_exp))
+
+head(mean_gamma)
+
+mean_predict <- mean_alpha %>% left_join(mean_gamma)
+
+head(mean_predict)
 
 head(gamma_dat)
 
-gamdata <- data.frame(YSA =  c(80,90,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500, 525,550,575,600,725,750,775,800,825,850,900, 1000))
-
-gamdata <- gamdata %>%  mutate(
-  log_YSA = log(YSA))
-
-predicted.gamma <- predict(p.gamma.rich, newdata = gamdata, re_formula = ~(1 + log_YSA) )
-
-head(predicted.gamma)
-
-gamma_predicts <-  mutate(as.data.frame(predicted.gamma)) %>% 
-  bind_cols(gamdata) %>% mutate(Method = "Predicted")
+# gamma_rich_mean_np    beta_div_mean_np          
+#   43.3                4.82              
 
 
-p.gamma.rich_fitted$Field <- as.character(p.gamma.rich_fitted$Field)
 
 
-p.gamma.rich_fitted <- p.gamma.rich_fitted %>% mutate(Method = "Estimated from observed values") %>%
-  bind_rows(gamma_predicts)
-
-head(p.gamma.rich_fitted)
 
 
 fig_5b <- ggplot() +
@@ -145,7 +127,7 @@ fig_5b <- ggplot() +
   theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                                   legend.position="bottom")  +
   labs( subtitle= expression(paste('b) ',italic(gamma), '-scale', sep = ''))
-        ) + ylab("Species Richness (%)")  + xlab("Years since agricultural \n abandonment") +
+  ) + ylab("Species Richness (%)")  + xlab("Years since agricultural \n abandonment") +
   theme(legend.key.width = unit(2,"cm"))
 
 
@@ -219,9 +201,9 @@ g_legend<-function(a.gplot){
 
 line.legend <- g_legend(fig_5b)
 
- fig_5 <- ( (fig_5a | fig_5b + theme(legend.position="none") | fig_5c) / (line.legend) + plot_layout(heights = c(10,1)) )
+fig_5 <- ( (fig_5a | fig_5b + theme(legend.position="none") | fig_5c) / (line.legend) + plot_layout(heights = c(10,1)) )
 
- fig_5
+fig_5
 
 # Instead of Predicting Beta..... Lets' Calc from alpha gamma
 
@@ -266,12 +248,12 @@ beta.div <- p.beta.div_fitted %>%
           beta.upper = Q97.5 ) %>%
   select(log_YSA, YSA, beta.Estimate, beta.lower, beta.upper , Method) %>%
   bind_rows(div.predict)
-  
+
 
 max(beta.div$YSA)
 
 head(beta.div)
-  
+
 
 fig_5c_2 <- ggplot() +
   geom_hline(yintercept = 100, lty = 2) +

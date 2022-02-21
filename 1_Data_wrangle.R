@@ -222,21 +222,23 @@ alpha_mean <- alpha_dat %>% group_by(Exp,site_status,YSA, Field, Year) %>%
 summarise(mean_alpha_rich = mean(alpha_rich),
           mean_alpha_ENSPIE = mean(alpha_ENSPIE))
 
-head(alpha_mean)
+View(alpha_mean)
 
-head(gamma_ccr)
+View(gamma_ccr)
 
 head(gamma_mean)
 
+alpha_mean$YSA<-as.factor(alpha_mean$YSA)
+
 gamma_ccr2 <- gamma_ccr %>% left_join(alpha_mean)
 
-head(gamma_ccr2)
+View(gamma_ccr2)
 
 gamma_div <- gamma_ccr2 %>% 
 mutate( beta_div = (gamma_rich/mean_alpha_rich),
         beta_ENSPIE = (gamma_ENSPIE/mean_alpha_ENSPIE))
 
-head(gamma_div)
+View(gamma_div)
 
 
 np_means <- gamma_div %>% filter(site_status == "never-plowed") %>% 
