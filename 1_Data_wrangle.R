@@ -246,9 +246,12 @@ np_means <- gamma_div %>% filter(site_status == "never-plowed") %>%
              beta_div_mean_np = mean(beta_div),
      gamma_spie_mean_np = mean(gamma_ENSPIE),
      beta_spie_mean_np = mean(beta_ENSPIE)
-             )
+             ) %>% bind_cols(np_alpha_means)
 
 head(np_means)
+
+write.csv(np_means, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/np_means.csv")
+
 
 colnames(gamma_div)
 
