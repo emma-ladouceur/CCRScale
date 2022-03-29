@@ -141,16 +141,12 @@ np_means <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/
 
 head(np_means)
 
-??roll_mean
-library(RcppRoll)
-
-
 beta_predict <- alpha_predict %>% left_join(gamma_predict) %>%
-  # back transform alphaand gamma percentages to diversity
-  mutate(alpha_predicted_div = ((alpha_predicted/100) *(np_means$alpha_rich_mean_np)),
-         gamma_predicted_div = ((gamma_predicted/100) *(np_means$gamma_rich_mean_np)),
+  # back transform alpha and gamma percentages to diversity
+  mutate(alpha_predicted_div = ((alpha_predicted/100) * (np_means$alpha_rich_mean_np)),
+         gamma_predicted_div = ((gamma_predicted/100) * (np_means$gamma_rich_mean_np)),
          ) %>%
-  #then calculate predicted beta
+  # then calculate predicted beta
 mutate( beta_predicted_div = (gamma_predicted_div/alpha_predicted_div),
         beta_predicted = (beta_predicted_div/np_means$beta_div_mean_np) * 100) %>%
   # Take rolling means and probs for every year
@@ -224,7 +220,7 @@ p.beta.div_fitted_bm <- p.beta.div_fitted %>% mutate(Method = "Estimated from ob
 
 head(p.beta.div_predicted_bm)
 
-p.beta.div_predicted_om <- beta_predict_calc %>% select(-c( `log_YSA`)) 
+p.beta.div_predicted_om <- beta_predict_calc #%>% select(-c( `log_YSA`)) 
   
 head(p.beta.div_predicted_om)
   
@@ -303,6 +299,7 @@ g_legend<-function(a.gplot){
 
 line.legend <- g_legend(fig_5_legend)
 
+# LANDSCAPE 9 X 13
 fig_5 <- ( (fig_5a | fig_5b + theme(legend.position="none") | fig_5c) / (line.legend) + plot_layout(heights = c(10,1)) )
 
 fig_5
