@@ -132,7 +132,7 @@ load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/a.rich.mod_dat.R
 
 
 fig_1c <-ggplot() + 
- # facet_grid(~Field, scales="free") +
+  #facet_grid(~Field, scales="free") +
   geom_hline(yintercept = 100, lty = 2) +
   geom_point(data = p.alpha.rich_fitted %>% mutate( `Old field` = fct_recode( Field,  "A" = "601",
                                                                            "B" = "600",

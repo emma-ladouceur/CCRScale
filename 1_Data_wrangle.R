@@ -211,7 +211,7 @@ gamma_ccr <- gamma_mean %>%
   group_by(Exp,site_status,YSA,Field,Year) %>%
   summarise( 
    gamma_rich = n_distinct(Species),
-    gamma_ENSPIE = vegan::diversity(species_av_p, index='invsimpson')) %>%
+    gamma_ENSPIE = vegan::diversity(species_av_p, index = 'invsimpson')) %>%
   ungroup()  %>% 
   arrange(Exp,site_status,Field, Year,YSA)
 
