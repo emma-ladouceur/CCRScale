@@ -324,7 +324,7 @@ load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discr
 summary(d.beta.spie)
 
 
-fig_s6c <- pp_check(d.beta.spie)+ xlab((expression(paste(italic(beta), -ENS[PIE], sep = ' ')))) + ylab("Density")+
+fig_s6c <- pp_check(d.beta.spie)+ xlab((expression(paste(italic(beta), -ENS[PIE], sep = ' ')))) + ylab("")+
   labs(title= "c)")+
   theme_classic() +  theme(legend.position= "none")# predicted vs. observed values
 fig_s6c
