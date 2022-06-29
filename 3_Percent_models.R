@@ -342,7 +342,33 @@ p.gamma.rich_coef2$Field<-as.character(p.gamma.rich_coef2$Field)
 
 
 
+ong.df <- obs_nest.gamma %>% unnest(cols = c(data, predicted))%>% mutate( `Old field` = fct_recode( Field,   "A" = "601",
+                                                                                          "B" = "600",
+                                                                                          "C" = "10",
+                                                                                          "D" = "28",
+                                                                                          "E" = "41",
+                                                                                          "F" = "39",
+                                                                                          "G" = "40",
+                                                                                          "H" = "4",
+                                                                                          "I" = "44",
+                                                                                          "J" = "53",
+                                                                                          "K" = "47",
+                                                                                          "L" = "21",
+                                                                                          "M" = "70",
+                                                                                          "N" = "5",
+                                                                                          "O" = "27",
+                                                                                          "P" = "45",
+                                                                                          "Q" = "32",
+                                                                                          "R" = "35",
+                                                                                          "S" = "72")) %>%  
+  mutate( `Old field` = as.character(`Old field`)) %>%
+  arrange(`Old field`, YSA)
+
+
+View(ong.df)
+
 fig_1d <- ggplot() +
+  facet_wrap(~Field)+
   geom_hline(yintercept = 100, lty = 2) +
   geom_point(data = p.gamma.rich_fitted %>%  mutate( `Old field` = fct_recode( Field,  "A" = "601",
                                                                                "B" = "600",
@@ -572,6 +598,32 @@ p.beta.div_fitted2<-p.beta.div_fitted %>% left_join(ysa_range) %>%
   mutate( `Old field` = as.character(`Old field`)) %>%
   arrange(`Old field`)
 
+
+
+onb.df<- obs_nest.beta.div %>% unnest(cols = c(data, predicted))%>% mutate( `Old field` = fct_recode( Field,   "A" = "601",
+                                                                                             "B" = "600",
+                                                                                             "C" = "10",
+                                                                                             "D" = "28",
+                                                                                             "E" = "41",
+                                                                                             "F" = "39",
+                                                                                             "G" = "40",
+                                                                                             "H" = "4",
+                                                                                             "I" = "44",
+                                                                                             "J" = "53",
+                                                                                             "K" = "47",
+                                                                                             "L" = "21",
+                                                                                             "M" = "70",
+                                                                                             "N" = "5",
+                                                                                             "O" = "27",
+                                                                                             "P" = "45",
+                                                                                             "Q" = "32",
+                                                                                             "R" = "35",
+                                                                                             "S" = "72")) %>%  
+  mutate( `Old field` = as.character(`Old field`)) %>%
+  arrange(`Old field`)
+
+
+View(onb.df)
 
 fig_3b <- ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
