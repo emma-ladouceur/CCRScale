@@ -312,7 +312,7 @@ summary(p_o_func)
 
 
 color_scheme_set("darkgray")
-fig_s <- pp_check(p_o_func)+ xlab( "Relative cover (%)") + ylab("Density") +
+fig_s <- pp_check(p_o_func)+ xlab( "Relative cover (Log %)") + ylab("Density") +
   labs(title= "")+
   theme_classic()+  theme(legend.position= "bottom") # predicted vs. observed values
 
