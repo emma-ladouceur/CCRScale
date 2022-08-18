@@ -187,7 +187,7 @@ obs_nest.native <- ccr_nat %>%
 
 setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
 # save data objects to avoid time of compiling every time
-save(p_nat_fitted, obs_nest.native, file = 'a.rich.mod_dat.Rdata')
+save(p_nat_fitted, obs_nest.native, file = 'p_nat_dat.Rdata')
 load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/p_nat_dat.Rdata')
 
 
@@ -281,7 +281,7 @@ head(ccr_groups)
 summary(ccr_groups)
 
 ccr_nat_groups <- ccr_groups %>% filter(!site_status == "never-plowed") %>%
-  filter(Origin == "Native") %>%
+  #filter(Origin == "Native") %>%
   filter(np_pres == "1") %>% 
   mutate(P_origin = as.numeric(round(P_origin, 2))) %>%
   mutate( # prep for modeling
@@ -299,11 +299,11 @@ summary(ccr_nat_groups)
 nrow(ccr_nat_groups)
 
 
-p_o_func <-  brm(log_P_origin ~  log_YSA * FunctionalGroup + ( 1 + log_YSA * FunctionalGroup | Field) + (1 | Year),
+p_o_func <-  brm(log_P_origin ~  log_YSA * Origin * FunctionalGroup + ( 1 + log_YSA * Origin * FunctionalGroup | Field ) + (1 | Year),
                  data = ccr_nat_groups, family=student(), cores = 4, iter=2000, warmup=1000, chains = 4)
 
 
-save(p_o_func, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p_o_func.Rdata')
+save(p_o_func, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p_o_func_np.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p_o_func.Rdata") 
 
 
@@ -312,7 +312,7 @@ summary(p_o_func)
 
 
 color_scheme_set("darkgray")
-fig_s <- pp_check(p_o_func)+ xlab( "Relative native cover (%)") + ylab("Density") +
+fig_s <- pp_check(p_o_func)+ xlab( "Relative cover (%)") + ylab("Density") +
   labs(title= "")+
   theme_classic()+  theme(legend.position= "bottom") # predicted vs. observed values
 
@@ -336,9 +336,12 @@ ccr_nat$Field<-as.character(as.factor(ccr_nat$Field))
 p_o_func_fitted <- cbind(p_o_func$data,
                          fitted(p_o_func, re_formula = NA
                          )) %>% 
-  as_tibble() %>% inner_join(ccr_nat_groups %>% distinct(Field, Year, YSA,  P_origin, log_P_origin, log_YSA, FunctionalGroup),
+  as_tibble() %>% inner_join(ccr_nat_groups %>% distinct(Field, Year, YSA,  P_origin, log_P_origin, log_YSA, Origin, FunctionalGroup),
                              #by= c("Field", "Year", "log_YSA", "log_alpha_rich_p")
-  )
+  ) %>% mutate( `Old field` = fct_recode( Field,  "A" = "601", "B" = "600","C" = "10", "D" = "28", "E" = "41",
+                                          "F" = "39", "G" = "40",   "H" = "4",    "I" = "44",  "J" = "53",  "K" = "47",  "L" = "21",   "M" = "70",  "N" = "5", "O" = "27",
+                                          "P" = "45", "Q" = "32",  "R" = "35",  "S" = "72")) %>%
+  mutate( FunctionalGroup = fct_recode( FunctionalGroup,  "Forb" = "F", "Graminoid" = "G","Legume" = "L")) 
 
 
 head(p_o_func_fitted)
@@ -352,11 +355,11 @@ head(p_o_fixef)
 
 obs_nest_p_o_func <- ccr_nat_groups %>% 
   mutate(Field_group = Field) %>%
-  group_by(Field_group, Field, FunctionalGroup) %>% 
+  group_by(Field_group, Field, Origin, FunctionalGroup) %>% 
   summarise(log_YSA = seq(min(log_YSA), max(log_YSA), length.out = 6 ),
             YSA = seq(min(YSA), max(YSA), length.out = 6 )) %>%
-  nest(data = c(FunctionalGroup, Field, YSA, log_YSA)) %>%
-  mutate(predicted = map(data, ~predict(p_o_func, newdata= .x, re_formula = ~(1 + log_YSA * FunctionalGroup | Field) ))) 
+  nest(data = c(Field, YSA, log_YSA, Origin, FunctionalGroup)) %>%
+  mutate(predicted = map(data, ~predict(p_o_func, newdata= .x, re_formula = ~(1 + log_YSA * Origin * FunctionalGroup | Field) ))) 
 
 
 setwd('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/')
@@ -365,56 +368,23 @@ save(p_o_func_fitted, file = 'p_o_func_fitted_dat.Rdata')
 load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/p_o_func_fitted_dat.Rdata')
 
 
-fig_o_func <-ggplot() + 
-  facet_grid(~FunctionalGroup, scales="free") +
+fig_o_func <- ggplot() + 
+  facet_wrap(~  fct_relevel(Origin, "Native", "Introduced")  * fct_relevel(FunctionalGroup, "Graminoid", "Forb", "Legume"), scales = "free" ) +
   geom_hline(yintercept = 0, lty = 2) +
   geom_hline(yintercept = 0, lty = 2) +
-geom_point(data = p_o_func_fitted %>% mutate( `Old field` = fct_recode( Field,  "A" = "601",
-                                                                            "B" = "600",
-                                                                            "C" = "10",
-                                                                            "D" = "28",
-                                                                            "E" = "41",
-                                                                            "F" = "39",
-                                                                            "G" = "40",
-                                                                            "H" = "4",
-                                                                            "I" = "44",
-                                                                            "J" = "53",
-                                                                            "K" = "47",
-                                                                            "L" = "21",
-                                                                            "M" = "70",
-                                                                            "N" = "5",
-                                                                            "O" = "27",
-                                                                            "P" = "45",
-                                                                            "Q" = "32",
-                                                                            "R" = "35",
-                                                                            "S" = "72"
-)) %>%
+geom_point(data = p_o_func_fitted %>% 
   mutate( `Old field` = as.character(`Old field`)) %>%
   arrange(`Old field`)
 ,
 aes(x = YSA, y = P_origin,
     colour = `Old field`),
 size = 1.2, shape=1, position = position_jitter(width = 2, height=2.5)) +
-geom_line(data = obs_nest_p_o_func  %>% unnest(cols = c(data, predicted)) %>% mutate( `Old field` = fct_recode( Field,   "A" = "601",
-                                                                                                             "B" = "600",
-                                                                                                             "C" = "10",
-                                                                                                             "D" = "28",
-                                                                                                             "E" = "41",
-                                                                                                             "F" = "39",
-                                                                                                             "G" = "40",
-                                                                                                             "H" = "4",
-                                                                                                             "I" = "44",
-                                                                                                             "J" = "53",
-                                                                                                             "K" = "47",
-                                                                                                             "L" = "21",
-                                                                                                             "M" = "70",
-                                                                                                             "N" = "5",
-                                                                                                             "O" = "27",
-                                                                                                             "P" = "45",
-                                                                                                             "Q" = "32",
-                                                                                                             "R" = "35",
-                                                                                                             "S" = "72")) %>%
+geom_line(data = obs_nest_p_o_func  %>% unnest(cols = c(data, predicted)) %>% mutate( `Old field` = fct_recode( Field,  "A" = "601", "B" = "600","C" = "10", "D" = "28", "E" = "41",
+                                                                                                                "F" = "39", "G" = "40",   "H" = "4",    "I" = "44",  "J" = "53",  "K" = "47",  "L" = "21",   "M" = "70",  "N" = "5", "O" = "27",
+                                                                                                                "P" = "45", "Q" = "32",  "R" = "35",  "S" = "72")) %>%
+            mutate( FunctionalGroup = fct_recode( FunctionalGroup,  "Forb" = "F", "Graminoid" = "G","Legume" = "L")) %>%
             mutate( `Old field` = as.character(`Old field`)) %>%
+            filter(!is.na(Origin)) %>%
             arrange(`Old field`), aes(x = YSA, y= exp(predicted[,1]) ,
                                       group = Field,
                                       colour = `Old field`),
@@ -432,13 +402,100 @@ geom_ribbon(data = p_o_func_fitted,
   scale_color_viridis(discrete = T, option="D")  + 
   scale_fill_viridis(discrete = T, option="D")  + 
   theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
-                                  legend.position="bottom") +
+                                  legend.position="bottom") +   guides(col = guide_legend(ncol = 7)) +
   labs(subtitle= ''
   ) +
-  ylab("Native cover (%)")  + xlab("Years since agricultural abandonment")
+  ylab("Relative cover (%)")  + xlab("Years since agricultural abandonment")
 
+# LANDSCAPE 10X11
 fig_o_func
 
+
+p_o_func.p <- as.data.frame(p_o_func,  variable = "^b_", regex = TRUE, draw = floor(runif(n = 1000, 1, max = 2000))) 
+
+
+head(p_o_func.p)
+
+p_o_func_posterior <-  p_o_func.p %>% dplyr::select(`b_log_YSA`,`b_log_YSA:OriginNative`,
+                                                    `b_log_YSA:FunctionalGroupG`, `b_log_YSA:OriginNative:FunctionalGroupG`,
+                                                    `b_log_YSA:FunctionalGroupL`, `b_log_YSA:OriginNative:FunctionalGroupL`) %>%
+  mutate(i.forb =`b_log_YSA`,
+         n.forb = (`b_log_YSA`+ `b_log_YSA:OriginNative`) ,
+           i.grass = (`b_log_YSA`+`b_log_YSA:FunctionalGroupG` ),
+           n.grass = (`b_log_YSA`+ `b_log_YSA:OriginNative:FunctionalGroupG`),
+           i.legume = (`b_log_YSA`+ `b_log_YSA:FunctionalGroupL`),
+           n.legume = (`b_log_YSA`+ `b_log_YSA:OriginNative:FunctionalGroupL`) ) %>%
+  dplyr::select(c(i.forb, n.forb, i.grass, n.grass, i.legume, n.legume))
+
+head(p_o_func_posterior)
+
+n.forb.p <-  p_o_func_posterior %>% 
+  mutate( response="Native Forb", eff = mean(n.forb),
+          eff_lower = quantile(n.forb, probs=0.025),
+          eff_upper = quantile(n.forb, probs=0.975))  %>%
+  dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
+
+head(n.forb.p)
+
+i.forb.p <-  p_o_func_posterior %>% 
+  mutate( response="Introduced Forb", eff = mean(i.forb),
+          eff_lower = quantile(i.forb, probs=0.025),
+          eff_upper = quantile(i.forb, probs=0.975))  %>%
+  dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
+
+head(i.forb.p)
+
+n.grass.p <-  p_o_func_posterior %>% 
+  mutate( response="Native Grass", eff = mean(n.grass),
+          eff_lower = quantile(n.grass, probs=0.025),
+          eff_upper = quantile(n.grass, probs=0.975))  %>%
+  dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
+
+head(n.grass.p)
+
+i.grass.p <-  p_o_func_posterior %>% 
+  mutate( response="Introduced Grass", eff = mean(i.grass),
+          eff_lower = quantile(i.grass, probs=0.025),
+          eff_upper = quantile(i.grass, probs=0.975))  %>%
+  dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
+
+head(i.grass.p)
+n.legume.p <-  p_o_func_posterior %>% 
+  mutate( response="Native Legume", eff = mean(n.legume),
+          eff_lower = quantile(n.legume, probs=0.025),
+          eff_upper = quantile(n.legume, probs=0.975))  %>%
+  dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
+
+head(n.legume.p)
+
+i.legume.p <-  p_o_func_posterior %>% 
+  mutate( response="Introduced Legume", eff = mean(i.legume),
+          eff_lower = quantile(i.legume, probs=0.025),
+          eff_upper = quantile(i.legume, probs=0.975))  %>%
+  dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
+
+head(i.legume.p)
+
+global.p <- bind_rows(i.forb.p, n.forb.p, i.grass.p, n.grass.p, i.legume.p, n.legume.p) %>%
+  mutate( eff = round(eff, 2),
+          eff_upper = round(eff_upper, 2),
+          eff_lower = round(eff_lower, 2))
+
+global.p
+
+ ggplot() + 
+  geom_point(data = global.p, aes(x = response, y = eff),size = 2) +
+  geom_errorbar(data = global.p, aes(x = response, ymin = eff_lower,
+                                           ymax = eff_upper),
+                width = 0, size = 0.7) +
+  labs(x = '',
+       y='Slope') +
+  geom_hline(yintercept = 0, lty = 2) +
+  #scale_y_continuous(breaks=c(-0.5,-0.2,0)) +
+  #scale_color_manual(values = c("#000000","#B40F20")) +
+  theme_bw(base_size=12)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                               plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.1, unit = "cm"),
+                               strip.background = element_blank(),legend.position="none")
 
 
 
