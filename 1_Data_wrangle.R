@@ -16,7 +16,7 @@ cover %>% distinct(LCD_species, Count_Species) %>% arrange(LCD_species, Count_Sp
 
 live_cover <- cover %>% filter(!Count_Species %in% c( "0") ) # remove not a species
 
-`905_cover` <- live_cover %>% filter(Field %in% c( "905") ) # keep site '905' (says zero burn_freq but is not)
+`905_cover` <- live_cover %>% filter(Field %in% c( "905") ) # keep site '905' (says zero burn_freq but is not, confirmed by Adam and Forest)
 
 head(`905_cover`)
 
@@ -36,7 +36,7 @@ head(savanna_cover)
 levels(savanna_cover$pCover_class)
 
 
-savanna_clean <- savanna_cover %>% # convert cover classes into the midpoint between classes
+savanna_clean <- savanna_cover %>% # convert cover classes into the midpoint between class limits
         mutate( pCover = case_when(pCover_class == "[0,0.2)" ~ "0.1",
                                    pCover_class == "[0.2,0.26)" ~ "0.23",
                                    pCover_class == "[0.26,0.51)" ~ "0.38",
