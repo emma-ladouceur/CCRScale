@@ -78,6 +78,7 @@ clean_cover <- savanna_clean %>% bind_rows(oldfield_others)  %>% # bind cleaned 
 
 clean_cover %>% distinct(Year)
 
+clean_cover
 
 plot_count <- clean_cover %>% distinct(Exp,Year,YSA,Field,Transect,Plot) %>%
   group_by(Exp,Year,YSA,Field) %>%
@@ -91,8 +92,9 @@ plot_count <- clean_cover %>% distinct(Exp,Year,YSA,Field,Transect,Plot) %>%
 View(plot_count)
 
 # filter n= 20 filters out all 2011 data
-View(plot_count %>% distinct(Year, Field, n))
+View(plot_count %>% distinct(Year, Field, site_status, n) %>% filter(n <= 20) )
 
+View(plot_count %>% distinct(Year, Field, site_status, n) %>% filter(n >= 20) )
 
 cover_wide <- plot_count %>% 
   group_by(Exp,Year,YSA,Field,Transect,Plot,n,site_status,LCD_species) %>%

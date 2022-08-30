@@ -50,3 +50,6 @@ np_only <- sp_list %>% filter(is.na(of)) %>% arrange(Species)
 
 View(np_only)
 
+of_only <- sp_list %>% filter(is.na(np)) %>% arrange(Species)
+
+View(of_only)
