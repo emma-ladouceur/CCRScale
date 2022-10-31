@@ -17,6 +17,9 @@ gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 
 
 head(alpha_dat)
 
+alpha_dat %>% select(Field) %>%
+
+
 # SPIE = mobr
 # ENSPIE = vegan - inverse Simpson's
 
