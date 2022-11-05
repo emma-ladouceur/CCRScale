@@ -38,6 +38,9 @@ load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/perce
 
 summary(p.alpha.rich)
 
+# check for auto correlation
+mcmc_plot(p.alpha.rich, type = 'acf')
+
 
 color_scheme_set("darkgray")
 fig_s4c <- pp_check(p.alpha.rich)+ xlab( "Species richness (%)") + ylab("Density") +

@@ -31,6 +31,9 @@ load( '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/disc
 
 summary(d.alpha.rich) # model summary
 
+# check for autocorrelation
+mcmc_plot(d.alpha.rich, type = 'acf')
+
 
 color_scheme_set("darkgray")
 fig_s4a <-pp_check(d.alpha.rich) +   
