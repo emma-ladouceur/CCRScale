@@ -8,7 +8,7 @@
 # and abundance (calculated with gls AR1) to determine the range of autocorrelation for each
 # response.
 
-
+                       
 ########## clean workspace and load required packages ####################
 rm(list = ls() )
 gc() #releases memory
