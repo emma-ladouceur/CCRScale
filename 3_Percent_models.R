@@ -468,13 +468,13 @@ fig_s6b <- pp_check(p.beta.div)+  xlab((expression(paste(italic(beta), '-Diversi
   theme_classic() +  theme(legend.position= "bottom")# predicted vs. observed values
 fig_s6b
 
-gamma_dat_of$Field<-as.character(gamma_dat_of$Field)
-gamma_dat_of$Year<-as.factor(as.character(gamma_dat_of$Year))
+gamma_dat$Field<-as.character(gamma_dat$Field)
+gamma_dat$Year<-as.factor(as.character(gamma_dat$Year))
 
 # models residuals
 mb<-residuals(p.beta.div)
 mb<-as.data.frame(mb)
-br.plot<-cbind(gamma_dat_of,mb$Estimate)
+br.plot<-cbind(gamma_dat, mb$Estimate)
 
 par(mfrow=c(1,2))
 with(br.plot, plot(Field, mb$Estimate))
