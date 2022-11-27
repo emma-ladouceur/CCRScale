@@ -112,45 +112,142 @@ beta_d <- beta %>%  dplyr::select(-X) %>% mutate( Exp = 14) %>% left_join(field_
 r.ar <- residuals(p.alpha.rich)
 r.ar <- as.data.frame(r.ar)
 ar.plot <- cbind(alpha_dat_p_d, r.ar$Estimate)
-
+ar.dat <- ar.plot %>% mutate('Residual Estimates' = `r.ar$Estimate`)
+  
+  
 r.gr <- residuals(p.gamma.rich)
 r.gr <- as.data.frame(r.gr)
 gr.plot <- cbind(gamma_dat_p_d, r.gr$Estimate)
+gr.dat <- gr.plot %>% mutate('Residual Estimates' = `r.gr$Estimate`)
 
 r.bd <- residuals(p.beta.div)
 r.bd <- as.data.frame(r.bd)
 bd.plot <- cbind(gamma_dat_p_d, r.bd$Estimate)
-
+bd.dat <- bd.plot %>% mutate('Residual Estimates' = `r.bd$Estimate`)
 
 r.as <- residuals(p.alpha.spie)
 r.as <- as.data.frame(r.as)
 as.plot <- cbind(alpha_dat_p_d, r.as$Estimate)
+as.dat <- as.plot %>% mutate('Residual Estimates' = `r.as$Estimate`)
 
 r.gs <- residuals(p.gamma.spie)
 r.gs <- as.data.frame(r.gs)
 gs.plot <- cbind(gamma_dat_p_d, r.gs$Estimate)
+gs.dat <- gs.plot %>% mutate('Residual Estimates' = `r.gs$Estimate`)
 
 r.bs <- residuals(p.beta.spie)
 r.bs <- as.data.frame(r.bs)
 bs.plot <- cbind(gamma_dat_p_d, r.bs$Estimate)
-
+bs.dat <- bs.plot %>% mutate('Residual Estimates' = `r.bs$Estimate`)
 
 r.jtu <- residuals(ccr.turnover)
 r.jtu <- as.data.frame(r.jtu)
 jtu.plot <- cbind(beta_d, r.jtu$Estimate)
+jtu.dat <- jtu.plot %>% mutate('Residual Estimates' = `r.jtu$Estimate`)
 
 r.jne <- residuals(ccr.nest)
 r.jne <- as.data.frame(r.jne)
 jne.plot <- cbind(beta_d, r.jne$Estimate)
+jne.dat <- jne.plot %>% mutate('Residual Estimates' = `r.jne$Estimate`)
 
 
-par(mfrow=c(3,3))
-with(ar.plot, plot(`distance from never-plowed centroid (m)`, r.ar$Estimate))
-with(gr.plot, plot(`distance from never-plowed centroid (m)`, r.gr$Estimate))
-with(bd.plot, plot(`distance from never-plowed centroid (m)`, r.bd$Estimate))
-with(as.plot, plot(`distance from never-plowed centroid (m)`, r.as$Estimate))
-with(gs.plot, plot(`distance from never-plowed centroid (m)`, r.gs$Estimate))
-with(bs.plot, plot(`distance from never-plowed centroid (m)`, r.bs$Estimate))
-with(jtu.plot, plot(`distance from never-plowed centroid (m)`, r.jtu$Estimate))
-with(jne.plot, plot(`distance from never-plowed centroid (m)`, r.jne$Estimate))
+ar.fig <- ggplot() + 
+  geom_hline(yintercept = 0, lty = 2) +
+  geom_point(data=ar.dat, aes(x= `distance from never-plowed centroid (m)`, y=`Residual Estimates`) , alpha = 0.5,  colour = 	"#C0C0C0") +
+  theme_classic() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
+                          strip.background = element_rect(colour="black", fill="white"),
+                          axis.title.x  = element_blank() )  +
+  labs(title=  (expression(''~paste(italic(alpha), '-species richness', sep = '')))  ) 
+
+
+ar.fig
+
+
+gr.fig <- ggplot() + 
+  geom_hline(yintercept = 0, lty = 2) +
+  geom_point(data=gr.dat, aes(x= `distance from never-plowed centroid (m)`, y=`Residual Estimates`) , alpha = 0.5,  colour = 	"#C0C0C0") +
+  theme_classic() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
+                          strip.background = element_rect(colour="black", fill="white"),
+                          axis.title.y  = element_blank() )  +
+  labs(title=  (expression(''~paste(italic(gamma), '-species richness', sep = '')))  ) 
+
+
+gr.fig
+
+
+bd.fig <- ggplot() + 
+  geom_hline(yintercept = 0, lty = 2) +
+  geom_point(data=bd.dat, aes(x= `distance from never-plowed centroid (m)`, y=`Residual Estimates`) , alpha = 0.5,  colour = 	"#C0C0C0") +
+  theme_classic() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
+                          strip.background = element_rect(colour="black", fill="white"),
+                          axis.title  = element_blank() )  +
+  labs(title=  (expression(''~paste(italic(beta), '-diversity', sep = '')))  ) 
+
+
+bd.fig
+
+
+as.fig <- ggplot() + 
+  geom_hline(yintercept = 0, lty = 2) +
+  geom_point(data=as.dat, aes(x= `distance from never-plowed centroid (m)`, y=`Residual Estimates`) , alpha = 0.5,  colour = 	"#C0C0C0") +
+  theme_classic() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
+                          strip.background = element_rect(colour="black", fill="white"),
+                          axis.title.x  = element_blank() )  +
+  labs(title= (expression(paste(italic(alpha), -ENS[PIE], sep = ' '))) ) 
+
+
+as.fig
+
+
+gs.fig <- ggplot() + 
+  geom_hline(yintercept = 0, lty = 2) +
+  geom_point(data=gs.dat, aes(x= `distance from never-plowed centroid (m)`, y=`Residual Estimates`) , alpha = 0.5,  colour = 	"#C0C0C0") +
+  theme_classic() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
+                          strip.background = element_rect(colour="black", fill="white"),
+                          axis.title.y  = element_blank() )  +
+  labs(title=  (expression(paste(italic(gamma), -ENS[PIE], sep = ' ')))  ) 
+
+
+gs.fig
+
+
+bs.fig <- ggplot() + 
+  geom_hline(yintercept = 0, lty = 2) +
+  geom_point(data=bs.dat, aes(x= `distance from never-plowed centroid (m)`, y=`Residual Estimates`) , alpha = 0.5,  colour = 	"#C0C0C0") +
+  theme_classic() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
+                          strip.background = element_rect(colour="black", fill="white"),
+                          axis.title  = element_blank() )  +
+  labs(title= (expression(paste(italic(beta), -ENS[PIE], sep = ' '))) ) 
+
+
+bs.fig
+
+
+
+jtu.fig <- ggplot() + 
+  geom_hline(yintercept = 0, lty = 2) +
+  geom_point(data=jtu.dat, aes(x= `distance from never-plowed centroid (m)`, y=`Residual Estimates`) , alpha = 0.5,  colour = 	"#C0C0C0") +
+  theme_classic() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
+                          strip.background = element_rect(colour="black", fill="white")
+                         )  +
+  labs(title=  "Turnover" ) 
+
+
+jtu.fig
+
+
+jne.fig <- ggplot() + 
+  geom_hline(yintercept = 0, lty = 2) +
+  geom_point(data=jne.dat, aes(x= `distance from never-plowed centroid (m)`, y=`Residual Estimates`) , alpha = 0.5,  colour = 	"#C0C0C0") +
+  theme_classic() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
+                          strip.background = element_rect(colour="black", fill="white"),
+                          axis.title.y  = element_blank() )  +
+  labs(title=  "Nestedness" ) 
+
+
+jne.fig
+
+
+
+( (ar.fig + gr.fig + bd.fig) / (as.fig + gs.fig + bs.fig) / ( jtu.fig + jne.fig) )
 

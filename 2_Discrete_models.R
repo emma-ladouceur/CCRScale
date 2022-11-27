@@ -12,6 +12,7 @@ library(patchwork)
 alpha_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/alpha_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
+
 # SPIE = mobr
 # ENSPIE = vegan - inverse Simpson's
 
@@ -76,7 +77,7 @@ fig_1a <- ggplot() +
                                 plot.title=element_text(size=18, hjust=0.5),
                                strip.background = element_blank(),legend.position="none") +
   labs( subtitle= 'a)'
-  ) + ylab("Species Richness") 
+  ) + ylab( (expression(paste(italic(alpha), "-species richness", sep = ' '))) ) 
 
 
 fig_1a
@@ -135,7 +136,7 @@ fig_2a <- ggplot() +
                                plot.title=element_text(size=18, hjust=0.5),
                                strip.background = element_blank(),legend.position="none") +
   labs( subtitle= 'a)' ) +  
-  ylab( expression(paste(ENS[PIE])) ) 
+    ylab((expression(paste(italic(alpha), -ENS[PIE],  sep = ' '))) )
 
 
 
@@ -169,7 +170,7 @@ fig_s4b <- pp_check(d.gamma.rich)+  xlab( "Species richness") + ylab("") +
 fig_s4b
 
 
-gamma_c <- conditional_effects(d.gamma.rich.test, effects = 'site_status', re_formula = NA, method = 'fitted')  
+gamma_c <- conditional_effects(d.gamma.rich, effects = 'site_status', re_formula = NA, method = 'fitted')  
 head(gamma_c)
 
 gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
@@ -193,7 +194,7 @@ fig_1b <- ggplot() +
                                plot.title=element_text(size=18, hjust=0.5),
                                strip.background = element_blank(),legend.position="none") +
   labs(subtitle= 'b)'
-  ) + ylab("Species Richness")  + xlab("")
+  ) +ylab( (expression(paste(italic(gamma), "-species richness", sep = ' '))) )  + xlab("")
 
 
 fig_1b
@@ -252,7 +253,7 @@ fig_2b <- ggplot() +
                                plot.title=element_text(size=18, hjust=0.5),
                                strip.background = element_blank(),legend.position="none") +
   labs(subtitle= 'b)'
-  ) +  ylab(expression(ENS[PIE])) 
+  ) + ylab((expression(paste(italic(gamma), -ENS[PIE],  sep = ' '))) )
 
 fig_2b
 

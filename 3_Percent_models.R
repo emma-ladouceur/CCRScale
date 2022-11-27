@@ -17,7 +17,7 @@ gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 
 
 head(alpha_dat)
 
-alpha_dat %>% select(Field) %>%
+alpha_dat %>% select(Field)
 
 
 # SPIE = mobr
@@ -204,7 +204,7 @@ fig_1c <-ggplot() +
                      legend.position="none") +
   labs(subtitle= 'c)'
   ) +
- ylab("Species Richness (%)")  + xlab("Years since agricultural abandonment")
+  ylab( (expression(paste(italic(alpha), "-species richness (%)", sep = ' '))) )  + xlab("Years since agricultural abandonment")
 
 fig_1c
 
@@ -374,7 +374,7 @@ ong.df <- obs_nest.gamma %>% unnest(cols = c(data, predicted))%>% mutate( `Old f
 View(ong.df)
 
 fig_1d <- ggplot() +
-  facet_wrap(~Field)+
+ # facet_wrap(~Field)+
   geom_hline(yintercept = 100, lty = 2) +
   geom_point(data = p.gamma.rich_fitted %>%  mutate( `Old field` = fct_recode( Field,  "A" = "601",
                                                                                "B" = "600",
@@ -439,7 +439,7 @@ fig_1d <- ggplot() +
     theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none")  +
   labs(#title = (expression(paste(italic(gamma), '-scale', sep = '')))
-       subtitle= 'd)' ) + ylab("Species Richness (%)")  + xlab("Years since agricultural abandonment")
+       subtitle= 'd)' ) + ylab( (expression(paste(italic(gamma), "-species richness (%)", sep = ' '))) )  + xlab("Years since agricultural abandonment")
 
 
 
@@ -859,7 +859,7 @@ fig_2c <- ggplot() +
   theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
                      legend.position="none") +
   labs(subtitle = 'c)') +
-  xlab("Years since agricultural abandonment") +  ylab((expression(paste(italic(alpha), -ENS[PIE], " (%)", sep = ' '))))
+  xlab("Years since agricultural abandonment") +  ylab((expression(paste(italic(alpha), -ENS[PIE], " (%)", sep = ' '))) )
 
 fig_2c
 
