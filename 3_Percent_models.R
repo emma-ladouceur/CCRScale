@@ -1306,27 +1306,4 @@ fig_s5
 
 
 
-# PRESENTATIONS
-
-
-# (d.alpha.rich.eff | p.alpha.rich.fig  )/ (ysa.legend) + plot_layout(heights = c(10,2)) 
-# 
-# 
-# (d.alpha.spie.eff | p.alpha.spie.fig  )/ (ysa.legend) + plot_layout(heights = c(10,2)) 
-# 
-# 
-# (d.gamma.rich.eff  | p.gamma.rich.fig  )/ (ysa.legend) + plot_layout(heights = c(10,2)) 
-# 
-# (d.gamma.spie.eff  | p.gamma.spie.fig  )/ (ysa.legend) + plot_layout(heights = c(10,2)) 
-
-
-
-
-b.fig <- (d.beta.div.eff | p.beta.div.fig + theme(legend.position="none")) /(  d.beta.spie.eff + theme(legend.position="none") | p.beta.spie.fig + theme(legend.position="none"))/(ysa.legend) + plot_layout(heights = c(10,10,2)) 
-b.fig
-
-(b.fig) + plot_annotation(title = (expression(paste('', italic(beta), '-scale', sep = ''))),
-                          theme = theme(plot.title = element_text(hjust = 0.5, size= 18))) + plot_layout(ncol=1)
-
-
 

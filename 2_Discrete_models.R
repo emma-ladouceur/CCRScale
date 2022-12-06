@@ -21,7 +21,7 @@ gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 
 
 #----------------------------------------------------------------------------------------------
 # alpha rich 
-alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-ploughed","old field"))
+#alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-ploughed","old field"))
 # 
 # d.alpha.rich <-  brm(alpha_rich ~  site_status +  ( 1 | Field) + (1 | Year),
 #                   data = alpha_dat, family = 'poisson', cores = 4, iter=3000, warmup=1000, chains = 4)
@@ -90,12 +90,12 @@ fig_2a
 
 colnames(alpha_dat)
 
-alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-ploughed","old field"))
-
-d.alpha.spie <-  brm(alpha_ENSPIE ~  site_status +  ( 1 | Field) + (1 | Year),
-                  data = alpha_dat,cores = 4, family = 'lognormal', iter=3000, warmup=1000, chains = 4)
-
-save(d.alpha.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.spie.Rdata')
+# alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-ploughed","old field"))
+# 
+# d.alpha.spie <-  brm(alpha_ENSPIE ~  site_status +  ( 1 | Field) + (1 | Year),
+#                   data = alpha_dat,cores = 4, family = 'lognormal', iter=3000, warmup=1000, chains = 4)
+# 
+# save(d.alpha.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.spie.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/alpha_pie_d.Rdata") 
 
 
@@ -143,15 +143,15 @@ fig_3a
 
 #----------------------------------------------------------------------------------------------
 # gamma rich 
-# gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-ploughed","old field"))
+ gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-ploughed","old field"))
 # 
 # head(gamma_dat)
 # 
-d.gamma.rich <-  brm(gamma_rich ~  site_status +  (1 | Field) +  (1 | Year),
-                     data = gamma_dat,family = 'poisson', cores = 4, iter=2000, chains = 4)
-
-
-
+# d.gamma.rich <-  brm(gamma_rich ~  site_status +  (1 | Field) +  (1 | Year),
+#                      data = gamma_dat,family = 'poisson', cores = 4, iter=2000, chains = 4)
+# 
+# 
+# 
 # save(d.gamma.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.gamma.rich.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/gamma_rich_d.Rdata") 
 
@@ -261,11 +261,12 @@ fig_3b
 # beta div
 
 colnames(gamma_dat)
-# gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-ploughed","old field"))
-# 
-# 
-# d.beta.div <-  brm(beta_rich ~  site_status +  (1 | Field) + (1 | Year), 
-#                   data = gamma_dat,family=student(), cores = 4, iter=10000,warmup=1000, chains = 4)
+#  gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-ploughed","old field"))
+# # 
+# # 
+# d.beta.div <-  brm(beta_div ~  site_status +  (1 | Field) + (1 | Year),
+#                   data = gamma_dat, family=student(), cores = 4, iter=10000,warmup=1000, chains = 4,
+#                   control = list(adapt_delta = 0.99))
 # 
 # save(d.beta.div, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.beta.div.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/beta_div_d.Rdata") 
@@ -317,8 +318,9 @@ fig_4a
 # gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-ploughed","old field"))
 # 
 # 
-# d.beta.spie <-  brm(beta_ENSPIE ~  site_status + (1 | Field) + (1 | Year), 
-#                  data = gamma_dat, family=student(),cores = 4, iter=4000,warmup=1000, chains = 4)
+# d.beta.spie <-  brm(beta_ENSPIE ~  site_status + (1 | Field) + (1 | Year),
+#                  data = gamma_dat, family=student(), cores = 4, iter=4000,warmup=1000, chains = 4,
+#                  control = list(adapt_delta = 0.99) )
 # 
 # save(d.beta.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.beta.spie.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/beta_pie_d.Rdata") 
