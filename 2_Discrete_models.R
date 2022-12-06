@@ -21,7 +21,7 @@ gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 
 
 #----------------------------------------------------------------------------------------------
 # alpha rich 
-alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-plowed","old field"))
+alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-ploughed","old field"))
 # 
 # d.alpha.rich <-  brm(alpha_rich ~  site_status +  ( 1 | Field) + (1 | Year),
 #                   data = alpha_dat, family = 'poisson', cores = 4, iter=3000, warmup=1000, chains = 4)
@@ -54,7 +54,7 @@ alpha_c <- conditional_effects(d.alpha.rich, effects = 'site_status', re_formula
 
 head(alpha_c)
 
-alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("old field","never-plowed"))
+alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("old field","never-ploughed"))
 
 
 #head(alpha_c)
@@ -90,7 +90,7 @@ fig_2a
 
 colnames(alpha_dat)
 
-# alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-plowed","old field"))
+# alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-ploughed","old field"))
 # 
 # 
 # d.alpha.spie <-  brm(alpha_ENSPIE ~  site_status +  ( 1 | Field) + (1 | Year), 
@@ -114,7 +114,7 @@ d.alpha.spie_c <- conditional_effects(d.alpha.spie, effects = 'site_status', re_
 
 head(d.alpha.spie_c)
 
-alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("old field","never-plowed"))
+alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("old field","never-ploughed"))
 
 #head(d.alpha.spie_c)
 
@@ -144,7 +144,7 @@ fig_3a
 
 #----------------------------------------------------------------------------------------------
 # gamma rich 
-# gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-plowed","old field"))
+# gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-ploughed","old field"))
 # 
 # head(gamma_dat)
 # 
@@ -173,7 +173,7 @@ fig_s3b
 gamma_c <- conditional_effects(d.gamma.rich, effects = 'site_status', re_formula = NA, method = 'fitted')  
 head(gamma_c)
 
-gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
+gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-ploughed"))
 
 
 head(gamma_dat)
@@ -206,7 +206,7 @@ fig_2b
 # colnames(gamma_dat)
 # gamma_dat$Field<-as.factor(as.character(gamma_dat$Field))
 # gamma_dat$Year<-as.factor(as.character(gamma_dat$Year))
-# gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-plowed","old field"))
+# gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-ploughed","old field"))
 # 
 # head(gamma_dat)
 # 
@@ -231,7 +231,7 @@ d.gamma.spie_c <- conditional_effects(d.gamma.spie, effects = 'site_status', re_
 
 head(d.gamma.spie_c)
 
-gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
+gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-ploughed"))
 
 #head(d.gamma.spie_c)
 
@@ -262,7 +262,7 @@ fig_3b
 # beta div
 
 colnames(gamma_dat)
-# gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-plowed","old field"))
+# gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-ploughed","old field"))
 # 
 # 
 # d.beta.div <-  brm(beta_rich ~  site_status +  (1 | Field) + (1 | Year), 
@@ -285,7 +285,7 @@ d.beta_c <- conditional_effects(d.beta.div, effects = 'site_status', re_formula 
 
 
 head(d.beta_c)
-gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
+gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-ploughed"))
 
 
 #head(d.beta_c)
@@ -315,7 +315,7 @@ fig_4a
 # beta spie
 
 # colnames(gamma_dat)
-# gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-plowed","old field"))
+# gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-ploughed","old field"))
 # 
 # 
 # d.beta.spie <-  brm(beta_ENSPIE ~  site_status + (1 | Field) + (1 | Year), 
@@ -337,7 +337,7 @@ d.beta.spie_c <- conditional_effects(d.beta.spie, effects = 'site_status', re_fo
 
 
 head(d.beta.spie_c)
-gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-plowed"))
+gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","never-ploughed"))
 
 
 #head(d.beta.spie_c)

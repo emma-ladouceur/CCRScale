@@ -143,7 +143,7 @@ ccr.all.df.avg <- ccr_dat %>%
 head(ccr.all.df.avg)
  
  
-ccr.all.df.avg.np <- ccr.all.df.avg %>% filter(YSA == "never-plowed") %>%
+ccr.all.df.avg.np <- ccr.all.df.avg %>% filter(YSA == "never-ploughed") %>%
   mutate( State = YSA)
 
 df.point.np <- ccr.all.df.avg.np[which(ccr.all.df.avg.np$Method=="Observed"),]
@@ -151,7 +151,7 @@ ccr.all.df.avg.np$Method <- factor(ccr.all.df.avg.np$Method,
                                    c("Rarefaction", "Extrapolation"),
                                    c("Rarefaction", "Extrapolation"))
 
-ccr.all.df.avg.of <- ccr.all.df.avg %>% filter(!YSA == "never-plowed")
+ccr.all.df.avg.of <- ccr.all.df.avg %>% filter(!YSA == "never-ploughed")
 
 head(ccr.all.df.avg.of)
 
@@ -166,7 +166,7 @@ ccr.all.df.avg.of$Method <- factor(ccr.all.df.avg.of$Method,
 
 # create custom legends
 
-# never plowed line
+# never ploughed line
 np.leg <- ggplot() +
   geom_line(data=ccr.all.df.avg.np %>% filter(Method == c("Rarefaction", "Extrapolation")), aes(x=x, y=y, color=State), lwd=1) +
   labs(x="Number of sampling units", y="Species richness",title="") +
@@ -272,7 +272,7 @@ extrap_c <- conditional_effects(d.extrap.rich, effects = 'site_status', re_formu
 
 head(alpha_c)
 
-ccr.extrap.df$site_status <- factor(ccr.extrap.df$site_status  , levels=c("old field","never-plowed"))
+ccr.extrap.df$site_status <- factor(ccr.extrap.df$site_status  , levels=c("old field","never-ploughed"))
 
 
 fig_s2 <- ggplot() + 

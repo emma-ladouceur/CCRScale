@@ -93,7 +93,7 @@ head(ccr_groups_prep)
 summary(ccr_groups_prep)
 View(ccr_groups_prep)
 
-ccr_groups <- ccr_groups_prep %>% filter(site_status == "old field") %>%  # calculate percent recovery relative to mean of never plowed sites
+ccr_groups <- ccr_groups_prep %>% filter(site_status == "old field") %>%  # calculate percent recovery relative to mean of never ploughed sites
   mutate(P_origin = as.numeric(round(P_origin, 2))) %>%
   mutate( # prep for modeling
     YSA = as.numeric(YSA),
@@ -235,7 +235,7 @@ fig_s10
  
  summary(ccr_groups_p_prep)
  
- np_origin_means <- ccr_groups_p_prep %>% filter(site_status == "never-plowed") %>% 
+ np_origin_means <- ccr_groups_p_prep %>% filter(site_status == "never-ploughed") %>% 
    group_by(FunctionalGroup, Origin) %>%
    summarise(origin_mean_np = mean(P_origin),
    ) %>% filter(!is.na(Origin))
@@ -244,7 +244,7 @@ fig_s10
  
  
  
- ccr_groups_p <- ccr_groups_p_prep %>% filter(site_status == "old field") %>%  # calculate percent recovery relative to mean of never plowed sites
+ ccr_groups_p <- ccr_groups_p_prep %>% filter(site_status == "old field") %>%  # calculate percent recovery relative to mean of never ploughed sites
    left_join(np_origin_means) %>%
    mutate(origin_p = ((P_origin/origin_mean_np) * 100)
    ) %>%
@@ -277,7 +277,7 @@ fig_s10
  
  
  color_scheme_set("darkgray")
- fig_s7a <- pp_check(p_o_func_np)+ xlab( "Relative cover (log % never-plowed)") + ylab("Density") +
+ fig_s7a <- pp_check(p_o_func_np)+ xlab( "Relative cover (log % never-ploughed)") + ylab("Density") +
    labs(title= "", subtitle = 'a)')+
    theme_classic()+  theme(legend.position= "bottom") # predicted vs. observed values
  

@@ -20,13 +20,13 @@ live_cover <- cover %>% filter(!Count_Species %in% c( "0") ) # remove not a spec
 
 head(`905_cover`)
 
-# never-plowed, E133, savannas
+# never-ploughed, E133, savannas
 savanna_cover <- live_cover %>% 
-  filter(HasBeenPlowed %in% c("0")) %>% # remnant savannas only
+  filter(HasBeenploughed %in% c("0")) %>% # remnant savannas only
   filter(!burn_freq %in% c( "0") ) %>% # remove sites that have never been burned
   filter(!is.na(burn_freq)) %>% # remove sites that have 'NA" for burn frequency 
   bind_rows(`905_cover`) %>% # add 905_cover back
-  mutate(site_status = "never-plowed") %>% # informative categorical label
+  mutate(site_status = "never-ploughed") %>% # informative categorical label
   mutate( pCover_class = as.factor(as.character(pCover_class)))
 
 distinct(savanna_cover,Field) %>% arrange(Field) # Matches Isbell et al. NEE 2019? Yep!
@@ -49,7 +49,7 @@ savanna_clean %>% distinct(Year)
 
 # clean the old field data
 oldfield_cover <- live_cover %>% 
-  filter(!HasBeenPlowed %in% c("0")) %>% # only old fields
+  filter(!HasBeenploughed %in% c("0")) %>% # only old fields
   filter(!forest_status %in% c( "HF") ) %>%  # remove heavily forested
   droplevels() %>%
   mutate(site_status = "old field")
@@ -72,7 +72,7 @@ oldfield_others <- oldfield_cover %>%  # for other years
 clean_cover <- savanna_clean %>% bind_rows(oldfield_others)  %>% # bind cleaned old field and remnants data
   bind_rows(oldfield_recents) %>%
   mutate(YSA = (Year - YearAb)) %>% # calculate year since agricultural abandonment
-  mutate( YSA = ifelse(YearAb == "0" & site_status == "never-plowed", "never-plowed", YSA))  %>% # if year ab = 0, then its never plowed
+  mutate( YSA = ifelse(YearAb == "0" & site_status == "never-ploughed", "never-ploughed", YSA))  %>% # if year ab = 0, then its never ploughed
   filter(!LCD_species %in% c("Miscellaneous woody plants", "Canopy Cover", "Miscellaneous species",
                              "Mosses & lichens")) %>% droplevels() # remove some other riff raff
 
@@ -160,7 +160,7 @@ alpha_dat <- cover_long %>%
 head(alpha_dat)
 
 
-np_alpha_means <- alpha_dat %>% filter(site_status == "never-plowed") %>% 
+np_alpha_means <- alpha_dat %>% filter(site_status == "never-ploughed") %>% 
   summarise(alpha_rich_mean_np = mean(alpha_rich),
             alpha_spie_mean_np = mean(alpha_ENSPIE)
   )
@@ -169,7 +169,7 @@ np_alpha_means
 
 colnames(np_alpha_means)
 
-alpha_p <- alpha_dat %>% filter(site_status == "old field") %>%  # calculate percent recovery relative to mean of never plowed sites
+alpha_p <- alpha_dat %>% filter(site_status == "old field") %>%  # calculate percent recovery relative to mean of never ploughed sites
   mutate(alpha_rich_p = ((alpha_rich/np_alpha_means$alpha_rich_mean_np) * 100),
          alpha_ENSPIE_p = (( alpha_ENSPIE/np_alpha_means$alpha_spie_mean_np ) * 100),
          YSA = as.numeric(YSA)
@@ -191,7 +191,7 @@ alpha_dat %>% distinct(Year)
 
 # alpha diversity
 write.csv(alpha_dat, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/alpha_div.csv")
-# percentage of recovery of old fields compared to never plowed sites
+# percentage of recovery of old fields compared to never ploughed sites
 write.csv(alpha_p, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/alpha_div_percent.csv")
 
 
@@ -243,7 +243,7 @@ mutate( beta_div = (gamma_rich/mean_alpha_rich),
 View(gamma_div)
 
 
-np_means <- gamma_div %>% filter(site_status == "never-plowed") %>% 
+np_means <- gamma_div %>% filter(site_status == "never-ploughed") %>% 
    summarise(gamma_rich_mean_np = mean(gamma_rich),
              beta_div_mean_np = mean(beta_div),
      gamma_spie_mean_np = mean(gamma_ENSPIE),
@@ -257,7 +257,7 @@ write.csv(np_means, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/n
 
 colnames(gamma_div)
 
-gamma_p <- gamma_div %>% filter(site_status == "old field") %>%  # calculate the percentage of recovery relative to the never plowed site mean
+gamma_p <- gamma_div %>% filter(site_status == "old field") %>%  # calculate the percentage of recovery relative to the never ploughed site mean
   mutate(gamma_rich_p = ((gamma_rich/np_means$gamma_rich_mean_np) * 100), # for each metric
      beta_div_p = (( beta_div/np_means$beta_div_mean_np ) * 100),
      gamma_ENSPIE_p = (( gamma_ENSPIE/np_means$gamma_spie_mean_np) * 100 ),
@@ -283,5 +283,5 @@ gamma_p %>% distinct(Year)
 write.csv(gamma_mean, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_species_mean.csv")
 # gamma and beta diversity metrics (richness and spie) for all sites
 write.csv(gamma_div, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div.csv")
-# percentage of recovery of old fields compared to never plowed sites
+# percentage of recovery of old fields compared to never ploughed sites
 write.csv(gamma_p, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div_percent.csv")

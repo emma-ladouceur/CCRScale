@@ -36,15 +36,15 @@ levels(ccr_dat$Year)
 ccr_dat %>% distinct(Exp, site_status ,  Year)
 
 
-fix_dat <- ccr_dat %>% filter(site_status == "never-plowed") %>% 
+fix_dat <- ccr_dat %>% filter(site_status == "never-ploughed") %>% 
   filter(Year == "2010") %>% # seperate out 2010 data and change to 2016 for comparison with 2016 old fields
   mutate(Year = fct_recode(Year,
                            "2016" = "2010",
   )) 
 
 
-# regional gamma never-plowed field within calendar year
-np_wide <- ccr_dat %>% filter(site_status == "never-plowed") %>% 
+# regional gamma never-ploughed field within calendar year
+np_wide <- ccr_dat %>% filter(site_status == "never-ploughed") %>% 
   bind_rows(fix_dat) %>% # add in 2016 comparison dat
   as_tibble() %>% 
   mutate(species2 = paste0('sp_', Species)) %>% 
@@ -53,7 +53,7 @@ np_wide <- ccr_dat %>% filter(site_status == "never-plowed") %>%
   spread(species2,pres,fill = 0) %>%
   mutate(OYear = Year) %>%
   mutate(Year = fct_recode(Year,
-                           "1983" ="1984", # here i rename the years never-plowed fields were surveyed to match the years
+                           "1983" ="1984", # here i rename the years never-ploughed fields were surveyed to match the years
                            "1989" = "1990", # of old fields, so i can easily pair them together
                            "1994" = "1995",
                           "1997" = "2000",
@@ -98,7 +98,7 @@ beta_pairs <- function(x){
   
   # separate out the control and treatment plots
   np = x %>% 
-    filter(site_status == 'never-plowed')
+    filter(site_status == 'never-ploughed')
   
   # fix for treatment labels
   of = x %>% 
@@ -562,13 +562,13 @@ ysa.legend <- g_legend(fig_4b)
 
 # DRAW THE CENTRE BIT
 Label <-c((expression(paste(italic(gamma), -ENS[PIE], " (%) Recovery", sep = ' '))))
-Label <- c('Never-Plowed Regional Species Pool')
+Label <- c('Never-ploughed Regional Species Pool')
 label_dat<- data.frame(Label)
 label_dat  
 
 
 middle_bit <- ggplot(data = label_dat) +
-  annotate("text", x = -1.7:-1.7, y = 0.5:-0.5, label =  c( "Never-Plowed" , "paste( 'Regional ',italic(gamma), '-scale')" ), size= 6, parse=TRUE ) +
+  annotate("text", x = -1.7:-1.7, y = 0.5:-0.5, label =  c( "Never-ploughed" , "paste( 'Regional ',italic(gamma), '-scale')" ), size= 6, parse=TRUE ) +
   coord_cartesian(xlim = c(0, 8), ylim = c(-1,1), clip = "off")+
    geom_hline( yintercept = 0, linetype="longdash") + theme_classic() + 
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
