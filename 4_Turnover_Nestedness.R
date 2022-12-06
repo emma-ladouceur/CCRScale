@@ -557,13 +557,13 @@ fig_5b <- ggplot() +
 
 fig_5b
 
-ysa.legend <- g_legend(fig_4b)
+ysa.legend <- g_legend(fig_5b)
 
 
 # DRAW THE CENTRE BIT
 Label <-c((expression(paste(italic(gamma), -ENS[PIE], " (%) Recovery", sep = ' '))))
 Label <- c('Never-ploughed Regional Species Pool')
-label_dat<- data.frame(Label)
+label_dat <- data.frame(Label)
 label_dat  
 
 

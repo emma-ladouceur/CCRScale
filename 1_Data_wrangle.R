@@ -270,7 +270,7 @@ mutate(
   log_gamma_ENSPIE_p = log(gamma_ENSPIE_p),
   log_beta_ENSPIE_p = log(beta_ENSPIE_p),
   log_YSA = log(YSA),
-  c.YSA = (YSA-mean(YSA)) ) %>% 
+  c.YSA = (YSA - mean(YSA)) ) %>% 
   select(-c(mean_alpha_rich, mean_alpha_ENSPIE)) %>%
 mutate(Field = as.character(Field),
  Year = as.factor(as.character(Year)) )

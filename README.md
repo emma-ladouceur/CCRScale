@@ -13,7 +13,7 @@ Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarc
 
 **alpha_div_percent.csv** Alpha diversity as a percentage of the average diversity of all never-ploughed plots.
 
-**gamma_div.csv** Gamma (Field = 10 plots) and Whittaker's Beta diversity (gamma/alpha)
+**gamma_div.csv** Gamma (Field = 20 plots) and Whittaker's Beta diversity (gamma/alpha)
 
 **gamma_div_percent.csv** Gamma and Whittaker's Beta diversity (gamma/alpha) as a percentage of the average diversity of never-ploughed fields at each scale and for each metric.
 
