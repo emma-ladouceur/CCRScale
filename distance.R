@@ -108,7 +108,6 @@ gamma_dat_p_d
 
 beta_d <- beta %>%  dplyr::select(-X) %>% mutate( Exp = 14) %>% left_join(field_dist) 
 
-
 r.ar <- residuals(p.alpha.rich)
 r.ar <- as.data.frame(r.ar)
 ar.plot <- cbind(alpha_dat_p_d, r.ar$Estimate)
@@ -151,7 +150,7 @@ jne.plot <- cbind(beta_d, r.jne$Estimate)
 jne.dat <- jne.plot %>% mutate('Residual Estimates' = `r.jne$Estimate`)
 
 
-ar.fig <- ggplot() + 
+fig_s9a <- ggplot() + 
   geom_hline(yintercept = 0, lty = 2) +
   geom_point(data=ar.dat, aes(x= `distance from never-plowed centroid (m)`, y=`Residual Estimates`) , alpha = 0.5,  colour = 	"#C0C0C0") +
   theme_classic() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
@@ -160,10 +159,10 @@ ar.fig <- ggplot() +
   labs(title=  (expression(''~paste(italic(alpha), '-species richness', sep = '')))  ) 
 
 
-ar.fig
+fig_s9a
 
 
-gr.fig <- ggplot() + 
+fig_s9b <- ggplot() + 
   geom_hline(yintercept = 0, lty = 2) +
   geom_point(data=gr.dat, aes(x= `distance from never-plowed centroid (m)`, y=`Residual Estimates`) , alpha = 0.5,  colour = 	"#C0C0C0") +
   theme_classic() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
@@ -172,10 +171,10 @@ gr.fig <- ggplot() +
   labs(title=  (expression(''~paste(italic(gamma), '-species richness', sep = '')))  ) 
 
 
-gr.fig
+fig_s9b
 
 
-bd.fig <- ggplot() + 
+fig_s9c <- ggplot() + 
   geom_hline(yintercept = 0, lty = 2) +
   geom_point(data=bd.dat, aes(x= `distance from never-plowed centroid (m)`, y=`Residual Estimates`) , alpha = 0.5,  colour = 	"#C0C0C0") +
   theme_classic() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
@@ -184,10 +183,10 @@ bd.fig <- ggplot() +
   labs(title=  (expression(''~paste(italic(beta), '-diversity', sep = '')))  ) 
 
 
-bd.fig
+fig_s9c
 
 
-as.fig <- ggplot() + 
+fig_s9d <- ggplot() + 
   geom_hline(yintercept = 0, lty = 2) +
   geom_point(data=as.dat, aes(x= `distance from never-plowed centroid (m)`, y=`Residual Estimates`) , alpha = 0.5,  colour = 	"#C0C0C0") +
   theme_classic() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
@@ -196,10 +195,10 @@ as.fig <- ggplot() +
   labs(title= (expression(paste(italic(alpha), -ENS[PIE], sep = ' '))) ) 
 
 
-as.fig
+fig_s9d
 
 
-gs.fig <- ggplot() + 
+fig_s9e <- ggplot() + 
   geom_hline(yintercept = 0, lty = 2) +
   geom_point(data=gs.dat, aes(x= `distance from never-plowed centroid (m)`, y=`Residual Estimates`) , alpha = 0.5,  colour = 	"#C0C0C0") +
   theme_classic() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
@@ -208,10 +207,10 @@ gs.fig <- ggplot() +
   labs(title=  (expression(paste(italic(gamma), -ENS[PIE], sep = ' ')))  ) 
 
 
-gs.fig
+fig_s9e
 
 
-bs.fig <- ggplot() + 
+fig_s9f <- ggplot() + 
   geom_hline(yintercept = 0, lty = 2) +
   geom_point(data=bs.dat, aes(x= `distance from never-plowed centroid (m)`, y=`Residual Estimates`) , alpha = 0.5,  colour = 	"#C0C0C0") +
   theme_classic() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
@@ -220,11 +219,11 @@ bs.fig <- ggplot() +
   labs(title= (expression(paste(italic(beta), -ENS[PIE], sep = ' '))) ) 
 
 
-bs.fig
+fig_s9f
 
 
 
-jtu.fig <- ggplot() + 
+fig_s9g <- ggplot() + 
   geom_hline(yintercept = 0, lty = 2) +
   geom_point(data=jtu.dat, aes(x= `distance from never-plowed centroid (m)`, y=`Residual Estimates`) , alpha = 0.5,  colour = 	"#C0C0C0") +
   theme_classic() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
@@ -233,10 +232,10 @@ jtu.fig <- ggplot() +
   labs(title=  "Turnover" ) 
 
 
-jtu.fig
+fig_s9g
 
 
-jne.fig <- ggplot() + 
+fig_s9h <- ggplot() + 
   geom_hline(yintercept = 0, lty = 2) +
   geom_point(data=jne.dat, aes(x= `distance from never-plowed centroid (m)`, y=`Residual Estimates`) , alpha = 0.5,  colour = 	"#C0C0C0") +
   theme_classic() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
@@ -245,9 +244,10 @@ jne.fig <- ggplot() +
   labs(title=  "Nestedness" ) 
 
 
-jne.fig
+fig_s9h
 
 
 
-( (ar.fig + gr.fig + bd.fig) / (as.fig + gs.fig + bs.fig) / ( jtu.fig + jne.fig) )
+fig_s9 <- ( (fig_s9a + fig_s9b + fig_s9c) / (fig_s9d + fig_s9e + fig_s9f) / ( fig_s9g + fig_s9h) )
 
+fig_s9

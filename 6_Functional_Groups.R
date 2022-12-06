@@ -177,7 +177,7 @@ save(p_o_func_fitted, obs_nest_p_o_func, file = 'p_o_func_fitted_dat.Rdata')
 load('~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/p_o_func_fitted_dat.Rdata')
 
 
-fig_s9 <- ggplot() + 
+fig_s10 <- ggplot() + 
   facet_wrap(~  fct_relevel(Origin, "Native", "Introduced")  * fct_relevel(FunctionalGroup, "Graminoid", "Forb", "Legume"), scales = "free" ) +
   geom_hline(yintercept = 0, lty = 2) +
   geom_hline(yintercept = 0, lty = 2) +
@@ -217,99 +217,8 @@ geom_ribbon(data = p_o_func_fitted,
   ylab("Relative cover (%)")  + xlab("Years since agricultural abandonment")
 
 # LANDSCAPE 10X11
-fig_s9
+fig_s10
 
-
-p_o_func.p <- as.data.frame(p_o_func,  variable = "^b_", regex = TRUE, draw = floor(runif(n = 1000, 1, max = 2000))) 
-
-
-head(p_o_func.p)
-
-p_o_func_posterior <-  p_o_func.p %>% dplyr::select(`b_log_YSA`,`b_log_YSA:OriginNative`,
-                                                    `b_log_YSA:FunctionalGroupG`, `b_log_YSA:OriginNative:FunctionalGroupG`,
-                                                    `b_log_YSA:FunctionalGroupL`, `b_log_YSA:OriginNative:FunctionalGroupL`) %>%
-  mutate(i.forb =`b_log_YSA`,
-         n.forb = (`b_log_YSA`+ `b_log_YSA:OriginNative`) ,
-           i.grass = (`b_log_YSA`+`b_log_YSA:FunctionalGroupG` ),
-           n.grass = (`b_log_YSA`+ `b_log_YSA:OriginNative:FunctionalGroupG`),
-           i.legume = (`b_log_YSA`+ `b_log_YSA:FunctionalGroupL`),
-           n.legume = (`b_log_YSA`+ `b_log_YSA:OriginNative:FunctionalGroupL`) ) %>%
-  dplyr::select(c(i.forb, n.forb, i.grass, n.grass, i.legume, n.legume))
-
-head(p_o_func_posterior)
-
-n.forb.p <-  p_o_func_posterior %>% 
-  mutate( response="Native Forb", eff = mean(n.forb),
-          eff_lower = quantile(n.forb, probs=0.025),
-          eff_upper = quantile(n.forb, probs=0.975))  %>%
-  dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
-
-head(n.forb.p)
-
-i.forb.p <-  p_o_func_posterior %>% 
-  mutate( response="Introduced Forb", eff = mean(i.forb),
-          eff_lower = quantile(i.forb, probs=0.025),
-          eff_upper = quantile(i.forb, probs=0.975))  %>%
-  dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
-
-head(i.forb.p)
-
-n.grass.p <-  p_o_func_posterior %>% 
-  mutate( response="Native Grass", eff = mean(n.grass),
-          eff_lower = quantile(n.grass, probs=0.025),
-          eff_upper = quantile(n.grass, probs=0.975))  %>%
-  dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
-
-head(n.grass.p)
-
-i.grass.p <-  p_o_func_posterior %>% 
-  mutate( response="Introduced Grass", eff = mean(i.grass),
-          eff_lower = quantile(i.grass, probs=0.025),
-          eff_upper = quantile(i.grass, probs=0.975))  %>%
-  dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
-
-head(i.grass.p)
-n.legume.p <-  p_o_func_posterior %>% 
-  mutate( response="Native Legume", eff = mean(n.legume),
-          eff_lower = quantile(n.legume, probs=0.025),
-          eff_upper = quantile(n.legume, probs=0.975))  %>%
-  dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
-
-head(n.legume.p)
-
-i.legume.p <-  p_o_func_posterior %>% 
-  mutate( response="Introduced Legume", eff = mean(i.legume),
-          eff_lower = quantile(i.legume, probs=0.025),
-          eff_upper = quantile(i.legume, probs=0.975))  %>%
-  dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
-
-head(i.legume.p)
-
-global.p <- bind_rows(i.forb.p, n.forb.p, i.grass.p, n.grass.p, i.legume.p, n.legume.p) %>%
-  mutate( eff = round(eff, 2),
-          eff_upper = round(eff_upper, 2),
-          eff_lower = round(eff_lower, 2))
-
-global.p
-
- fig_s10b <- ggplot() + 
-  geom_point(data = global.p, aes(x = response, y = eff),size = 2) +
-  geom_errorbar(data = global.p, aes(x = response, ymin = eff_lower,
-                                           ymax = eff_upper),
-                width = 0, size = 0.7) +
-  labs(x = '',
-       y='Slope', subtitle = 'b) Relative cover' ) +
-  geom_hline(yintercept = 0, lty = 2) +
-  #scale_y_continuous(breaks=c(-0.5,-0.2,0)) +
-  #scale_color_manual(values = c("#000000","#B40F20")) +
-  theme_bw(base_size=12)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                               plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.1, unit = "cm"),
-                               strip.background = element_blank(),legend.position="none")
-
-
-
- fig_s10b
- 
  
  #__________________________________________________________
  
@@ -473,94 +382,4 @@ global.p
  # LANDSCAPE 10X11
  fig_6
  
- 
- p_o_func_np.p <- as.data.frame(p_o_func_np,  variable = "^b_", regex = TRUE, draw = floor(runif(n = 1000, 1, max = 2000))) 
- 
- 
- head(p_o_func_np.p)
- 
- p_o_func_np_posterior <-  p_o_func_np.p %>% dplyr::select(`b_log_YSA`,`b_log_YSA:OriginNative`,
-                                                     `b_log_YSA:FunctionalGroupG`, `b_log_YSA:OriginNative:FunctionalGroupG`,
-                                                     `b_log_YSA:FunctionalGroupL`, `b_log_YSA:OriginNative:FunctionalGroupL`) %>%
-   mutate(i.forb =`b_log_YSA`,
-          n.forb = (`b_log_YSA`+ `b_log_YSA:OriginNative`) ,
-          i.grass = (`b_log_YSA`+`b_log_YSA:FunctionalGroupG` ),
-          n.grass = (`b_log_YSA`+ `b_log_YSA:OriginNative:FunctionalGroupG`),
-          i.legume = (`b_log_YSA`+ `b_log_YSA:FunctionalGroupL`),
-          n.legume = (`b_log_YSA`+ `b_log_YSA:OriginNative:FunctionalGroupL`) ) %>%
-   dplyr::select(c(i.forb, n.forb, i.grass, n.grass, i.legume, n.legume))
- 
- head(p_o_func_np_posterior)
- 
- n.forb.np <-  p_o_func_np_posterior %>% 
-   mutate( response="Native Forb", eff = mean(n.forb),
-           eff_lower = quantile(n.forb, probs=0.025),
-           eff_upper = quantile(n.forb, probs=0.975))  %>%
-   dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
- 
- head(n.forb.np)
- 
- i.forb.np <-  p_o_func_np_posterior %>% 
-   mutate( response="Introduced Forb", eff = mean(i.forb),
-           eff_lower = quantile(i.forb, probs=0.025),
-           eff_upper = quantile(i.forb, probs=0.975))  %>%
-   dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
- 
- head(i.forb.np)
- 
- n.grass.np <-  p_o_func_np_posterior %>% 
-   mutate( response="Native Grass", eff = mean(n.grass),
-           eff_lower = quantile(n.grass, probs=0.025),
-           eff_upper = quantile(n.grass, probs=0.975))  %>%
-   dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
- 
- head(n.grass.np)
- 
- i.grass.np <-  p_o_func_np_posterior %>% 
-   mutate( response="Introduced Grass", eff = mean(i.grass),
-           eff_lower = quantile(i.grass, probs=0.025),
-           eff_upper = quantile(i.grass, probs=0.975))  %>%
-   dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
- 
- head(i.grass.np)
- n.legume.np <-  p_o_func_np_posterior %>% 
-   mutate( response="Native Legume", eff = mean(n.legume),
-           eff_lower = quantile(n.legume, probs=0.025),
-           eff_upper = quantile(n.legume, probs=0.975))  %>%
-   dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
- 
- head(n.legume.np)
- 
- i.legume.np <-  p_o_func_np_posterior %>% 
-   mutate( response="Introduced Legume", eff = mean(i.legume),
-           eff_lower = quantile(i.legume, probs=0.025),
-           eff_upper = quantile(i.legume, probs=0.975))  %>%
-   dplyr::select(c(eff,eff_upper,eff_lower,response)) %>% distinct()  
- 
- head(i.legume.np)
- 
- global.np <- bind_rows(i.forb.np, n.forb.np, i.grass.np, n.grass.np, i.legume.np, n.legume.np) %>%
-   mutate( eff = round(eff, 2),
-           eff_upper = round(eff_upper, 2),
-           eff_lower = round(eff_lower, 2))
- 
- global.np
- 
- fig_s10a <- ggplot() + 
-   geom_point(data = global.np, aes(x = response, y = eff),size = 2) +
-   geom_errorbar(data = global.np, aes(x = response, ymin = eff_lower,
-                                      ymax = eff_upper),
-                 width = 0, size = 0.7) +
-   labs(x = '',
-        y='Slope', subtitle = 'a) Relative cover (% never-plowed)') +
-   geom_hline(yintercept = 0, lty = 2) +
-   #scale_y_continuous(breaks=c(-0.5,-0.2,0)) +
-   #scale_color_manual(values = c("#000000","#B40F20")) +
-   theme_bw(base_size=12)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-                                plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.1, unit = "cm"),
-                                strip.background = element_blank(),legend.position="none")
- 
- fig_s10a
- 
- (fig_s10a + fig_s10b)
  

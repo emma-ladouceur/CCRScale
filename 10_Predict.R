@@ -1,7 +1,4 @@
 
-
-
-
 rm(list=ls())
 
 library(tidyverse)
@@ -224,7 +221,7 @@ p.beta.div_predicted_om <- beta_predict_calc #%>% select(-c( `log_YSA`))
   
 head(p.beta.div_predicted_om)
   
-fig_5c <- ggplot() +
+fig_s11c <- ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
   # uncertainy in fixed effect
   geom_ribbon(data = p.beta.div_fitted_bm,
@@ -258,7 +255,7 @@ fig_5c <- ggplot() +
 
 
 
-fig_5c
+fig_s11c
 
 
 line_types_dat <- p.beta.div_fitted_bm %>% bind_rows(p.beta.div_predicted_om) %>%
@@ -269,7 +266,7 @@ line_types_dat <- p.beta.div_fitted_bm %>% bind_rows(p.beta.div_predicted_om) %>
 
 levels(line_types_dat$Method)
 
-fig_5_legend <-  ggplot() +
+fig_s11_legend <-  ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
   #uncertainy in fixed effect
   geom_ribbon(data = line_types_dat,
@@ -297,9 +294,9 @@ g_legend<-function(a.gplot){
   legend <- tmp$grobs[[leg]]
   return(legend)}
 
-line.legend <- g_legend(fig_5_legend)
+line.legend <- g_legend(fig_s11_legend)
 
 # LANDSCAPE 9 X 13
-fig_5 <- ( (fig_5a | fig_5b + theme(legend.position="none") | fig_5c) / (line.legend) + plot_layout(heights = c(10,1)) )
+fig_s11 <- ( (fig_s11a | fig_s11b + theme(legend.position="none") | fig_s11c) / (line.legend) + plot_layout(heights = c(10,1)) )
 
-fig_5
+fig_s11

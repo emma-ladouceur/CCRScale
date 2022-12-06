@@ -37,13 +37,13 @@ mcmc_plot(d.alpha.rich, type = 'acf')
 
 
 color_scheme_set("darkgray")
-fig_s4a <-pp_check(d.alpha.rich) +   
+fig_s3a <-pp_check(d.alpha.rich) +   
   xlab( "Species richness") + ylab("Density") + 
   ggtitle((expression(paste(italic(alpha), '-scale', sep = ''))))+
   labs(subtitle= "a)")+
   theme_classic() +  theme( plot.title=element_text(size=18, hjust=0.5), legend.position= "none")# predicted vs. observed values
 
-fig_s4a
+fig_s3a
 
 
  alpha.rich_fixef <- fixef(d.alpha.rich) # look @ fixed effects
@@ -59,7 +59,7 @@ alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("old field","n
 
 #head(alpha_c)
 
-fig_1a <- ggplot() + 
+fig_2a <- ggplot() + 
   geom_point(data = alpha_dat,
              aes(x = site_status, y = alpha_rich, colour = 	"#C0C0C0"), 
              size = 0.25, alpha = 0.2, position = position_jitter(width = 0.05, height=0.45)) +
@@ -80,7 +80,7 @@ fig_1a <- ggplot() +
   ) + ylab( (expression(paste(italic(alpha), "-species richness", sep = ' '))) ) 
 
 
-fig_1a
+fig_2a
 
 
 
@@ -104,11 +104,11 @@ summary(d.alpha.spie)
 
 
 color_scheme_set("darkgray")
-fig_s5a <- pp_check(d.alpha.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("Density") + 
+fig_s4a <- pp_check(d.alpha.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("Density") + 
   ggtitle((expression(paste(italic(alpha), '-scale', sep = ''))))+
   labs(subtitle= "a)")+
   xlim(-20,20) + theme_classic() +  theme(plot.title=element_text(size=18, hjust=0.5), legend.position= "none")# predicted vs. observed values
-fig_s5a
+fig_s4a
 
 d.alpha.spie_c <- conditional_effects(d.alpha.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
 
@@ -118,7 +118,7 @@ alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("old field","n
 
 #head(d.alpha.spie_c)
 
-fig_2a <- ggplot() + 
+fig_3a <- ggplot() + 
   geom_point(data = alpha_dat,
              aes(x = site_status, y = alpha_rich, colour = 	"#C0C0C0"), 
              size = 0.25, alpha = 0.2, position = position_jitter(width = 0.05, height=0.45)) +
@@ -140,7 +140,7 @@ fig_2a <- ggplot() +
 
 
 
-fig_2a
+fig_3a
 
 #----------------------------------------------------------------------------------------------
 # gamma rich 
@@ -162,12 +162,12 @@ summary(d.gamma.rich)
 
 
 color_scheme_set("darkgray")
-fig_s4b <- pp_check(d.gamma.rich)+  xlab( "Species richness") + ylab("") + 
+fig_s3b <- pp_check(d.gamma.rich)+  xlab( "Species richness") + ylab("") + 
   ggtitle((expression(paste(italic(gamma), '-scale', sep = ''))))+
   labs(subtitle= "b)")+
   xlim(0,70) + theme_classic() +  theme( plot.title=element_text(size=18, hjust=0.5),legend.position= "none")# predicted vs. observed values
 
-fig_s4b
+fig_s3b
 
 
 gamma_c <- conditional_effects(d.gamma.rich, effects = 'site_status', re_formula = NA, method = 'fitted')  
@@ -178,7 +178,7 @@ gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","n
 
 head(gamma_dat)
 
-fig_1b <- ggplot() + 
+fig_2b <- ggplot() + 
   geom_point(data = gamma_dat,
              aes(x = site_status, y = gamma_rich, colour = 	"#C0C0C0"), 
              size = 0.25, gamma = 0.2, position = position_jitter(width = 0.02, height=0.05)) +
@@ -197,7 +197,7 @@ fig_1b <- ggplot() +
   ) +ylab( (expression(paste(italic(gamma), "-species richness", sep = ' '))) )  + xlab("")
 
 
-fig_1b
+fig_2b
 
 #----------------------------------------------------------------------------------------------
 
@@ -221,11 +221,11 @@ load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discr
 summary(d.gamma.spie)
 
 color_scheme_set("darkgray")
-fig_s5b <- pp_check(d.gamma.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("") + 
+fig_s4b <- pp_check(d.gamma.spie)+  xlab( expression(paste(ENS[PIE])) ) + ylab("") + 
   ggtitle((expression(paste(italic(gamma), '-scale', sep = ''))))+
   labs(subtitle= "b)")+  scale_x_continuous(limits = c(-20,25))+ 
   theme_classic() +  theme(plot.title=element_text(size=18, hjust=0.5),legend.position= "none")# predicted vs. observed values
-fig_s5b
+fig_s4b
 
 d.gamma.spie_c <- conditional_effects(d.gamma.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
 
@@ -235,7 +235,7 @@ gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","n
 
 #head(d.gamma.spie_c)
 
-fig_2b <- ggplot() + 
+fig_3b <- ggplot() + 
   geom_point(data = gamma_dat,
              aes(x = site_status, y = gamma_ENSPIE, colour = 	"#C0C0C0"), 
              size = 0.25, gamma = 0.2, position = position_jitter(width = 0.02, height=0.05)) +
@@ -255,7 +255,7 @@ fig_2b <- ggplot() +
   labs(subtitle= 'b)'
   ) + ylab((expression(paste(italic(gamma), -ENS[PIE],  sep = ' '))) )
 
-fig_2b
+fig_3b
 
 
 #----------------------------------------------------------------------------------------------
@@ -275,11 +275,11 @@ load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discr
 summary(d.beta.div)
 
 
-fig_s6a <- pp_check(d.beta.div)+ xlab((expression(paste(italic(beta), '-Diversity', sep = '')))) +  ylab("Density") + 
+fig_s5a <- pp_check(d.beta.div)+ xlab((expression(paste(italic(beta), '-Diversity', sep = '')))) +  ylab("Density") + 
   labs(title= "a)")+
   theme_classic() +  theme(legend.position= "none")# predicted vs. observed values
 
-fig_s6a
+fig_s5a
 
 d.beta_c <- conditional_effects(d.beta.div, effects = 'site_status', re_formula = NA, method = 'fitted')  
 
@@ -291,7 +291,7 @@ gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","n
 #head(d.beta_c)
 colnames(gamma_dat)
 
-fig_3a <- ggplot() + 
+fig_4a <- ggplot() + 
   geom_point(data = gamma_dat,
              aes(x = site_status, y = beta_div, colour = 	"#C0C0C0"), 
              size = 0.25, gamma = 0.2, position = position_jitter(width = 0.02, height=0.05)) +
@@ -308,7 +308,7 @@ fig_3a <- ggplot() +
   ylab((expression(paste(italic(beta), '-Diversity', sep = '')))) + xlab('')
 
 
-fig_3a
+fig_4a
 
 
 #----------------------------------------------------------------------------------------------
@@ -328,10 +328,10 @@ load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discr
 summary(d.beta.spie)
 
 
-fig_s6c <- pp_check(d.beta.spie)+ xlab((expression(paste(italic(beta), -ENS[PIE], sep = ' ')))) + ylab("")+
+fig_s5c <- pp_check(d.beta.spie)+ xlab((expression(paste(italic(beta), -ENS[PIE], sep = ' ')))) + ylab("")+
   labs(title= "c)")+
   theme_classic() +  theme(legend.position= "none")# predicted vs. observed values
-fig_s6c
+fig_s5c
 
 d.beta.spie_c <- conditional_effects(d.beta.spie, effects = 'site_status', re_formula = NA, method = 'fitted')  
 
@@ -343,7 +343,7 @@ gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("old field","n
 #head(d.beta.spie_c)
 colnames(gamma_dat)
 
-fig_3c <- ggplot() + 
+fig_4c <- ggplot() + 
   geom_point(data = gamma_dat,
              aes(x = site_status, y = beta_ENSPIE, colour = 	"#C0C0C0"), 
              size = 0.25, gamma = 0.2, position = position_jitter(width = 0.02, height=0.05)) +
@@ -362,7 +362,7 @@ fig_3c <- ggplot() +
   ylab((expression(paste(italic(beta), -ENS[PIE], sep = ' ')))) + xlab('')
 
 
-fig_3c
+fig_4c
 
 
 

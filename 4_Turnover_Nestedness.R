@@ -221,15 +221,15 @@ summary(ccr.turnover)
 
 
 
-fig_s7a <- pp_check(ccr.turnover) + 
+fig_s6a <- pp_check(ccr.turnover) + 
   labs(title= "a)")+
   xlab("Turnover") + ylab("Density")+ theme_classic()+  theme(legend.position= "none")
-fig_s7a
+fig_s6a
 
-fig_s7b <- pp_check(ccr.nest) + 
+fig_s6b <- pp_check(ccr.nest) + 
   labs(title= "b)")+
   xlab("Nestedness") + ylab("")+ theme_classic()+  theme(legend.position= "bottom")
-fig_s7b
+fig_s6b
 
 
 betat_fitted <- cbind(ccr.turnover$data,
@@ -422,7 +422,7 @@ betan_coef3<-betan_coef2%>% mutate( `Old field` = fct_recode( Field,  "A" = "601
 
 
 
-fig_4a <- ggplot() +
+fig_5a <- ggplot() +
   annotate("text", x = -15, y = 0.7, label =  c( "a)"), size= 6) +
   coord_cartesian(xlim = c(0, 80), ylim = c(0.15,0.7), clip = "off")+
   geom_point(data = betat_fitted2,
@@ -491,13 +491,13 @@ fig_4a <- ggplot() +
   ylab("Turnover")+  xlab("") +
   guides(col = guide_legend(ncol = 9))
 
-fig_4a
+fig_5a
 
 head(betan_fitted2)
 head(betan_coef3)
 head(betan_fitted)
 
-fig_4b <- ggplot() +
+fig_5b <- ggplot() +
   annotate("text", x = -15, y = 0.7, label =  c( "b)"), size= 6) +
   coord_cartesian(xlim = c(0, 80), ylim = c(0.2,0.7), clip = "off")+
   geom_point(data = betan_fitted2,
@@ -555,9 +555,9 @@ fig_4b <- ggplot() +
   ylab("Nestedness") +  xlab("Years since agricultural abandonment") +
   guides(col = guide_legend(ncol = 2))
 
-fig_4b
+fig_5b
 
-ysa.legend<-g_legend(fig_4b)
+ysa.legend <- g_legend(fig_4b)
 
 
 # DRAW THE CENTRE BIT
@@ -584,17 +584,17 @@ middle_bit <- ggplot(data = label_dat) +
 middle_bit
 
 #  PORTRAIT 11X14
-almost_fig_4 <- (fig_4a + theme(legend.position="none") ) / (middle_bit) / ( fig_4b + theme(legend.position="none"))  + plot_layout(heights = c(10,1.5,10)) 
+almost_fig_5 <- (fig_5a + theme(legend.position="none") ) / (middle_bit) / ( fig_5b + theme(legend.position="none"))  + plot_layout(heights = c(10,1.5,10)) 
 
-fig_4 <- (almost_fig_4 | ysa.legend) + plot_layout(widths = c(30,5) )
+fig_5 <- (almost_fig_5 | ysa.legend) + plot_layout(widths = c(30,5) )
 
-fig_4
+fig_5
 
 # posterior predictive check for turnover and nestedness supp figure
 
-fig_s7_legend <- g_legend(fig_s7b)
+fig_s6_legend <- g_legend(fig_s6b)
 
-fig_s7 <- (fig_s7a | fig_s7b +  theme(legend.position= "none") ) / (fig_s7_legend)+ plot_layout(heights = c(10,0.75))
-fig_s7
+fig_s6 <- (fig_s6a | fig_s6b +  theme(legend.position= "none") ) / (fig_s6_legend)+ plot_layout(heights = c(10,0.75))
+fig_s6
 
 
