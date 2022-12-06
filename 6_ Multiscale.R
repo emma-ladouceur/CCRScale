@@ -109,10 +109,6 @@ head(ccr.all.out)
 # type 1 = sample-size-based rarefaction/extrapolation curve
 ccr.all.df <- fortify(ccr.all.out, type = 1)  %>%
   mutate(site = Assemblage)
-  # filter(Method == "interpolated" | Method == "observed") %>%
-  # mutate(Method= recode( Method, "interpolated" = "observed")) %>%
-  # separate(Assemblage, c("Year","Field")) %>%
-  # mutate(site = Field) 
   
 colnames(ccr.all.df)
 colnames(ccr_comm_prep)
@@ -123,8 +119,6 @@ head(ccr_comm_prep)
 
 ccr_dat <- ccr_comm_prep %>%  distinct(site_id, Year, YSA, Field) %>%
   mutate(site = site_id) %>%
-  # mutate(Year = as.character(Year),
-  #        Field = as.character(Field) ) %>%
   left_join(ccr.all.df)
 
 head(ccr_dat)

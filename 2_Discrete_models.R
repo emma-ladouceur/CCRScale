@@ -346,14 +346,14 @@ colnames(gamma_dat)
 
 fig_4c <- ggplot() + 
   geom_point(data = gamma_dat,
-             aes(x = site_status, y = beta_ENSPIE, colour = 	"#C0C0C0"), 
+             aes(x = site_status, y = beta_ENSPIE, colour =	"#C0C0C0"), 
              size = 0.25, gamma = 0.2, position = position_jitter(width = 0.02, height=0.05)) +
   geom_point(data = d.beta.spie_c$site_status,
              aes(x = site_status, y = estimate__, colour = site_status), size = 3) +
   geom_errorbar(data = d.beta.spie_c$site_status,
                 aes(x = site_status, ymin = lower__, ymax = upper__, colour = site_status),
                 size = 1, width = 0) +
-  scale_color_manual(values =  c(	"#C0C0C0","#228B22", 	"#6B8E23"))  + 
+  scale_color_manual(values =  c(	"#C0C0C0","#228B22", "#6B8E23"))  + 
   theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                                plot.margin= margin(t = 0.2, r = 0.2, b = -0.2, l = 0.2, unit = "cm"),
                                strip.background = element_blank(),legend.position="none") +
