@@ -26,8 +26,8 @@ alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-ploughe
 # d.alpha.rich <-  brm(alpha_rich ~  site_status +  ( 1 | Field) + (1 | Year),
 #                   data = alpha_dat, family = 'poisson', cores = 4, iter=3000, warmup=1000, chains = 4)
 
-# 
-# save(d.alpha.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.rich.Rdata')
+
+#save(d.alpha.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.rich.Rdata')
 load( '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/alpha_rich_d.Rdata')
 
 summary(d.alpha.rich) # model summary
@@ -37,7 +37,7 @@ mcmc_plot(d.alpha.rich, type = 'acf')
 
 
 color_scheme_set("darkgray")
-fig_s3a <-pp_check(d.alpha.rich) +   
+fig_s3a <- pp_check(d.alpha.rich) +   
   xlab( "Species richness") + ylab("Density") + 
   ggtitle((expression(paste(italic(alpha), '-scale', sep = ''))))+
   labs(subtitle= "a)")+
@@ -90,13 +90,12 @@ fig_2a
 
 colnames(alpha_dat)
 
-# alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-ploughed","old field"))
-# 
-# 
-# d.alpha.spie <-  brm(alpha_ENSPIE ~  site_status +  ( 1 | Field) + (1 | Year), 
-#                   data = alpha_dat,cores = 4, family = 'lognormal', iter=3000, warmup=1000, chains = 4)
-# 
-# save(d.alpha.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.spie.Rdata')
+alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-ploughed","old field"))
+
+d.alpha.spie <-  brm(alpha_ENSPIE ~  site_status +  ( 1 | Field) + (1 | Year),
+                  data = alpha_dat,cores = 4, family = 'lognormal', iter=3000, warmup=1000, chains = 4)
+
+save(d.alpha.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.spie.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/alpha_pie_d.Rdata") 
 
 
