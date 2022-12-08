@@ -89,12 +89,12 @@ plot_count <- clean_cover %>% distinct(Exp,Year,YSA,Field,Transect,Plot) %>%
   arrange(Field,Year,Transect,Plot) %>%
   distinct()
 
-View(plot_count)
+head(plot_count)
 
 # filter n= 20 filters out all 2011 data
-View(plot_count %>% distinct(Year, Field, site_status, n) %>% filter(n <= 20) )
+head(plot_count %>% distinct(Year, Field, site_status, n) %>% filter(n <= 20) )
 
-View(plot_count %>% distinct(Year, Field, site_status, n) %>% filter(n >= 20) )
+head(plot_count %>% distinct(Year, Field, site_status, n) %>% filter(n >= 20) )
 
 cover_wide <- plot_count %>% 
   group_by(Exp,Year,YSA,Field,Transect,Plot,n,site_status,LCD_species) %>%
@@ -114,7 +114,7 @@ colnames(cover_select)
 
 
 
-View(cover_rel)
+head(cover_rel)
 
 cover_long <- cover_select %>% gather(Species,pCover, "Achillea millefolium":"Zea mays") %>%
   filter(!is.na(pCover)) %>% droplevels() %>%
@@ -123,7 +123,7 @@ cover_long <- cover_select %>% gather(Species,pCover, "Achillea millefolium":"Ze
 
 cover_long$site_status<- as.factor(as.character(cover_long$site_status))
 
-View(cover_long)
+head(cover_long)
 
 
 cover_rel <- cover_long %>% group_by(site_status, Field, Year, Transect, Plot) %>%
@@ -132,13 +132,13 @@ cover_rel <- cover_long %>% group_by(site_status, Field, Year, Transect, Plot) %
    mutate( Relative_pCover = (pCover/pCover_plot_sum) * 100 ) %>%
   arrange(Field,Year,Transect,Plot) %>% ungroup()
 
-View(cover_rel)
+head(cover_rel)
 
 cover_rel %>% distinct(Year)
 
 site_check <- distinct(cover_rel, Field)
 
-View(site_check)
+head(site_check)
 
 write.csv(cover_rel, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv")
 
@@ -183,8 +183,8 @@ mutate(Field = as.character(Field)) %>%
 mutate(Year = as.factor(as.character(Year)))
 
 
-View(alpha_dat)
-View(alpha_p)
+head(alpha_dat)
+head(alpha_p)
 
 
 alpha_dat %>% distinct(Year)
@@ -224,9 +224,9 @@ alpha_mean <- alpha_dat %>% group_by(Exp,site_status,YSA, Field, Year) %>%
 summarise(mean_alpha_rich = mean(alpha_rich),
           mean_alpha_ENSPIE = mean(alpha_ENSPIE))
 
-View(alpha_mean)
+head(alpha_mean)
 
-View(gamma_ccr)
+head(gamma_ccr)
 
 head(gamma_mean)
 
@@ -234,13 +234,13 @@ alpha_mean$YSA<-as.factor(alpha_mean$YSA)
 
 gamma_ccr2 <- gamma_ccr %>% left_join(alpha_mean)
 
-View(gamma_ccr2)
+head(gamma_ccr2)
 
 gamma_div <- gamma_ccr2 %>% 
 mutate( beta_div = (gamma_rich/mean_alpha_rich),
         beta_ENSPIE = (gamma_ENSPIE/mean_alpha_ENSPIE))
 
-View(gamma_div)
+head(gamma_div)
 
 
 np_means <- gamma_div %>% filter(site_status == "never-ploughed") %>% 

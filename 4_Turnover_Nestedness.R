@@ -88,7 +88,7 @@ ccr_wide <-  of_wide %>% bind_rows(np_wide) %>%
   select(-OYear) %>%
   arrange(Year, Field)
 
-View(ccr_wide)
+head(ccr_wide)
 
 colnames(ccr_wide)
 
@@ -160,7 +160,7 @@ wide.df <- ccr_checklist_w %>%
   group_by(Year) %>%
     nest_legacy(starts_with('sp_'), site_status, Field, YSA)
  
-View(wide.df)
+head(wide.df)
 
 wide.df <- wide.df %>% 
   mutate(beta = purrr::map(data, ~ beta_pairs(.x)))
@@ -174,7 +174,7 @@ beta.df = wide.df %>%
 
 
 
-View(beta.df)
+head(beta.df)
 
 
 

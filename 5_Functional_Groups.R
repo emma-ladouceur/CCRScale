@@ -64,7 +64,7 @@ ccr_comp <- ccr_dat %>% left_join(sp)
 
 head(ccr_comp)
 summary(ccr_comp)
-View(ccr_comp)
+head(ccr_comp)
 
 ccr_comp %>% group_by(Exp, site_status, Field, Year, YSA, Transect, Plot) %>%
   mutate(rp_sum = sum(Relative_pCover),
@@ -92,7 +92,7 @@ ccr_groups_prep <- ccr_comp %>% left_join(np_sp) %>%
 
 head(ccr_groups_prep)
 summary(ccr_groups_prep)
-View(ccr_groups_prep)
+head(ccr_groups_prep)
 
 ccr_groups <- ccr_groups_prep %>% filter(site_status == "old field") %>%  
   mutate(P_origin = as.numeric(round(P_origin, 2))) %>%

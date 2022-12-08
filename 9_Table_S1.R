@@ -16,11 +16,11 @@ gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 
 # SPIE = mobr
 # ENSPIE = vegan - inverse Simpson's
 
-View(alpha_dat)
-View(gamma_dat)
-View(ccr_dat)
+head(alpha_dat)
+head(gamma_dat)
+head(ccr_dat)
 
-View(alpha_dat)
+head(alpha_dat)
 
 
 alpha_dat %>% filter(Field %in% 41)
@@ -59,7 +59,7 @@ head(alpha_dat_np)
 alpha_s1 <- alpha_dat_of %>% bind_rows(alpha_dat_np) %>% select(-site_status) %>% arrange(Exp,Field) %>%
   select(Exp,Field,Year_Range,YSA_Range,N_Year,alpha_rich)
 
-View(alpha_s1)
+head(alpha_s1)
 # gamma
 
 
@@ -76,7 +76,7 @@ gamma_dat_of <- gamma_dat %>% filter(site_status == "old field") %>% group_by(Ex
   unite(Year_Range, Year_min, Year_max, remove = TRUE, sep = "-") %>%
   unite(YSA_Range, YSA_min:YSA_max, remove = TRUE, sep = "-")
 
-View(gamma_dat_of)
+head(gamma_dat_of)
 
 
 gamma_dat_np <- gamma_dat %>% filter(site_status == "never-plowed") %>% group_by(Exp,Field,site_status) %>%
@@ -90,11 +90,11 @@ gamma_dat_np <- gamma_dat %>% filter(site_status == "never-plowed") %>% group_by
   mutate(YSA_Range=site_status)
 
 
-View(gamma_dat_np)
+head(gamma_dat_np)
 
 gamma_s1<-gamma_dat_of %>% bind_rows(gamma_dat_np) %>% select(-site_status) %>% arrange(Exp,Field)
 
-View(gamma_s1)
+head(gamma_s1)
 
 #beta
 
@@ -127,11 +127,11 @@ beta_dat_np <- gamma_dat %>% filter(site_status == "never-plowed") %>% group_by(
   mutate(YSA_Range=site_status)
 
 
-View(beta_dat_np)
+head(beta_dat_np)
 
 beta_s1 <- beta_dat_of %>% bind_rows(beta_dat_np) %>% select(-site_status) %>% arrange(Exp,Field)
 
-View(beta_s1)
+head(beta_s1)
 
 
 div_sum_prep <- alpha_s1 %>% left_join(beta_s1) %>% left_join(gamma_s1) %>% 
@@ -181,7 +181,7 @@ div_sum <- div_sum_of %>% rbind(div_sum_np) %>%
   select(-beta_rich) %>% 
   relocate( beta_div, .after = alpha_rich)
 
-View(div_sum)
+head(div_sum)
 
 div_sum$YSA_Range<-as.factor(as.character(div_sum$YSA_Range))
 

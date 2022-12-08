@@ -281,7 +281,7 @@ obs_nest.gamma <- gamma_dat %>%
   mutate(predicted = map(data, ~predict(p.gamma.rich, newdata= .x, re_formula = ~(1 + log_YSA | Field) ))) 
 
 
-View(obs_nest.gamma)
+head(obs_nest.gamma)
 
 
 # try predicting for longer time frames
@@ -292,7 +292,7 @@ head(gamma_dat)
 ysa_summary <- gamma_dat %>% select(YSA, log_YSA) %>% distinct() %>%
   arrange(YSA)
 
-View(ysa_summary)
+head(ysa_summary)
 
 newdata <- data.frame(YSA =  c(80,90,100,150,200,250,300,350,400))
 
@@ -307,7 +307,7 @@ predicted.gamma <- predict(p.gamma.rich, newdata = newdata, re_formula = ~(1 + l
 gamma_predicts <-  mutate(as.data.frame(predicted.gamma)) %>% 
   bind_cols(newdata)
 
-View(gamma_predicts)
+head(gamma_predicts)
 
 
 
@@ -371,7 +371,7 @@ ong.df <- obs_nest.gamma %>% unnest(cols = c(data, predicted))%>% mutate( `Old f
   arrange(`Old field`, YSA)
 
 
-View(ong.df)
+head(ong.df)
 
 fig_2d <- ggplot() +
  # facet_wrap(~Field)+
@@ -629,7 +629,7 @@ onb.df<- obs_nest.beta.div %>% unnest(cols = c(data, predicted))%>% mutate( `Old
   arrange(`Old field`)
 
 
-View(onb.df)
+head(onb.df)
 
 fig_4b <- ggplot() +
   geom_hline(yintercept = 100, lty = 2) +
