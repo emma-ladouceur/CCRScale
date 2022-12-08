@@ -15,7 +15,6 @@ library(purrr)
 
 
 ccr_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/e014_e133_cleaned_1983-2016_EL.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
-
 ccr_sp <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Clark_2018/species.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
 
@@ -72,11 +71,13 @@ ccr_comp %>% group_by(Exp, site_status, Field, Year, YSA, Transect, Plot) %>%
          p_sum = sum(pCover),
         ) 
 
-
+np_sp <- ccr_comp %>% select(Species, pres, YSA) %>%
+  filter(YSA == "never-ploughed") %>%
+  mutate(np_pres = pres) %>% select(-c(pres, YSA)) %>% distinct() %>% arrange(Species)
 
 # func groups
-View(ccr_comp)
-View(np_sp)
+head(ccr_comp)
+head(np_sp)
 
 ccr_groups_prep <- ccr_comp %>% left_join(np_sp) %>%
   select(-c(X, Species, pCover,  pCover_plot_sum, n, pres, Duration)) %>%
@@ -93,23 +94,25 @@ head(ccr_groups_prep)
 summary(ccr_groups_prep)
 View(ccr_groups_prep)
 
-ccr_groups <- ccr_groups_prep %>% filter(site_status == "old field") %>%  # calculate percent recovery relative to mean of never ploughed sites
+ccr_groups <- ccr_groups_prep %>% filter(site_status == "old field") %>%  
   mutate(P_origin = as.numeric(round(P_origin, 2))) %>%
   mutate( # prep for modeling
     YSA = as.numeric(YSA),
     log_YSA = log(YSA),
-    c.YSA = (YSA - mean(YSA)),
     log_P_origin  = log(P_origin),
     ) %>%
   mutate(Field = as.character(Field)) %>%
-  mutate(Year = as.factor(as.character(Year))) 
+  mutate(Year = as.factor(as.character(Year)))  
 
 head(ccr_groups)
 
+write.csv(ccr_groups,"~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/func_groups.csv")
 
+ccr_groups <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/func_groups.csv", header=TRUE) %>%
+  as_tibble()
 
-p_o_func <-  brm(log_P_origin ~  log_YSA * Origin * FunctionalGroup + ( 1 + log_YSA * Origin * FunctionalGroup | Field ) + (1 | Year),
-                 data = ccr_groups, family=student(), cores = 4, iter=2000, warmup=1000, chains = 4)
+# p_o_func <-  brm(log_P_origin ~  log_YSA * Origin * FunctionalGroup + ( 1 + log_YSA * Origin * FunctionalGroup | Field ) + (1 | Year),
+#                  data = ccr_groups, family=student(), cores = 4, iter=2000, warmup=1000, chains = 4)
 
 
 save(p_o_func, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p_o_func.Rdata')
@@ -221,11 +224,11 @@ fig_s10
 
  
  #__________________________________________________________
- 
+head(ccr_groups) 
+
  # percentage of np fields
  ccr_groups_p_prep <- ccr_comp %>% left_join(np_sp) %>%
-   select(-c(X, Species, pCover,  pCover_plot_sum, n, pres, Duration)) %>%
-   select(-np_pres) %>%
+   select(-c(X, Species, pCover,  pCover_plot_sum, n, pres, np_pres, Duration)) %>%
    group_by(Exp, site_status, Field, Year, YSA, Transect, Plot, FunctionalGroup,  Origin) %>%
    mutate(P_origin = sum(Relative_pCover)) %>% 
    select(-c(Relative_pCover)) %>%
@@ -252,16 +255,19 @@ fig_s10
    mutate( # prep for modeling
      YSA = as.numeric(YSA),
      log_YSA = log(YSA),
-     c.YSA = (YSA - mean(YSA)),
      log_origin_p  = log(origin_p),
    ) %>%
    mutate(Field = as.character(Field)) %>%
    mutate(Year = as.factor(as.character(Year))) 
  
- View(ccr_groups_p)
- summary(ccr_groups_p)
+ 
+ head(ccr_groups)
  head(ccr_groups_p)
  
+ write.csv(ccr_groups_p,"~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/func_groups_percent.csv")
+ 
+ ccr_groups_p <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/func_groups_percent.csv", header=TRUE) %>%
+   as_tibble()
  
  p_o_func_np <-  brm(log_origin_p ~  log_YSA * Origin * FunctionalGroup + ( 1 + log_YSA * Origin * FunctionalGroup | Field ) + (1 | Year),
                   data = ccr_groups_p, family=student(), cores = 4, iter=2000, warmup=1000, chains = 4)

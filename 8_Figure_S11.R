@@ -14,17 +14,151 @@ library(modelr)
 library(viridis)
 
 
+
 alpha_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/alpha_div_percent.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/alpha_rich_c.Rdata") 
 
 
-# p.alpha.rich_fitted <- cbind(p.alpha.rich$data,
-#                              fitted(p.alpha.rich, re_formula = NA
-#                              )) %>% 
-#   as_tibble() %>% inner_join(alpha_dat %>% distinct(Field, Year, log_YSA, YSA, log_alpha_rich_p, alpha_rich_p, alpha_rich),
-#                              #by= c("Field", "Year", "log_YSA", "log_alpha_rich_p")
-#   )
+p.alpha.rich_fitted <- cbind(p.alpha.rich$data,
+                             fitted(p.alpha.rich, re_formula = NA
+                             )) %>% 
+  as_tibble() %>% inner_join(alpha_dat %>% distinct(Field, Year, log_YSA, YSA, log_alpha_rich_p, alpha_rich_p, alpha_rich),
+                             #by= c("Field", "Year", "log_YSA", "log_alpha_rich_p")
+  )
+
+
+head(gamma_dat)
+
+ysa_summary <- alpha_dat %>% select(YSA, log_YSA) %>% distinct() %>%
+  arrange(YSA)
+
+View(ysa_summary)
+
+alphdata <- data.frame(YSA =  c(80,90,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500, 525,550,575,600,725,750,775,800,825,850,900,925,950,1000))
+
+head(alphdata)
+
+alphdata <- alphdata %>%  mutate(
+  log_YSA = log(YSA))
+
+predicted.alpha <- predict(p.alpha.rich, newdata = alphdata, re_formula = ~(1 + log_YSA) )
+
+
+head(predicted.alpha)
+
+alpha_predicts <-  mutate(as.data.frame(predicted.alpha)) %>% 
+  bind_cols(alphdata) %>% mutate(Method = "Predicted") %>% 
+  filter(YSA >= 80)
+
+head(alpha_predicts)
+
+p.alpha.rich_fitted <- p.alpha.rich_fitted %>% mutate(Method = "Estimated from observed values") %>%
+  bind_rows(alpha_predicts)
+
+
+head(p.alpha.rich_fitted)
+
+fig_s11a <-ggplot() + 
+  # facet_grid(~Field, scales="free") +
+  geom_hline(yintercept = 100, lty = 2) +
+  # uncertainy in fixed effect
+  geom_ribbon(data = p.alpha.rich_fitted,
+              aes(x = YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
+              alpha = 0.3) +
+  # fixed effect
+  geom_line(data = p.alpha.rich_fitted,
+            aes(x = YSA, y = exp(Estimate), linetype= Method),
+            size = 1.5) +
+  scale_y_continuous( breaks = c(25, 50,70, 75, 80 , 90, 95,100, 125)) +
+  scale_x_continuous( breaks = c(0, 80, 250, 500, 750, 1000)) +
+  coord_cartesian( ylim = c(25,125)) +
+  scale_color_viridis(discrete = T, option="D")  + 
+  theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+                                  legend.position="none") +
+  labs(subtitle = expression(paste('a) ',italic(alpha), '-scale', sep = ''))
+  ) +
+  ylab("Species Richness (%)")  + xlab("")
+
+fig_s11a
+
+
+
+
+#gamma
+gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div_percent.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+
+
+# save(p.gamma.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/p.gamma.rich.Rdata')
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/gamma_rich_c.Rdata") 
+
+# for plotting fixed effects
+p.gamma.rich_fitted <- cbind(p.gamma.rich$data,
+                             fitted(p.gamma.rich, re_formula = NA
+                             )) %>% 
+  as_tibble() %>%
+  # join with plot data for figures
+  inner_join(gamma_dat %>% distinct(Field, Year, log_YSA, YSA, log_gamma_rich_p, gamma_rich_p, gamma_rich),
+             #by= c("Field", "Year", "log_YSA", "log_gamma_rich_p")
+  )
+
+
+# try predicting for longer time frames
+## predict response for new data
+
+head(gamma_dat)
+
+gamdata <- data.frame(YSA =  c(80,90,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500, 525,550,575,600,725,750,775,800,825,850,900, 1000))
+
+gamdata <- gamdata %>%  mutate(
+  log_YSA = log(YSA))
+
+predicted.gamma <- predict(p.gamma.rich, newdata = gamdata, re_formula = ~(1 + log_YSA) )
+
+head(predicted.gamma)
+
+gamma_predicts <-  mutate(as.data.frame(predicted.gamma)) %>% 
+  bind_cols(gamdata) %>% mutate(Method = "Predicted")
+
+
+p.gamma.rich_fitted$Field <- as.character(p.gamma.rich_fitted$Field)
+
+
+p.gamma.rich_fitted <- p.gamma.rich_fitted %>% mutate(Method = "Estimated from observed values") %>%
+  bind_rows(gamma_predicts)
+
+head(p.gamma.rich_fitted)
+
+
+fig_s11b <- ggplot() +
+  geom_hline(yintercept = 100, lty = 2) +
+  #uncertainy in fixed effect
+  geom_ribbon(data = p.gamma.rich_fitted,
+              aes(x=YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
+              alpha = 0.3) +
+  # fixed effect
+  geom_line(data = p.gamma.rich_fitted,
+            aes(x=YSA, y = exp(Estimate), linetype = Method),
+            size = 1.5) +
+  scale_y_continuous( breaks = c(25, 50,60,70, 75, 80 , 90, 95,100, 125)) +
+  scale_x_continuous( breaks = c(0, 80, 250, 500, 750, 1000)) +
+  coord_cartesian( ylim = c(25,125)) +
+  scale_color_viridis(discrete = T, option="D")  + 
+  theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),
+                                  legend.position="bottom")  +
+  labs( subtitle= expression(paste('b) ',italic(gamma), '-scale', sep = ''))
+  ) + ylab("Species Richness (%)")  + xlab("Years since agricultural \n abandonment") +
+  theme(legend.key.width = unit(2,"cm"))
+
+
+
+fig_s11b
+
+
+# use alpha and gamma models to predict beta, then predict from beta model
+alpha_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/alpha_div_percent.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+
+load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/alpha_rich_c.Rdata") 
 
 
 head(alpha_dat)
@@ -129,7 +263,7 @@ head(gamma_predict)
 write.csv(gamma_predict, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/smol_predicted_gamma.csv")
 
 
-#smol version
+# predict beta from alpha and gamma model predictions
 alpha_predict <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/smol_predicted_alpha.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
 gamma_predict <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/Data/smol_predicted_gamma.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
@@ -174,7 +308,7 @@ beta_predict <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/D
 gamma_dat <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/gamma_div_percent.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
 
-# beta
+#  then predict with beta model and see if two match
 
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/percent/beta_div_c.Rdata") 
 
@@ -230,10 +364,6 @@ fig_s11c <- ggplot() +
   geom_ribbon(data = p.beta.div_predicted_om,
               aes(x = YSA, ymin = exp(Q2.5), ymax = exp(Q97.5)),
               alpha = 0.1) +
-  # fixed effect
-  # geom_line(data = p.beta.div_predicted_om,
-  #           aes(x = YSA, y = exp(Estimate)),
-  #           size = 0.75, alpha = 0.6) +
   geom_line(data = p.beta.div_fitted_bm,
             aes(x = YSA, y = exp(Estimate), linetype = Method, color = Method),
              size = 1.5) +
@@ -243,8 +373,6 @@ fig_s11c <- ggplot() +
   scale_y_continuous( breaks = c(25, 50,60,70, 75, 80 , 90, 95,100, 125)) +
   scale_x_continuous( breaks = c(0, 80, 250, 500, 750, 1000)) +
   coord_cartesian( ylim = c(10,125)) +
-  #scale_color_manual(values = mycolors) +
-  #scale_color_viridis(discrete = T, option="D")  + 
   scale_colour_manual(values = c("black", "black", "black"))+
   scale_linetype_manual(values = c("solid", "dotted", "dashed" )) +
   theme_bw(base_size=18 ) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_rect(colour="black", fill="white"),

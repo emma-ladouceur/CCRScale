@@ -117,22 +117,26 @@ colnames(ccr_comm_prep)
 head(ccr.all.df)
 head(ccr_comm_prep)
 
-ccr_dat <- ccr_comm_prep %>%  distinct(site_id, Year, YSA, Field) %>%
+ccr_deets <- ccr_prep %>% distinct(Field, YSA, site_status) 
+
+ccr_deets
+
+ccr_multi_scale <- ccr_comm_prep %>%  distinct(site_id, Year, YSA, Field) %>%
   mutate(site = site_id) %>%
-  left_join(ccr.all.df)
+  left_join(ccr.all.df) %>% left_join(ccr_deets) 
 
-head(ccr_dat)
+head(ccr_multi_scale)
 
-ccr_deets <- ccr_prep %>% distinct(Field, YSA, site_status) %>%
-  mutate(Field = as.character(Field))
+write.csv(ccr_multi_scale,"~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/multi_scale.csv")
 
+
+ccr_multi_scale <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/multi_scale.csv", header=TRUE) %>%
+  as_tibble()
 
 # fix the color problem and make a plot for publishing
-ccr.all.df.avg <- ccr_dat %>% 
-  group_by(YSA, x, Method) %>%
-  summarise(y=mean(y),y.lwr=mean(y.lwr),y.upr=mean(y.upr))  %>%
-  left_join(ccr_deets) 
-
+ccr.all.df.avg <- ccr_multi_scale %>% 
+  group_by(Field, YSA, site_status, x, Method) %>%
+  summarise(y=mean(y),y.lwr=mean(y.lwr),y.upr=mean(y.upr))
 
 head(ccr.all.df.avg)
  
@@ -224,24 +228,19 @@ fig_s1
 
 # # PORTRAIT 11 X 15
 
-
-
 # take only extrapolated values at 50 samps and have a look at what we might expect overall
 
-ccr.extrap.df <- ccr_dat %>% filter(Method == "Extrapolation" ,
+ccr.extrap.df <- ccr_multi_scale %>% filter(Method == "Extrapolation" ,
                                     x == 50) %>%
   separate(site, c("Year","Field")) %>%
-  # group_by(site_id,Year, YSA, Field, method, x) %>%
-  # summarise(y = mean(y), y.lwr = mean(y.lwr), y.upr = mean(y.upr)) %>%
-  #select(-method) %>%
   left_join(ccr_deets) %>%
   unite(Field_stat, Field, site_status, sep="_",remove=F) 
 
 head(ccr.extrap.df)
 
-write.csv(ccr.extrap.df, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/extrap.df.csv")
+#write.csv(ccr.extrap.df, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/extrap.df.csv")
 
-ccr.extrap.df <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/extrap.df.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
+#ccr.extrap.df <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/extrap.df.csv",header=T,fill=TRUE,sep=",",na.strings=c(""," ","NA","NA ","na","NULL"))
 
 
 # d.extrap.rich <-  brm(y ~  site_status +  ( 1 | Field) + (1 | Year),

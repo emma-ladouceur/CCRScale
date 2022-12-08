@@ -15,6 +15,13 @@ locations <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 
 
 head(locations)
 
+# for EDI geographic coverage
+locations %>% summarise(xmin = min(xloc),
+                        xmax = max(xloc),
+                        ymin = min(yloc),
+                        ymax = max(yloc))
+  
+  
 mean_locations <- locations %>% dplyr::select(xloc, yloc, field, exp) %>%
   group_by(field, exp) %>% summarise(mean_xloc = mean(xloc),
                                 mean_yloc = mean(yloc)) %>% ungroup()
