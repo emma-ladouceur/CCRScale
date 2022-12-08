@@ -43,13 +43,16 @@ fix_dat <- ccr_dat %>% filter(site_status == "never-ploughed") %>%
   )) 
 
 
+head(fix_dat)
+
+
 # regional gamma never-ploughed field within calendar year
 np_wide <- ccr_dat %>% filter(site_status == "never-ploughed") %>% 
   bind_rows(fix_dat) %>% # add in 2016 comparison dat
   as_tibble() %>% 
   mutate(species2 = paste0('sp_', Species)) %>% 
   group_by(site_status,Year,YSA,species2) %>% 
-  summarise(pres=n_distinct(pres)) %>%
+  summarise(pres = n_distinct(pres)) %>%
   spread(species2,pres,fill = 0) %>%
   mutate(OYear = Year) %>%
   mutate(Year = fct_recode(Year,
@@ -89,6 +92,20 @@ View(ccr_wide)
 
 colnames(ccr_wide)
 
+write.csv(ccr_wide, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/checklist_wide.csv")
+
+colnames(ccr_wide)
+
+ccr_checklist <- ccr_wide %>% gather(Species, pres, `sp_Achillea millefolium`:`sp_Vitis riparia`) %>%
+  arrange(YSA,Field, Year)
+
+head(ccr_checklist)
+
+write.csv(ccr_checklist, "~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/E14 _133/checklist.csv")
+
+ccr_checklist_w <- ccr_checklist %>% spread(Species, pres) %>% arrange(Year, Field)
+
+head(ccr_checklist_w)
 
 beta_pairs <- function(x){
   # function to return the dissimilarities (turnover and nestedness component)
@@ -137,9 +154,9 @@ beta_pairs <- function(x){
   return(out)
 }
 
-colnames(ccr_wide)
+colnames(ccr_checklist_w)
 
-wide.df <- ccr_wide %>%
+wide.df <- ccr_checklist_w %>%
   group_by(Year) %>%
     nest_legacy(starts_with('sp_'), site_status, Field, YSA)
  

@@ -133,6 +133,8 @@ write.csv(ccr_multi_scale,"~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/
 ccr_multi_scale <- read.csv("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/multi_scale.csv", header=TRUE) %>%
   as_tibble()
 
+head(ccr_multi_scale)
+
 # fix the color problem and make a plot for publishing
 ccr.all.df.avg <- ccr_multi_scale %>% 
   group_by(Field, YSA, site_status, x, Method) %>%
