@@ -15,13 +15,13 @@ Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarc
 
 **alpha_div_percent.csv** α-diversity as a percentage of the average diversity of all never-ploughed plots.
 
-**gamma_div.csv** γ (Field = 20 plots) and Whittaker's β-diversity (gamma/alpha)
+**gamma_div.csv** γ (Field = 20 plots) and Whittaker's β-diversity (γ/α)
 
 **gamma_div_percent.csv** γ and Whittaker's β-diversity (γ/α) as a percentage of the average diversity of never-ploughed fields at each scale and for each metric.
 
 **checklist.csv** Species checklist for every old field, and across all never-ploughed fields for each year, used to calculate pairwise turnover and nestedness components of Jaccard's index.
 
-**beta.df.csv** Turnover and Nestedness components of Jaccard's index, comparing a checklist of each field (gamma-scale) at each time point to the nearest measured time point for the checklist for all never-ploughed fields (regional-γ-scale).
+**beta.df.csv** Turnover and Nestedness components of Jaccard's index, comparing a checklist of each field (γ-scale) at each time point to the nearest measured time point for the checklist for all never-ploughed fields (regional-γ-scale).
 
 **func_groups_percent** Relative cover (plots = 0.5m2) of different functional groups (graminoid, forb, legume) and their origin (native, exotic) and as a percentage of that found on average in never-ploughed plots.
 
