@@ -17,7 +17,7 @@ Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarc
 
 **gamma_div.csv** γ (Field = 20 plots) and Whittaker's β-diversity (gamma/alpha)
 
-**gamma_div_percent.csv** γ and Whittaker's β-diversity (gamma/alpha) as a percentage of the average diversity of never-ploughed fields at each scale and for each metric.
+**gamma_div_percent.csv** γ and Whittaker's β-diversity (γ/α) as a percentage of the average diversity of never-ploughed fields at each scale and for each metric.
 
 **checklist.csv** Species checklist for every old field, and across all never-ploughed fields for each year, used to calculate pairwise turnover and nestedness components of Jaccard's index.
 
