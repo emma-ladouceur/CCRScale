@@ -11,15 +11,15 @@ This work builds on [Isbell et al. 2019](https://www.nature.com/articles/s41559-
 ### Data
 Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarcreek.umn.edu/research/data). Data openly available to reproduce results includes;
 
-**alpha_div.csv** Alpha diversity (plot = 0.5m2)
+**alpha_div.csv** α-diversity (plot = 0.5m2)
 
-**alpha_div_percent.csv** Alpha diversity as a percentage of the average diversity of all never-ploughed plots.
+**alpha_div_percent.csv** α-diversity as a percentage of the average diversity of all never-ploughed plots.
 
-**gamma_div.csv** Gamma (Field = 20 plots) and Whittaker's β-diversity (gamma/alpha)
+**gamma_div.csv** γ (Field = 20 plots) and Whittaker's β-diversity (gamma/alpha)
 
-**gamma_div_percent.csv** Gamma and Whittaker's Beta diversity (gamma/alpha) as a percentage of the average diversity of never-ploughed fields at each scale and for each metric.
+**gamma_div_percent.csv** γ and Whittaker's β-diversity (gamma/alpha) as a percentage of the average diversity of never-ploughed fields at each scale and for each metric.
 
-**checklist.csv** species checklist for every old field, and across all never-ploughed fields for each year, used to calculate pairwise turnover and nestedness components of Jaccard's index.
+**checklist.csv** Species checklist for every old field, and across all never-ploughed fields for each year, used to calculate pairwise turnover and nestedness components of Jaccard's index.
 
 **beta.df.csv** Turnover and Nestedness components of Jaccard's index, comparing a checklist of each field (gamma-scale) at each time point to the nearest measured time point for the checklist for all never-ploughed fields (regional-gamma-scale).
 
@@ -27,7 +27,7 @@ Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarc
 
 **multi_scale** Sample-based rarefied and extrapolated species richness (Hill numbers, q = 0) for each field.
 
-**np_means** mean of diversity of never-ploughed fields at each scale and for each metric. Used to calculate relative percentages of old field recovery.
+**np_means** Mean diversity of never-ploughed fields at each scale and for each metric. Used to calculate relative percentages of old field recovery.
 
 OTHER ENTITIES: **model objects** Each linear mixed effects model used in this analyses is saved as a model object so you can just load them to recreate figures, rather than run them on your local machine.
 
