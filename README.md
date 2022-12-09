@@ -21,7 +21,7 @@ Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarc
 
 **checklist.csv** Species checklist for every old field, and across all never-ploughed fields for each year, used to calculate pairwise turnover and nestedness components of Jaccard's index.
 
-**beta.df.csv** Turnover and Nestedness components of Jaccard's index, comparing a checklist of each field (gamma-scale) at each time point to the nearest measured time point for the checklist for all never-ploughed fields (regional-gamma-scale).
+**beta.df.csv** Turnover and Nestedness components of Jaccard's index, comparing a checklist of each field (gamma-scale) at each time point to the nearest measured time point for the checklist for all never-ploughed fields (regional-γ-scale).
 
 **func_groups_percent** Relative cover (plots = 0.5m2) of different functional groups (graminoid, forb, legume) and their origin (native, exotic) and as a percentage of that found on average in never-ploughed plots.
 
