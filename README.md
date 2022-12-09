@@ -15,30 +15,30 @@ Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarc
 
 **alpha_div_percent.csv** Alpha diversity as a percentage of the average diversity of all never-ploughed plots.
 
-**gamma_div.csv** Gamma (Field = 20 plots) and Whittaker's Beta diversity (gamma/alpha)
+**gamma_div.csv** Gamma (Field = 20 plots) and Whittaker's β-diversity (gamma/alpha)
 
 **gamma_div_percent.csv** Gamma and Whittaker's Beta diversity (gamma/alpha) as a percentage of the average diversity of never-ploughed fields at each scale and for each metric.
 
-**checklist_wide.csv** species checklist for every old field, and across all never-ploughed fields for each year, used to calculate pairwise turnover and nestedness components of Jaccard's index.
+**checklist.csv** species checklist for every old field, and across all never-ploughed fields for each year, used to calculate pairwise turnover and nestedness components of Jaccard's index.
 
 **beta.df.csv** Turnover and Nestedness components of Jaccard's index, comparing a checklist of each field (gamma-scale) at each time point to the nearest measured time point for the checklist for all never-ploughed fields (regional-gamma-scale).
 
-**multi_scale** Sample-based rarefied and extrapolated species richness (Hill numbers, q = 0) for each field.
+**func_groups_percent** Relative cover (plots = 0.5m2) of different functional groups (graminoid, forb, legume) and their origin (native, exotic) and as a percentage of that found on average in never-ploughed plots.
 
-**func_groups & func_groups_precent** Relative cover (plots = 0.5m2) of different functional groups (graminoid, forb, legume) and their origin (native, exotic) and as a percentage of that found on average in never-ploughed plots.
+**multi_scale** Sample-based rarefied and extrapolated species richness (Hill numbers, q = 0) for each field.
 
 **np_means** mean of diversity of never-ploughed fields at each scale and for each metric. Used to calculate relative percentages of old field recovery.
 
-FOLDER: **model objects** Each linear mixed effects model used in this analyses is saved as a model object so you can just load them to recreate figures, rather than run them on your local machine.
+OTHER ENTITIES: **model objects** Each linear mixed effects model used in this analyses is saved as a model object so you can just load them to recreate figures, rather than run them on your local machine.
 
 ### R Scripts
 This code is designed to be a pedagogic example of examining biodiversity change across scales.
 
 **1_Data_wrangle.R** Wrangling data and quantifying metrics across scales.
 
-**2_Discrete_models.R** Models, data extraction from models and figures. Figure 2a) & b), 3a) & b), 4a) & c). Supplementary Figures S3a) & b), S4a) & b), S5a) & c),
+**2_Discrete_models.R** Models, data extraction from models and figures for discrete analysis. Figure 2a) & b), 3a) & b), 4a) & c). Supplementary Figures S3a) & b), S4a) & b), S5a) & c),
 
-**3_Percent_models.R** Models, data extraction from models and figures. Figure 2c) & d), 3c) & d), 4b) & d). Supplementary Figures S3c) & d), S4c) & d), S5b) & d),
+**3_Percent_models.R** Models, data extraction from models and figures for continuous analysis. Figure 2c) & d), 3c) & d), 4b) & d). Supplementary Figures S3c) & d), S4c) & d), S5b) & d),
 
 **4_Turnover_Nestedness.R** Quantifying metrics, models, data extraction from models and figures. Figure 5a) & b). Supplementary Figure S6a) & b)
 
