@@ -11,7 +11,7 @@ This work builds on [Isbell et al. 2019](https://www.nature.com/articles/s41559-
 ### Data
 Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarcreek.umn.edu/research/data). Aggregate-level diversity metrics openly available to reproduce results includes;
 
-<code>**alpha_div.csv** α-diversity (plot = 0.5m<sup>2</sup>)</code>
+<code>**alpha_div.csv** α-diversity (plot = 0.5m<sup>2</sup>)
 
 **alpha_div_percent.csv** α-diversity as a percentage of the average diversity of all never-ploughed plots.
 
@@ -29,7 +29,7 @@ Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarc
 
 **np_means** Mean diversity of never-ploughed fields at each scale and for each metric. Used to calculate relative percentages of old field recovery.
 
-OTHER ENTITIES: **model objects** Each linear mixed effects model used in this analyses is saved as a model object so you can just load them to recreate figures, rather than run them on your local machine.
+OTHER ENTITIES: **model objects** Each linear mixed effects model used in this analyses is saved as a model object so you can just load them to recreate figures, rather than run them on your local machine.</code>
 
 ### R Scripts
 This code is designed to be a pedagogic example of examining biodiversity change across scales.
