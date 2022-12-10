@@ -26,7 +26,7 @@ head(alpha_dat)
 
 
 
-#save(d.alpha.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.rich.Rdata')
+#save(d.alpha.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/alpha_rich_d.Rdata')
 load( '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/alpha_rich_d.Rdata')
 
 summary(d.alpha.rich) # model summary
@@ -95,7 +95,7 @@ colnames(alpha_dat)
 #                      data = alpha_dat, family = student(), cores = 4, iter=3000, warmup = 1000, chains = 4)
 
 # 
-# save(d.alpha.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.alpha.spie.Rdata')
+# save(d.alpha.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/alpha_pie_d.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/alpha_pie_d.Rdata") 
 
 
@@ -152,7 +152,7 @@ fig_3a
 # 
 # 
 # 
-# save(d.gamma.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.gamma.rich.Rdata')
+# save(d.gamma.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/gamma_rich_d.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/gamma_rich_d.Rdata") 
 
 
@@ -212,7 +212,7 @@ fig_2b
 # d.gamma.spie <-  brm(gamma_ENSPIE ~  site_status + (1 | Field)  + (1 | Year),
 #                      data = gamma_dat, family = student(), cores = 4, iter=3000, warmup = 1000, chains = 4)
 # 
-# save(d.gamma.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.gamma.spie.Rdata')
+# save(d.gamma.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/gamma_pie_d.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/gamma_pie_d.Rdata") 
 
 
@@ -268,7 +268,7 @@ colnames(gamma_dat)
 #                    data = gamma_dat, family=student(), cores = 4, iter=10000, warmup=1000, chains = 4,
 #                    control = list(adapt_delta = 0.99))
 # 
-# save(d.beta.div, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.beta.div.Rdata')
+# save(d.beta.div, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/beta_div_d.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/beta_div_d.Rdata") 
 
 
@@ -323,7 +323,7 @@ fig_4a
 #                     control = list(adapt_delta = 0.99) )
 
 # 
-# save(d.beta.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.beta.spie.Rdata')
+# save(d.beta.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/beta_pie_d.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/beta_pie_d.Rdata") 
 
 
