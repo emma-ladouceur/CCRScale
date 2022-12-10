@@ -11,25 +11,25 @@ This work builds on [Isbell et al. 2019](https://www.nature.com/articles/s41559-
 ### Data
 Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarcreek.umn.edu/research/data). Aggregate-level diversity metrics openly available to reproduce results includes;
 
-* **alpha_div.csv** <code>α-diversity (plot = 0.5m<sup>2</sup>)</code>
+* **alpha_div.csv** <code>α-diversity (species richness & ENS<sub>PIE</sub>) (plot = 0.5m<sup>2</sup>)</code>
 
-* **alpha_div_percent.csv** <code>α-diversity as a percentage of the average diversity of all never-ploughed plots.</code>
+* **alpha_div_percent.csv** <code>α-diversity (species richness & ENS<sub>PIE</sub>) as a percentage of the average diversity of all never-ploughed plots.</code>
 
-* **gamma_div.csv** <code>γ (Field = 20 plots = 10m<sup>2</sup>) and Whittaker's β-diversity (γ/α).</code>
+* **gamma_div.csv** <code>γ-diversity (species richness & ENS<sub>PIE</sub>) (Field = 20 plots = 10m<sup>2</sup>) & Whittaker's β-diversity (γ/α).</code>
 
-* **gamma_div_percent.csv** <code>γ and Whittaker's β-diversity (γ/α) as a percentage of the average diversity of never-ploughed fields at each scale and for each metric.</code>
+* **gamma_div_percent.csv** <code>γ-diversity (species richness & ENS<sub>PIE</sub>) & Whittaker's β-diversity (γ/α) as a percentage of the average diversity of never-ploughed fields at each scale and for each metric.</code>
 
 * **checklist.csv** <code>Species checklist for every old field, and across all never-ploughed fields for each year, used to calculate pairwise turnover and nestedness components of Jaccard's index.</code>
 
 * **beta.df.csv** <code>Turnover and Nestedness components of Jaccard's index, comparing a checklist of each field (γ-scale) at each time point to the nearest measured time point for the checklist for all never-ploughed fields (regional-γ-scale).</code>
 
-* **func_groups_percent** <code>Relative cover (α-scale - plot = 0.5m<sup>2</sup>) of different functional groups (graminoid, forb, legume) and their origin (native, exotic) and as a percentage of that found on average in never-ploughed plots.</code>
+* **func_groups_percent** <code>Relative cover (α-scale = plot = 0.5m<sup>2</sup>) of different functional groups (graminoid, forb, legume) and their origin (native, exotic) and as a percentage of that found on average in never-ploughed plots.</code>
 
-* **multi_scale** <code>Sample-based rarefied (1-19 samples), observed (20 samples) and extrapolated (21-50 samples) diversity (Hill numbers, q = 0), across multiple scales of sampling effort for each field.</code>
+* **multi_scale** <code>Sample-based rarefied (1-19 samples), observed (20 samples) and extrapolated (21-50 samples) diversity (Hill numbers, q = 0, equivelent to species richness), across multiple scales of sampling effort for each field.</code>
 
 * **np_means** <code>Mean diversity of never-ploughed fields at each scale and for each metric. Used to calculate relative percentages of old field recovery.</code>
 
-* OTHER ENTITIES: **model objects** <code>Each linear mixed effects model used in this analyses is saved as a model object so you can just load them to recreate figures, rather than run them on your local machine.</code>
+* OTHER ENTITIES: **model objects** <code>Each linear mixed effects model used in this analyses is saved as a model object *(.RData)* so you can just load them to recreate figures, rather than run them on your local machine.</code>
 
 ### R Scripts
 This code is designed to be a pedagogic example of examining biodiversity change across scales.
