@@ -6,7 +6,7 @@ The recovery of plant community composition following passive restoration across
 
 *Emma Ladouceur, Forest Isbell, Adam T. Clark, W. Stanley Harpole, Peter B. Reich, G. David Tilman, & Jonathan M. Chase (2022) The recovery of plant community composition following passive restoration across spatial scales. Journal of Ecology. Article DOI: [doi.org/]() & Data DOI: [Coming soon]()*
  
-This work builds on [Isbell et al. 2019](https://www.nature.com/articles/s41559-019-1012-1), using a scale-explicit approach to quantifying [Measurements of Biodiversity](https://doi.org/10.1111/2041-210X.13102). See another pedagogic example employing this framework [here](https://doi.org/10.1111/1365-2664.13549).
+This work builds on [Isbell et al. 2019](https://www.nature.com/articles/s41559-019-1012-1), using a scale-explicit approach to quantifying [Measurements of Biodiversity](https://doi.org/10.1111/2041-210X.13102). 
 
 ### Data
 Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarcreek.umn.edu/research/data). Aggregate-level diversity metrics openly available to reproduce results includes;
