@@ -19,20 +19,20 @@ head(alpha_dat)
 
 #----------------------------------------------------------------------------------------------
 # alpha rich 
-#alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-ploughed","old field"))
-# 
-# d.alpha.spie <-  brm(alpha_ENSPIE ~  site_status + (1 | Field)  + (1 | Year) ,
-#                      data = alpha_dat, family = student(), cores = 4, iter=3000, warmup = 1000, chains = 4)
+alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-ploughed","old field"))
+
+d.alpha.rich <-  brm(alpha_rich ~  site_status + (1 | Field)  + (1 | Year) ,
+                     data = alpha_dat, family = student(), cores = 4, iter=3000, warmup = 1000, chains = 4)
 
 
 
-#save(d.alpha.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/alpha_rich_d.Rdata')
+save(d.alpha.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/alpha_rich_d.Rdata')
 load( '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/alpha_rich_d.Rdata')
 
 summary(d.alpha.rich) # model summary
 
-# check for autocorrelation
-mcmc_plot(d.alpha.rich, type = 'acf')
+# check for autocorrelation in chains
+#mcmc_plot(d.alpha.rich, type = 'acf')
 
 
 color_scheme_set("darkgray")
@@ -89,13 +89,13 @@ fig_2a
 
 colnames(alpha_dat)
 
-# alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-ploughed","old field"))
-# 
-# d.alpha.spie <-  brm(alpha_ENSPIE ~  site_status + (1 | Field)  + (1 | Year) ,
-#                      data = alpha_dat, family = student(), cores = 4, iter=3000, warmup = 1000, chains = 4)
+alpha_dat$site_status <- factor(alpha_dat$site_status  , levels=c("never-ploughed","old field"))
 
-# 
-# save(d.alpha.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/alpha_pie_d.Rdata')
+d.alpha.spie <-  brm(alpha_ENSPIE ~  site_status + (1 | Field)  + (1 | Year) ,
+                     data = alpha_dat, family = student(), cores = 4, iter=3000, warmup = 1000, chains = 4)
+
+
+ save(d.alpha.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/alpha_pie_d.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/alpha_pie_d.Rdata") 
 
 
@@ -144,15 +144,16 @@ fig_3a
 #----------------------------------------------------------------------------------------------
 # gamma rich 
  gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-ploughed","old field"))
-# 
-# head(gamma_dat)
-# 
-# d.gamma.rich <-  brm(gamma_rich ~  site_status +  (1 | Field) + (1 | Year),
-#                      data = gamma_dat,family = 'poisson',cores = 4, iter=2000, chains = 4)
-# 
-# 
-# 
-# save(d.gamma.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/gamma_rich_d.Rdata')
+
+head(gamma_dat)
+
+d.gamma.rich <-  brm(gamma_rich ~  site_status +  (1 | Field) + (1 | Year),
+                     data = gamma_dat, family = 'poisson', cores = 4, iter=3000, warmup=1000, chains = 4,
+                     control = list(adapt_delta = 0.99))
+
+
+
+save(d.gamma.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/gamma_rich_d.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/gamma_rich_d.Rdata") 
 
 
@@ -202,17 +203,17 @@ fig_2b
 
 # gamma pie
 
-# colnames(gamma_dat)
-# gamma_dat$Field<-as.factor(as.character(gamma_dat$Field))
-# gamma_dat$Year<-as.factor(as.character(gamma_dat$Year))
-# gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-ploughed","old field"))
-# 
-# head(gamma_dat)
-# 
-# d.gamma.spie <-  brm(gamma_ENSPIE ~  site_status + (1 | Field)  + (1 | Year),
-#                      data = gamma_dat, family = student(), cores = 4, iter=3000, warmup = 1000, chains = 4)
-# 
-# save(d.gamma.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/gamma_pie_d.Rdata')
+colnames(gamma_dat)
+gamma_dat$Field<-as.factor(as.character(gamma_dat$Field))
+gamma_dat$Year<-as.factor(as.character(gamma_dat$Year))
+gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-ploughed","old field"))
+
+head(gamma_dat)
+
+d.gamma.spie <-  brm(gamma_ENSPIE ~  site_status + (1 | Field)  + (1 | Year),
+                     data = gamma_dat, family = student(), cores = 4, iter=3000, warmup = 1000, chains = 4)
+
+save(d.gamma.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/gamma_pie_d.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/gamma_pie_d.Rdata") 
 
 
@@ -261,14 +262,14 @@ fig_3b
 # beta div
 
 colnames(gamma_dat)
-#  gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-ploughed","old field"))
-# # 
-# # 
-# d.beta.div <-  brm(beta_div ~  site_status +  (1 | Field) + (1 | Year),
-#                    data = gamma_dat, family=student(), cores = 4, iter=10000, warmup=1000, chains = 4,
-#                    control = list(adapt_delta = 0.99))
-# 
-# save(d.beta.div, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/beta_div_d.Rdata')
+gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-ploughed","old field"))
+
+
+d.beta.div <-  brm(beta_div ~  site_status +  (1 | Field) + (1 | Year),
+                   data = gamma_dat, family=student(), cores = 4, iter=10000, warmup=1000, chains = 4,
+                   control = list(adapt_delta = 0.99))
+
+save(d.beta.div, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/beta_div_d.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/beta_div_d.Rdata") 
 
 
@@ -314,16 +315,16 @@ fig_4a
 #----------------------------------------------------------------------------------------------
 # beta spie
 
-# colnames(gamma_dat)
-# gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-ploughed","old field"))
-# 
-# 
-# d.beta.spie <-  brm(beta_ENSPIE ~  site_status + (1 | Field) + (1 | Year),
-#                     data = gamma_dat, family=student(),cores = 4, iter=4000,warmup=1000, chains = 4,
-#                     control = list(adapt_delta = 0.99) )
+colnames(gamma_dat)
+gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-ploughed","old field"))
 
-# 
-# save(d.beta.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/beta_pie_d.Rdata')
+
+d.beta.spie <-  brm(beta_ENSPIE ~  site_status + (1 | Field) + (1 | Year),
+                    data = gamma_dat, family=student(),cores = 4, iter=4000,warmup=1000, chains = 4,
+                    control = list(adapt_delta = 0.99) )
+
+
+save(d.beta.spie, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/beta_pie_d.Rdata')
 load("~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/beta_pie_d.Rdata") 
 
 

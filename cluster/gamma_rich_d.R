@@ -13,7 +13,8 @@ gamma_dat$site_status <- factor(gamma_dat$site_status  , levels=c("never-ploughe
 
 
 d.gamma.rich <-  brm(gamma_rich ~  site_status +  (1 | Field) + (1 | Year),
-                  data = gamma_dat,family = 'poisson',cores = 4, iter=2000, chains = 4)
+                     data = gamma_dat, family = 'poisson', cores = 4, iter=3000, warmup=1000, chains = 4,
+                     control = list(adapt_delta = 0.99))
 
 
 save(d.gamma.rich,
