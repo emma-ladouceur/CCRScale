@@ -11,44 +11,44 @@ This work builds on [Isbell et al. 2019](https://www.nature.com/articles/s41559-
 ### Data
 Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarcreek.umn.edu/research/data). Aggregate-level diversity metrics openly available to reproduce results includes;
 
-* <code>**alpha_div.csv** α-diversity (plot = 0.5m<sup>2</sup>)</code>
+* **alpha_div.csv** <code>α-diversity (plot = 0.5m<sup>2</sup>)</code>
 
-* <code>**alpha_div_percent.csv** α-diversity as a percentage of the average diversity of all never-ploughed plots.</code>
+* **alpha_div_percent.csv** <code>α-diversity as a percentage of the average diversity of all never-ploughed plots.</code>
 
-* <code>**gamma_div.csv** γ (Field = 20 plots = 10m<sup>2</sup>) and Whittaker's β-diversity (γ/α).</code>
+* **gamma_div.csv** <code>γ (Field = 20 plots = 10m<sup>2</sup>) and Whittaker's β-diversity (γ/α).</code>
 
-* <code>**gamma_div_percent.csv** γ and Whittaker's β-diversity (γ/α) as a percentage of the average diversity of never-ploughed fields at each scale and for each metric.</code>
+* **gamma_div_percent.csv** <code>γ and Whittaker's β-diversity (γ/α) as a percentage of the average diversity of never-ploughed fields at each scale and for each metric.</code>
 
-* <code>**checklist.csv** Species checklist for every old field, and across all never-ploughed fields for each year, used to calculate pairwise turnover and nestedness components of Jaccard's index.</code>
+* **checklist.csv** <code>Species checklist for every old field, and across all never-ploughed fields for each year, used to calculate pairwise turnover and nestedness components of Jaccard's index.</code>
 
-* <code>**beta.df.csv** Turnover and Nestedness components of Jaccard's index, comparing a checklist of each field (γ-scale) at each time point to the nearest measured time point for the checklist for all never-ploughed fields (regional-γ-scale).</code>
+* **beta.df.csv** <code>Turnover and Nestedness components of Jaccard's index, comparing a checklist of each field (γ-scale) at each time point to the nearest measured time point for the checklist for all never-ploughed fields (regional-γ-scale).</code>
 
-* <code>**func_groups_percent** Relative cover (α-scale - plot = 0.5m<sup>2</sup>) of different functional groups (graminoid, forb, legume) and their origin (native, exotic) and as a percentage of that found on average in never-ploughed plots.</code>
+* **func_groups_percent** <code>Relative cover (α-scale - plot = 0.5m<sup>2</sup>) of different functional groups (graminoid, forb, legume) and their origin (native, exotic) and as a percentage of that found on average in never-ploughed plots.</code>
 
-* <code>**multi_scale** Sample-based rarefied (1-19 samples), observed (20 samples) and extrapolated (21-50 samples) diversity (Hill numbers, q = 0), across multiple scales of sampling effort for each field.</code>
+* **multi_scale** <code>Sample-based rarefied (1-19 samples), observed (20 samples) and extrapolated (21-50 samples) diversity (Hill numbers, q = 0), across multiple scales of sampling effort for each field.</code>
 
-* <code>**np_means** Mean diversity of never-ploughed fields at each scale and for each metric. Used to calculate relative percentages of old field recovery.</code>
+* **np_means** <code>Mean diversity of never-ploughed fields at each scale and for each metric. Used to calculate relative percentages of old field recovery.</code>
 
-* <code>OTHER ENTITIES: **model objects** Each linear mixed effects model used in this analyses is saved as a model object so you can just load them to recreate figures, rather than run them on your local machine.</code>
+* OTHER ENTITIES: **model objects** <code>Each linear mixed effects model used in this analyses is saved as a model object so you can just load them to recreate figures, rather than run them on your local machine.</code>
 
 ### R Scripts
 This code is designed to be a pedagogic example of examining biodiversity change across scales.
 
-* <code>**1_Data_wrangle.R** Wrangling data and quantifying metrics across scales.</code>
+* **1_Data_wrangle.R** <code>Wrangling data and quantifying metrics across scales.</code>
 
-* <code>**2_Discrete_models.R** Models, data extraction from models and figures for discrete analysis. Figure 2a) & b), 3a) & b), 4a) & c). Supplementary Figures S3a) & b), S4a) & b), S5a) & c),</code>
+* **2_Discrete_models.R** <code>Models, data extraction from models and figures for discrete analysis. Figure 2a) & b), 3a) & b), 4a) & c). Supplementary Figures S3a) & b), S4a) & b), S5a) & c),</code>
 
-* <code>**3_Percent_models.R** Models, data extraction from models and figures for continuous analysis. Figure 2c) & d), 3c) & d), 4b) & d). Supplementary Figures S3c) & d), S4c) & d), S5b) & d),</code>
+* **3_Percent_models.R** <code>Models, data extraction from models and figures for continuous analysis. Figure 2c) & d), 3c) & d), 4b) & d). Supplementary Figures S3c) & d), S4c) & d), S5b) & d),</code>
 
-* <code>**4_Turnover_Nestedness.R** Quantifying metrics, models, data extraction from models and figures. Figure 5a) & b). Supplementary Figure S6a) & b).</code>
+* **4_Turnover_Nestedness.R** <code>Quantifying metrics, models, data extraction from models and figures. Figure 5a) & b). Supplementary Figure S6a) & b).</code>
 
-* <code>**4_Functional_Groups.R** Models, data extraction from models and figures. Figure 6. Supplementary Figure S7a), b), & S10.</code>
+* **4_Functional_Groups.R** <code>Models, data extraction from models and figures. Figure 6. Supplementary Figure S7a), b), & S10.</code>
 
-* <code>**6_Multiscale.R** Sample-based rarefied, observed, and extrapolated diversity (Hill numbers, q = 0), across multiple scales of sampling effort for each field. Figure S1, S2, & S8.</code>
+* **6_Multiscale.R** <code>Sample-based rarefied, observed, and extrapolated diversity (Hill numbers, q = 0), across multiple scales of sampling effort for each field. Figure S1, S2, & S8.</code>
 
-* <code>**7_Figure_S9.R** Checking model residuals for auto-correlation. Figure S9.</code>
+* **7_Figure_S9.R** <code>Checking model residuals for auto-correlation. Figure S9.</code>
 
-* <code>**8_Figure_S11.R** Predicting time to 100% recovery at different scales. Figure S11 a)-c).</code>
+* **8_Figure_S11.R** <code>Predicting time to 100% recovery at different scales. Figure S11 a)-c).</code>
 
-* <code>**9_Table_S1.R** Table S1.</code>
+* **9_Table_S1.R** <code>Table S1.</code>
 
