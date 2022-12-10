@@ -248,8 +248,8 @@ head(ccr.extrap.df)
 # d.extrap.rich <-  brm(y ~  site_status +  ( 1 | Field) + (1 | Year),
 #                       data = ccr.extrap.df, family = student(), cores = 4, iter = 3000, warmup = 1000, chains = 4)
 # 
-# save(d.extrap.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.extrap.rich.Rdata')
-load( '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/d.extrap.rich.Rdata')
+# save(d.extrap.rich, file = '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/extrap_rich_d.Rdata')
+load( '~/GRP GAZP Dropbox/Emma Ladouceur/_Projects/CCRScale/data/model_fits/discrete/extrap_rich_d.Rdata')
 
 summary(d.extrap.rich) # model summary
 
