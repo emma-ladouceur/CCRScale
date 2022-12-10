@@ -9,13 +9,13 @@ The recovery of plant community composition following passive restoration across
 This work builds on [Isbell et al. 2019](https://www.nature.com/articles/s41559-019-1012-1), using a scale-explicit approach to quantifying [Measurements of Biodiversity](https://doi.org/10.1111/2041-210X.13102). See another pedagogic example employing this framework [here](https://doi.org/10.1111/1365-2664.13549).
 
 ### Data
-Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarcreek.umn.edu/research/data). Data openly available to reproduce results includes;
+Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarcreek.umn.edu/research/data). Aggregate-level diversity metrics openly available to reproduce results includes;
 
-**alpha_div.csv** α-diversity (plot = 0.5m2)
+**alpha_div.csv** α-diversity (plot = 0.5m^2)
 
 **alpha_div_percent.csv** α-diversity as a percentage of the average diversity of all never-ploughed plots.
 
-**gamma_div.csv** γ (Field = 20 plots) and Whittaker's β-diversity (γ/α)
+**gamma_div.csv** γ (Field = 20 plots = 10m^2) and Whittaker's β-diversity (γ/α)
 
 **gamma_div_percent.csv** γ and Whittaker's β-diversity (γ/α) as a percentage of the average diversity of never-ploughed fields at each scale and for each metric.
 
@@ -23,9 +23,9 @@ Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarc
 
 **beta.df.csv** Turnover and Nestedness components of Jaccard's index, comparing a checklist of each field (γ-scale) at each time point to the nearest measured time point for the checklist for all never-ploughed fields (regional-γ-scale).
 
-**func_groups_percent** Relative cover (plots = 0.5m2) of different functional groups (graminoid, forb, legume) and their origin (native, exotic) and as a percentage of that found on average in never-ploughed plots.
+**func_groups_percent** Relative cover (α-scale - plot = 0.5m^2) of different functional groups (graminoid, forb, legume) and their origin (native, exotic) and as a percentage of that found on average in never-ploughed plots.
 
-**multi_scale** Sample-based rarefied and extrapolated species richness (Hill numbers, q = 0) for each field.
+**multi_scale** Sample-based rarefied (1-19 samples), observed (20 samples) and extrapolated (21-50 samples) diversity (Hill numbers, q = 0), across multiple scales of sampling effort for each field.
 
 **np_means** Mean diversity of never-ploughed fields at each scale and for each metric. Used to calculate relative percentages of old field recovery.
 
@@ -44,7 +44,7 @@ This code is designed to be a pedagogic example of examining biodiversity change
 
 **4_Functional_Groups.R** Models, data extraction from models and figures. Figure 6. Supplementary Figure S7a), b), & S10.
 
-**6_Multiscale.R** Sample-Based species accumulation, rarefaction, extrapolation, Hill numbers. Figure S1, S2, & S8.
+**6_Multiscale.R** Sample-based rarefied, observed, and extrapolated diversity (Hill numbers, q = 0), across multiple scales of sampling effort for each field. Figure S1, S2, & S8.
 
 **7_Figure_S9.R** Checking model residuals for auto-correlation. Figure S9.
 
