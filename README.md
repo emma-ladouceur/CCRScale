@@ -15,7 +15,7 @@ Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarc
 
 **alpha_div_percent.csv** α-diversity as a percentage of the average diversity of all never-ploughed plots.
 
-**gamma_div.csv** γ (Field = 20 plots = 10m^2) and Whittaker's β-diversity (γ/α)
+**gamma_div.csv** γ (Field = 20 plots = 10m^2^) and Whittaker's β-diversity (γ/α)
 
 **gamma_div_percent.csv** γ and Whittaker's β-diversity (γ/α) as a percentage of the average diversity of never-ploughed fields at each scale and for each metric.
 
@@ -23,7 +23,7 @@ Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarc
 
 **beta.df.csv** Turnover and Nestedness components of Jaccard's index, comparing a checklist of each field (γ-scale) at each time point to the nearest measured time point for the checklist for all never-ploughed fields (regional-γ-scale).
 
-**func_groups_percent** Relative cover (α-scale - plot = 0.5m^2) of different functional groups (graminoid, forb, legume) and their origin (native, exotic) and as a percentage of that found on average in never-ploughed plots.
+**func_groups_percent** Relative cover (α-scale - plot = 0.5m^2^) of different functional groups (graminoid, forb, legume) and their origin (native, exotic) and as a percentage of that found on average in never-ploughed plots.
 
 **multi_scale** Sample-based rarefied (1-19 samples), observed (20 samples) and extrapolated (21-50 samples) diversity (Hill numbers, q = 0), across multiple scales of sampling effort for each field.
 
