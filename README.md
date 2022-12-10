@@ -34,21 +34,21 @@ Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarc
 ### R Scripts
 This code is designed to be a pedagogic example of examining biodiversity change across scales.
 
-**1_Data_wrangle.R** Wrangling data and quantifying metrics across scales.
+<code> * **1_Data_wrangle.R** Wrangling data and quantifying metrics across scales.</code>
 
-**2_Discrete_models.R** Models, data extraction from models and figures for discrete analysis. Figure 2a) & b), 3a) & b), 4a) & c). Supplementary Figures S3a) & b), S4a) & b), S5a) & c),
+<code> * **2_Discrete_models.R** Models, data extraction from models and figures for discrete analysis. Figure 2a) & b), 3a) & b), 4a) & c). Supplementary Figures S3a) & b), S4a) & b), S5a) & c),</code>
 
-**3_Percent_models.R** Models, data extraction from models and figures for continuous analysis. Figure 2c) & d), 3c) & d), 4b) & d). Supplementary Figures S3c) & d), S4c) & d), S5b) & d),
+<code> * **3_Percent_models.R** Models, data extraction from models and figures for continuous analysis. Figure 2c) & d), 3c) & d), 4b) & d). Supplementary Figures S3c) & d), S4c) & d), S5b) & d),</code>
 
-**4_Turnover_Nestedness.R** Quantifying metrics, models, data extraction from models and figures. Figure 5a) & b). Supplementary Figure S6a) & b)
+<code> * **4_Turnover_Nestedness.R** Quantifying metrics, models, data extraction from models and figures. Figure 5a) & b). Supplementary Figure S6a) & b).</code>
 
-**4_Functional_Groups.R** Models, data extraction from models and figures. Figure 6. Supplementary Figure S7a), b), & S10.
+<code> * **4_Functional_Groups.R** Models, data extraction from models and figures. Figure 6. Supplementary Figure S7a), b), & S10.</code>
 
-**6_Multiscale.R** Sample-based rarefied, observed, and extrapolated diversity (Hill numbers, q = 0), across multiple scales of sampling effort for each field. Figure S1, S2, & S8.
+<code> * **6_Multiscale.R** Sample-based rarefied, observed, and extrapolated diversity (Hill numbers, q = 0), across multiple scales of sampling effort for each field. Figure S1, S2, & S8.</code>
 
-**7_Figure_S9.R** Checking model residuals for auto-correlation. Figure S9.
+<code> * **7_Figure_S9.R** Checking model residuals for auto-correlation. Figure S9.</code>
 
-**8_Figure_S11.R** Predicting time to 100% recovery at different scales. Figure S11 a)-c).
+<code> * **8_Figure_S11.R** Predicting time to 100% recovery at different scales. Figure S11 a)-c).</code>
 
-**9_Table_S1.R** Table S1.
+<code> * **9_Table_S1.R** Table S1.</code>
 
