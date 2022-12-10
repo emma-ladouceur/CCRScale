@@ -15,9 +15,9 @@ Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarc
 
 * **alpha_div_percent.csv** <code>α-diversity (species richness & ENS<sub>PIE</sub>) as a percentage of the average diversity of all never-ploughed plots.</code>
 
-* **gamma_div.csv** <code>γ-diversity (species richness & ENS<sub>PIE</sub>) (Field = 20 plots = 10m<sup>2</sup>) & Whittaker's β-diversity (γ/α).</code>
+* **gamma_div.csv** <code>γ-diversity (species richness & ENS<sub>PIE</sub>) (Field = 20 plots = 10m<sup>2</sup>) & Whittaker's β-diversity, β-ENS<sub>PIE</sub> (γ/α).</code>
 
-* **gamma_div_percent.csv** <code>γ-diversity (species richness & ENS<sub>PIE</sub>) & Whittaker's β-diversity (γ/α) as a percentage of the average diversity of never-ploughed fields at each scale and for each metric.</code>
+* **gamma_div_percent.csv** <code>γ-diversity (species richness & ENS<sub>PIE</sub>) & Whittaker's β-diversity, β-ENS<sub>PIE</sub> (γ/α) as a percentage of the average diversity of never-ploughed fields at each scale and for each metric.</code>
 
 * **checklist.csv** <code>Species checklist for every old field, and across all never-ploughed fields for each year, used to calculate pairwise turnover and nestedness components of Jaccard's index.</code>
 
