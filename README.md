@@ -11,7 +11,7 @@ This work builds on [Isbell et al. 2019](https://www.nature.com/articles/s41559-
 ### Data
 Species-level data is available at [Cedar Creek Data Catalog](https://www.cedarcreek.umn.edu/research/data). Aggregate-level diversity metrics openly available to reproduce results includes;
 
-<code>* **alpha_div.csv** α-diversity (plot = 0.5m<sup>2</sup>)</code>
+* <code>**alpha_div.csv** α-diversity (plot = 0.5m<sup>2</sup>)</code>
 
 <code> * **alpha_div_percent.csv** α-diversity as a percentage of the average diversity of all never-ploughed plots.</code>
 
