@@ -1,6 +1,6 @@
 
 
-# CCRScale
+# CCRScale [![DOI](https://zenodo.org/badge/241158475.svg)](https://zenodo.org/badge/latestdoi/241158475)
 
 The recovery of plant community composition following passive restoration across spatial scales: At [Cedar Creek Ecosystem Science Reserve](https://www.cedarcreek.umn.edu/)
 
